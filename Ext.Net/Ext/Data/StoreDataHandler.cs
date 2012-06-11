@@ -1,20 +1,20 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
-
-using Ext.Net.Utilities;
 using Newtonsoft.Json;
+using Ext.Net.Utilities;
+using System.ComponentModel;
 
 namespace Ext.Net
 {
@@ -27,7 +27,6 @@ namespace Ext.Net
         private string jsonData;
         private XmlDocument xmlData;
         private readonly HttpContext context;
-        private bool isBatch;
 
 		/// <summary>
 		/// 
@@ -49,7 +48,6 @@ namespace Ext.Net
                 throw new ArgumentNullException("jsonData");
             }
             this.jsonData = jsonData;
-            this.isBatch = this.jsonData.IsNotEmpty() && this.jsonData[0] == '{' && this.jsonData[this.jsonData.Length - 1] == '}';
         }
 
 		/// <summary>
@@ -69,17 +67,6 @@ namespace Ext.Net
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool IsBatch
-        {
-            get
-            {
-                return this.isBatch;
-            }
-        }
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -90,15 +77,9 @@ namespace Ext.Net
             {
                 if (xmlData == null)
                 {
-                    if (this.isBatch)
-                    {
-                        RecordsToXmlConverter converter = new RecordsToXmlConverter();
-                        xmlData = (XmlDocument)JsonConvert.DeserializeObject(JsonData, typeof(XmlDocument), converter);
-                    }
-                    else
-                    {
-                        xmlData = JsonConvert.DeserializeXmlNode("{records:{record:" + JsonData + "}}");
-                    }
+                    RecordsToXmlConverter converter = new RecordsToXmlConverter();
+                    
+                    xmlData = (XmlDocument)JsonConvert.DeserializeObject(JsonData, typeof(XmlDocument), converter);
                 }
 
                 return xmlData;
@@ -109,12 +90,8 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public ChangeRecords<T> BatchObjectData<T>()
+        public ChangeRecords<T> ObjectData<T>()
         {
-            if (!this.IsBatch)
-            {
-                throw new Exception("The data is not batch");
-            }
             JsonSerializer serializer = new JsonSerializer();
             serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
             StringReader sr = new StringReader(JsonData);
@@ -123,22 +100,34 @@ namespace Ext.Net
             return data;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        public List<T> ObjectData<T>()
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ConfirmationList BuildConfirmationList(string idColumnName)
         {
-            if (this.IsBatch)
+            if (idColumnName.IsEmpty())
             {
-                throw new Exception("The data is batch");
+                return null;
             }
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
-            StringReader sr = new StringReader(JsonData);
-            List<T> data = (List<T>)serializer.Deserialize(sr, typeof(List<T>));
 
-            return data;
+            ConfirmationList confirmationList = new ConfirmationList();
+
+            XmlNodeList records = this.XmlData.SelectNodes("records/*/record");
+
+            foreach (XmlNode node in records)
+            {
+                XmlNode keyNode = node.SelectSingleNode(idColumnName);
+
+                if (keyNode.InnerText.IsEmpty())
+                {
+                    throw new InvalidOperationException("No id in submitted record");
+                }
+
+                confirmationList.Add(keyNode.InnerText, new ConfirmationRecord(false, keyNode.InnerText));
+            }
+
+            return confirmationList;
         }
     }
 }

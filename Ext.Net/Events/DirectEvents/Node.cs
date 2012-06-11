@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,10 +17,6 @@ namespace Ext.Net
 	[Description("")]
     public partial class NodeDirectEvents : ComponentDirectEvents
     {
-        public NodeDirectEvents() { }
-
-        public NodeDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent append;
 
         /// <summary>
@@ -41,7 +37,7 @@ namespace Ext.Net
             {
                 if (this.append == null)
                 {
-                    this.append = new ComponentDirectEvent(this);
+                    this.append = new ComponentDirectEvent();
                 }
 
                 return this.append;
@@ -67,7 +63,7 @@ namespace Ext.Net
             {
                 if (this.beforeAppend == null)
                 {
-                    this.beforeAppend = new ComponentDirectEvent(this);
+                    this.beforeAppend = new ComponentDirectEvent();
                 }
 
                 return this.beforeAppend;
@@ -94,7 +90,7 @@ namespace Ext.Net
             {
                 if (this.beforeInsert == null)
                 {
-                    this.beforeInsert = new ComponentDirectEvent(this);
+                    this.beforeInsert = new ComponentDirectEvent();
                 }
 
                 return this.beforeInsert;
@@ -122,7 +118,7 @@ namespace Ext.Net
             {
                 if (this.beforeMove == null)
                 {
-                    this.beforeMove = new ComponentDirectEvent(this);
+                    this.beforeMove = new ComponentDirectEvent();
                 }
 
                 return this.beforeMove;
@@ -148,7 +144,7 @@ namespace Ext.Net
             {
                 if (this.beforeRemove == null)
                 {
-                    this.beforeRemove = new ComponentDirectEvent(this);
+                    this.beforeRemove = new ComponentDirectEvent();
                 }
 
                 return this.beforeRemove;
@@ -175,7 +171,7 @@ namespace Ext.Net
             {
                 if (this.insert == null)
                 {
-                    this.insert = new ComponentDirectEvent(this);
+                    this.insert = new ComponentDirectEvent();
                 }
 
                 return this.insert;
@@ -203,7 +199,7 @@ namespace Ext.Net
             {
                 if (this.move == null)
                 {
-                    this.move = new ComponentDirectEvent(this);
+                    this.move = new ComponentDirectEvent();
                 }
 
                 return this.move;
@@ -229,7 +225,7 @@ namespace Ext.Net
             {
                 if (this.remove == null)
                 {
-                    this.remove = new ComponentDirectEvent(this);
+                    this.remove = new ComponentDirectEvent();
                 }
 
                 return this.remove;

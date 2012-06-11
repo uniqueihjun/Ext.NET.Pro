@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,188 +17,24 @@ namespace Ext.Net
         /*  Public Properties
             -----------------------------------------------------------------------------------------------*/
 
-        private XTemplate afterBoxLabelTextTpl;
-
         /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup after the box label text. If an XTemplate is used, the component's subTpl data serves as the context.       
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. Checkbox")]
-        [ConfigOption("afterBoxLabelTextTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup after the box label text. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate AfterBoxLabelTextTpl
-        {
-            get
-            {
-                return this.afterBoxLabelTextTpl;
-            }
-            set
-            {
-                if (this.afterBoxLabelTextTpl != null)
-                {
-                    this.Controls.Remove(this.afterBoxLabelTextTpl);
-                    this.LazyItems.Remove(this.afterBoxLabelTextTpl);
-                }
-
-                this.afterBoxLabelTextTpl = value;
-
-                if (this.afterBoxLabelTextTpl != null)
-                {
-                    this.afterBoxLabelTextTpl.EnableViewState = false;
-                    this.Controls.Add(this.afterBoxLabelTextTpl);
-                    this.LazyItems.Add(this.afterBoxLabelTextTpl);
-                }
-            }
-        }
-
-        private XTemplate afterBoxLabelTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup after the box label element. If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. Checkbox")]
-        [ConfigOption("afterBoxLabelTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup after the box label element. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate AfterBoxLabelTpl
-        {
-            get
-            {
-                return this.afterBoxLabelTpl;
-            }
-            set
-            {
-                if (this.afterBoxLabelTpl != null)
-                {
-                    this.Controls.Remove(this.afterBoxLabelTpl);
-                    this.LazyItems.Remove(this.afterBoxLabelTpl);
-                }
-
-                this.afterBoxLabelTpl = value;
-
-                if (this.afterBoxLabelTpl != null)
-                {
-                    this.afterBoxLabelTpl.EnableViewState = false;
-                    this.Controls.Add(this.afterBoxLabelTpl);
-                    this.LazyItems.Add(this.afterBoxLabelTpl);
-                }
-            }
-        }
-
-        private XTemplate beforeBoxLabelTextTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup before the box label text. If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. Checkbox")]
-        [ConfigOption("beforeBoxLabelTextTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup before the box label text. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate BeforeBoxLabelTextTpl
-        {
-            get
-            {
-                return this.beforeBoxLabelTextTpl;
-            }
-            set
-            {
-                if (this.beforeBoxLabelTextTpl != null)
-                {
-                    this.Controls.Remove(this.beforeBoxLabelTextTpl);
-                    this.LazyItems.Remove(this.beforeBoxLabelTextTpl);
-                }
-
-                this.beforeBoxLabelTextTpl = value;
-
-                if (this.beforeBoxLabelTextTpl != null)
-                {
-                    this.beforeBoxLabelTextTpl.EnableViewState = false;
-                    this.Controls.Add(this.beforeBoxLabelTextTpl);
-                    this.LazyItems.Add(this.beforeBoxLabelTextTpl);
-                }
-            }
-        }
-
-        private XTemplate beforeBoxLabelTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup before the box label element. If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. Checkbox")]
-        [ConfigOption("beforeBoxLabelTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup before the box label text. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate BeforeBoxLabelTpl
-        {
-            get
-            {
-                return this.beforeBoxLabelTpl;
-            }
-            set
-            {
-                if (this.beforeBoxLabelTpl != null)
-                {
-                    this.Controls.Remove(this.beforeBoxLabelTpl);
-                    this.LazyItems.Remove(this.beforeBoxLabelTpl);
-                }
-
-                this.beforeBoxLabelTpl = value;
-
-                if (this.beforeBoxLabelTpl != null)
-                {
-                    this.beforeBoxLabelTpl.EnableViewState = false;
-                    this.Controls.Add(this.beforeBoxLabelTpl);
-                    this.LazyItems.Add(this.beforeBoxLabelTpl);
-                }
-            }
-        }
-
-        /// <summary>
-        /// An optional text label that will appear next to the checkbox. Whether it appears before or after the checkbox is determined by the boxLabelAlign config (defaults to after).
+        /// The text that appears beside the checkbox (defaults to '').
         /// </summary>
         [Meta]
         [ConfigOption]
         [DirectEventUpdate(MethodName = "SetBoxLabel")]
         [Category("6. Checkbox")]
         [DefaultValue("")]
-        [Description("An optional text label that will appear next to the checkbox. Whether it appears before or after the checkbox is determined by the boxLabelAlign config (defaults to after).")]
+        [Description("The text that appears beside the checkbox (defaults to '').")]
         public virtual string BoxLabel
         {
             get
             {
-                return this.State.Get<string>("BoxLabel", "");
+                return (string)this.ViewState["BoxLabel"] ?? "";
             }
             set
             {
-                this.State.Set("BoxLabel", value);
-            }
-        }
-
-        /// <summary>
-        /// The position relative to the checkbox where the boxLabel should appear. Recognized values are 'before' and 'after'. Defaults to 'after'.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("6. Checkbox")]
-        [DefaultValue(BoxLabelAlign.After)]
-        [Description("The position relative to the checkbox where the boxLabel should appear. Recognized values are 'before' and 'after'. Defaults to 'after'.")]
-        public virtual BoxLabelAlign BoxLabelAlign
-        {
-            get
-            {
-                return this.State.Get<BoxLabelAlign>("BoxLabelAlign", BoxLabelAlign.After);
-            }
-            set
-            {
-                this.State.Set("BoxLabelAlign", value);
+                this.ViewState["BoxLabel"] = value;
             }
         }
 
@@ -215,55 +51,19 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("BoxLabelStyle", "");
+                return (string)this.ViewState["BoxLabelStyle"] ?? "";
             }
             set
             {
-                this.State.Set("BoxLabelStyle", value);
-            }
-        }
-
-        private XTemplate boxLabelAttrTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup inside the box label element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. Checkbox")]
-        [ConfigOption("boxLabelAttrTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup inside the box label element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate BoxLabelAttrTpl
-        {
-            get
-            {
-                return this.boxLabelAttrTpl;
-            }
-            set
-            {
-                if (this.boxLabelAttrTpl != null)
-                {
-                    this.Controls.Remove(this.boxLabelAttrTpl);
-                    this.LazyItems.Remove(this.boxLabelAttrTpl);
-                }
-
-                this.boxLabelAttrTpl = value;
-
-                if (this.boxLabelAttrTpl != null)
-                {
-                    this.boxLabelAttrTpl.EnableViewState = false;
-                    this.Controls.Add(this.boxLabelAttrTpl);
-                    this.LazyItems.Add(this.boxLabelAttrTpl);
-                }
+                this.ViewState["BoxLabelStyle"] = value;
             }
         }
 
         /// <summary>
-        /// The CSS class to be applied to the boxLabel element
+        /// 
         /// </summary>
         [Meta]
-        [ConfigOption("boxLabelClsExtra")]
+        [ConfigOption]
         [DirectEventUpdate(MethodName = "SetBoxLabelCls")]
         [Category("6. Checkbox")]
         [DefaultValue("")]
@@ -272,29 +72,29 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("BoxLabelCls", "");
+                return (string)this.ViewState["BoxLabelCls"] ?? "";
             }
             set
             {
-                this.State.Set("BoxLabelCls", value);
+                this.ViewState["BoxLabelCls"] = value;
             }
         }
 
         /// <summary>
-        /// True if the the checkbox should render already checked (defaults to false).
+        /// True if the checkbox should render already checked (defaults to false).
         /// </summary>
         [Meta]
         [DirectEventUpdate(MethodName = "SetValue")]
         [DefaultValue(false)]
         [Category("6. Checkbox")]
         [Bindable(true, BindingDirection.TwoWay)]
-        [Description("True if the the checkbox should render already checked (defaults to false).")]
+        [Description("True if the checkbox should render already checked (defaults to false).")]
         public virtual bool Checked
         {
             get
             {
                 object obj = this.Value;
-                return obj == null ? false : (bool)obj;
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
@@ -303,112 +103,126 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// The CSS class added to the component's main element when it is in the checked state.
+        /// The CSS class to use when the control is checked (defaults to 'x-form-check-checked'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
         /// </summary>
         [Meta]
         [ConfigOption]
         [Category("6. Checkbox")]
-        [DefaultValue("")]
-        [Description("The CSS class added to the component's main element when it is in the checked state.")]
+        [DefaultValue("x-form-check-checked")]
+        [Description("The CSS class to use when the control is checked (defaults to 'x-form-check-checked'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.")]
         public virtual string CheckedCls
         {
             get
             {
-                return this.State.Get<string>("CheckedCls", "");
+                return (string)this.ViewState["CheckedCls"] ?? "x-form-check-checked";
             }
             set
             {
-                this.State.Set("CheckedCls", value);
+                this.ViewState["CheckedCls"] = value;
             }
         }
 
         /// <summary>
-        /// A function called when the checked value changes (can be used instead of handling the change event).
-        /// Parameters
-        /// checkbox : Ext.form.field.Checkbox
-        ///     The Checkbox being toggled.
-        /// checked : Boolean
-        ///     The new checked state of the checkbox.
+        /// The CSS class to use when the control receives input focus (defaults to 'x-form-check-focus'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
         /// </summary>
         [Meta]
-        [ConfigOption(JsonMode.Raw)]
+        [ConfigOption]
         [Category("6. Checkbox")]
-        [DefaultValue("")]
-        [Description("A function called when the checked value changes (can be used instead of handling the change event).")]
-        public virtual string Handler
+        [DefaultValue("x-form-check-focus")]
+        [Description("The CSS class to use when the control receives input focus (defaults to 'x-form-check-focus'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.")]
+        public virtual string FocusCls
         {
             get
             {
-                return this.State.Get<string>("Handler", "");
+                return (string)this.ViewState["FocusCls"] ?? "x-form-check-focus";
             }
             set
             {
-                this.State.Set("Handler", value);
+                this.ViewState["FocusCls"] = value;
             }
         }
 
         /// <summary>
-        /// The value that should go into the generated input element's value attribute and should be used as the parameter value when submitting as part of a form. Defaults to "on".
+        /// The value that should go into the generated input element's value attribute (defaults to undefined, with no value attribute)
         /// </summary>
         [Meta]
         [ConfigOption]
         [Category("6. Checkbox")]
         [DefaultValue("")]
-        [Description("The value that should go into the generated input element's value attribute and should be used as the parameter value when submitting as part of a form. Defaults to \"on\".")]
+        [Description("The value that should go into the generated input element's value attribute (defaults to undefined, with no value attribute)")]
         public virtual string InputValue
         {
             get
             {
-                if (this.DesignMode && this.State["InputValue"] == null)
+                if (this.DesignMode && this.ViewState["InputValue"] == null)
                 {
                     return "";
                 }
 
-                return this.State.Get<string>("InputValue", this.ClientID);
+                return (string)this.ViewState["InputValue"] ?? this.ClientID;
             }
             set
             {
-                this.State.Set("InputValue", value);
+                this.ViewState["InputValue"] = value;
             }
         }
 
         /// <summary>
-        /// An object to use as the scope ('this' reference) of the handler function. Defaults to this Checkbox.
-        /// </summary>
-        [Meta]
-        [ConfigOption(JsonMode.Raw)]
-        [Category("6. Checkbox")]
-        [DefaultValue(null)]
-        [Description("An object to use as the scope ('this' reference) of the handler function. Defaults to this Checkbox.")]
-        public virtual string Scope
-        {
-            get
-            {
-                return this.State.Get<string>("Scope", null);
-            }
-            set
-            {
-                this.State.Set("Scope", value);
-            }
-        }
-
-        /// <summary>
-        /// If configured, this will be submitted as the checkbox's value during form submit if the checkbox is unchecked. By default this is undefined, which results in nothing being submitted for the checkbox field when the form is submitted (the default behavior of HTML checkboxes).
+        /// The CSS class to use when the control is being actively clicked (defaults to 'x-form-check-down'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
         /// </summary>
         [Meta]
         [ConfigOption]
         [Category("6. Checkbox")]
-        [DefaultValue(null)]
-        [Description("If configured, this will be submitted as the checkbox's value during form submit if the checkbox is unchecked. By default this is undefined, which results in nothing being submitted for the checkbox field when the form is submitted (the default behavior of HTML checkboxes).")]
-        public virtual string UncheckedValue
+        [DefaultValue("x-form-check-down")]
+        [Description("The CSS class to use when the control is being actively clicked (defaults to 'x-form-check-down'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.")]
+        public virtual string MouseDownCls
         {
             get
             {
-                return this.State.Get<string>("UncheckedValue", null);
+                return (string)this.ViewState["MouseDownCls"] ?? "x-form-check-down";
             }
             set
             {
-                this.State.Set("UncheckedValue", value);
+                this.ViewState["MouseDownCls"] = value;
+            }
+        }
+
+        /// <summary>
+        /// An optional extra CSS class that will be added to this component's Element when the mouse moves over the Element, and removed when the mouse moves out. (defaults to ''). This can be useful for adding customized 'active' or 'hover' styles to the component or any of its children using standard CSS rules.
+        /// </summary>
+        [Meta]
+        [ConfigOption]
+        [Category("6. Checkbox")]
+        [DefaultValue("x-form-check-over")]
+        [Description("The CSS class to use when the control is hovered over (defaults to 'x-form-check-over'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.")]
+        public override string OverCls
+        {
+            get
+            {
+                return (string)this.ViewState["OverCls"] ?? "x-form-check-over";
+            }
+            set
+            {
+                this.ViewState["OverCls"] = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Meta]
+        [ConfigOption]
+        [Category("6. Checkbox")]
+        [DefaultValue("")]
+        public virtual string Tag
+        {
+            get
+            {
+                return (string)this.ViewState["Tag"] ?? "";
+            }
+            set
+            {
+                this.ViewState["Tag"] = value;
             }
         }
 

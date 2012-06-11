@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -18,7 +18,7 @@ namespace Ext.Net
     /// </summary>
     [Meta]
     [Description("")]
-    public partial class Task : BaseItem
+    public partial class Task : StateManagedItem
     {
         /// <summary>
         /// 
@@ -38,11 +38,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("TaskID", "");
+                return (string)this.ViewState["TaskID"] ?? "";
             }
             set
             {
-                this.State.Set("TaskID", value);
+                this.ViewState["TaskID"] = value;
             }
         }
 
@@ -58,31 +58,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("AutoRun", true);
+                object obj = this.ViewState["AutoRun"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("AutoRun", value);
-            }
-        }
-
-        /// <summary>
-        /// True to wait previous request.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("3. TaskManager")]
-        [DefaultValue(false)]
-        [Description("True to wait previous request.")]
-        public virtual bool WaitPreviousRequest
-        {
-            get
-            {
-                return this.State.Get<bool>("WaitPreviousRequest", false);
-            }
-            set
-            {
-                this.State.Set("WaitPreviousRequest", value);
+                this.ViewState["AutoRun"] = value;
             }
         }
 
@@ -98,11 +79,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("Interval", 1000);
+                object obj = this.ViewState["Interval"];
+                return (obj == null) ? 1000 : (int)obj;
             }
             set
             {
-                this.State.Set("Interval", value);
+                this.ViewState["Interval"] = value;
             }
         }
 
@@ -118,11 +100,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string[]>("Args", null);
+                object obj = this.ViewState["Args"];
+                return (obj == null) ? null : (string[])obj;
             }
             set
             {
-                this.State.Set("Args", value);
+                this.ViewState["Args"] = value;
             }
         }
 
@@ -138,11 +121,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Scope", "this");
+                return (string)this.ViewState["Scope"] ?? "this";
             }
             set
             {
-                this.State.Set("Scope", value);
+                this.ViewState["Scope"] = value;
             }
         }
 
@@ -158,11 +141,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("Duration", 0);
+                object obj = this.ViewState["Duration"];
+                return (obj == null) ? 0 : (int)obj;
             }
             set
             {
-                this.State.Set("Duration", value);
+                this.ViewState["Duration"] = value;
             }
         }
 
@@ -178,11 +162,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("Repeat", 0);
+                object obj = this.ViewState["Repeat"];
+                return (obj == null) ? 0 : (int)obj;
             }
             set
             {
-                this.State.Set("Repeat", value);
+                this.ViewState["Repeat"] = value;
             }
         }
 
@@ -206,7 +191,7 @@ namespace Ext.Net
                     if (this.DirectEvents.Update.HandlerIsNotEmpty)
                     {
                         cfgObj.Remove(cfgObj.Length - 1, 1);
-                        cfgObj.AppendFormat("{0}eventType: \"{1}\"", configObject.Length > 2 ? "," : "", AjaxRequestType.PostBack.ToString().ToLowerInvariant());
+                        cfgObj.AppendFormat("{0}eventType: \"{1}\"", configObject.Length > 2 ? "," : "", AjaxRequestType.PostBack.ToString().ToLower());
                         cfgObj.AppendFormat(",action:\"{0}\"", this.DirectEvents.Update.HandlerName);
                         cfgObj.Append("}");
                     }
@@ -249,11 +234,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("OnStart", "");
+                return (string)this.ViewState["OnStart"] ?? "";
             }
             set
             {
-                this.State.Set("OnStart", value);
+                this.ViewState["OnStart"] = value;
             }
         }
 
@@ -269,11 +254,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("OnStop", "");
+                return (string)this.ViewState["OnStop"] ?? "";
             }
             set
             {
-                this.State.Set("OnStop", value);
+                this.ViewState["OnStop"] = value;
             }
         }
 
@@ -286,7 +271,8 @@ namespace Ext.Net
         [Category("2. Observable")]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public TaskListeners Listeners
         {
@@ -295,6 +281,11 @@ namespace Ext.Net
                 if (this.listeners == null)
                 {
                     this.listeners = new TaskListeners();
+
+                    if (this.IsTrackingViewState)
+                    {
+                        ((IStateManager)this.listeners).TrackViewState();
+                    }
                 }
 
                 return this.listeners;
@@ -311,7 +302,8 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption("directEvents", JsonMode.Object)]        
+        [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side DirectEventHandlers")]
         public TaskDirectEvents DirectEvents
         {
@@ -320,6 +312,11 @@ namespace Ext.Net
                 if (this.directEvents == null)
                 {
                     this.directEvents = new TaskDirectEvents();
+
+                    if (this.IsTrackingViewState)
+                    {
+                        ((IStateManager)this.directEvents).TrackViewState();
+                    }
                 }
 
                 return this.directEvents;
@@ -331,13 +328,13 @@ namespace Ext.Net
     /// 
     /// </summary>
     [Description("")]
-    public partial class TaskCollection : BaseItemCollection<Task> { }
+    public partial class TaskCollection : StateManagedCollection<Task> { }
 
     /// <summary>
     /// 
     /// </summary>
     [Description("")]
-    public partial class TaskListeners : BaseItem
+    public partial class TaskListeners : StateManagedItem
     {
         private SimpleListener update;
 
@@ -387,7 +384,7 @@ namespace Ext.Net
     /// 
     /// </summary>
     [Description("")]
-    public partial class TaskDirectEvents : BaseItem
+    public partial class TaskDirectEvents : StateManagedItem
     {
         private ComponentDirectEvent update;
 

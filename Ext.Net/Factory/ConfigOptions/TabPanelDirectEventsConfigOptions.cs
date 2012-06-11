@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TabPanelDirectEvents
     {
         /// <summary>
@@ -38,6 +35,7 @@ namespace Ext.Net
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
                 list.Add("beforeTabChange", new ConfigOption("beforeTabChange", new SerializationOptions("beforetabchange", typeof(DirectEventJsonConverter)), null, this.BeforeTabChange ));
+                list.Add("contextMenu", new ConfigOption("contextMenu", new SerializationOptions("contextmenu", typeof(DirectEventJsonConverter)), null, this.ContextMenu ));
                 list.Add("tabChange", new ConfigOption("tabChange", new SerializationOptions("tabchange", typeof(DirectEventJsonConverter)), null, this.TabChange ));
                 list.Add("beforeTabClose", new ConfigOption("beforeTabClose", new SerializationOptions("beforetabclose", typeof(DirectEventJsonConverter)), null, this.BeforeTabClose ));
                 list.Add("beforeTabHide", new ConfigOption("beforeTabHide", new SerializationOptions("beforetabhide", typeof(DirectEventJsonConverter)), null, this.BeforeTabHide ));

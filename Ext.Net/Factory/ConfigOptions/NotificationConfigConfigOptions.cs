@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class NotificationConfig
     {
         /// <summary>
@@ -49,7 +46,6 @@ namespace Ext.Net
                 list.Add("autoScroll", new ConfigOption("autoScroll", null, false, this.AutoScroll ));
                 list.Add("closable", new ConfigOption("closable", null, true, this.Closable ));
                 list.Add("shadow", new ConfigOption("shadow", null, false, this.Shadow ));
-                list.Add("preventHeader", new ConfigOption("preventHeader", null, false, this.PreventHeader ));
                 list.Add("plain", new ConfigOption("plain", null, false, this.Plain ));
                 list.Add("resizable", new ConfigOption("resizable", null, false, this.Resizable ));
                 list.Add("draggable", new ConfigOption("draggable", null, false, this.Draggable ));

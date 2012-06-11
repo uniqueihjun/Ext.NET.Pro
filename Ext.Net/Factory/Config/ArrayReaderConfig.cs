@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ArrayReader
     {
 		/*  Ctor
@@ -63,6 +60,42 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
+			private string iDProperty = "";
+
+			/// <summary>
+			/// [id] Name of the property within a row object that contains a record identifier value. Defaults to id
+			/// </summary>
+			[DefaultValue("")]
+			public override string IDProperty 
+			{ 
+				get
+				{
+					return this.iDProperty;
+				}
+				set
+				{
+					this.iDProperty = value;
+				}
+			}
+
+			private int iDIndex = -1;
+
+			/// <summary>
+			/// The subscript within row Array that provides an ID for the Record.
+			/// </summary>
+			[DefaultValue(-1)]
+			public virtual int IDIndex 
+			{ 
+				get
+				{
+					return this.iDIndex;
+				}
+				set
+				{
+					this.iDIndex = value;
+				}
+			}
+
         }
     }
 }

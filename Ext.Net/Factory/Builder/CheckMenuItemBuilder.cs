@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class CheckMenuItem
     {
         /// <summary>
@@ -60,29 +57,11 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
-			/// True to prevent the checked item from being toggled. Any submenu will still be accessible. Defaults to: false
-			/// </summary>
-            public virtual CheckMenuItem.Builder CheckChangeDisabled(bool checkChangeDisabled)
-            {
-                this.ToComponent().CheckChangeDisabled = checkChangeDisabled;
-                return this as CheckMenuItem.Builder;
-            }
-             
- 			/// <summary>
 			/// True to initialize this checkbox as checked (defaults to false). Note that if this checkbox is part of a radio group (group = true) only the last item in the group that is initialized with checked = true will be rendered as checked.
 			/// </summary>
             public virtual CheckMenuItem.Builder Checked(bool _checked)
             {
                 this.ToComponent().Checked = _checked;
-                return this as CheckMenuItem.Builder;
-            }
-             
- 			/// <summary>
-			/// The CSS class used by cls to show the checked state. Defaults to Ext.baseCSSPrefix + 'menu-item-checked'.
-			/// </summary>
-            public virtual CheckMenuItem.Builder CheckedCls(string checkedCls)
-            {
-                this.ToComponent().CheckedCls = checkedCls;
                 return this as CheckMenuItem.Builder;
             }
              
@@ -96,20 +75,11 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The CSS class applied to this item's icon image to denote being a part of a radio group. Defaults to Ext.baseCSSClass + 'menu-group-icon'. Any specified iconCls overrides this.
+			/// The default CSS class to use for radio group check items (defaults to \"x-menu-group-item\")
 			/// </summary>
-            public virtual CheckMenuItem.Builder GroupCls(string groupCls)
+            public virtual CheckMenuItem.Builder GroupClass(string groupClass)
             {
-                this.ToComponent().GroupCls = groupCls;
-                return this as CheckMenuItem.Builder;
-            }
-             
- 			/// <summary>
-			/// The CSS class used by cls to show the unchecked state. Defaults to Ext.baseCSSPrefix + 'menu-item-unchecked'.
-			/// </summary>
-            public virtual CheckMenuItem.Builder UncheckedCls(string uncheckedCls)
-            {
-                this.ToComponent().UncheckedCls = uncheckedCls;
+                this.ToComponent().GroupClass = groupClass;
                 return this as CheckMenuItem.Builder;
             }
              
@@ -122,34 +92,30 @@ namespace Ext.Net
                 return this as CheckMenuItem.Builder;
             }
              
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of CheckMenuItem.Builder</returns>
-            public virtual CheckMenuItem.Builder Listeners(Action<CheckMenuItemListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as CheckMenuItem.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side DirectEventHandlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of CheckMenuItem.Builder</returns>
-            public virtual CheckMenuItem.Builder DirectEvents(Action<CheckMenuItemDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as CheckMenuItem.Builder;
-            }
-			
+ 			// /// <summary>
+			// /// Client-side JavaScript Event Handlers
+			// /// </summary>
+            // public virtual TBuilder Listeners(CheckMenuItemListeners listeners)
+            // {
+            //    this.ToComponent().Listeners = listeners;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// Server-side DirectEventHandlers
+			// /// </summary>
+            // public virtual TBuilder DirectEvents(CheckMenuItemDirectEvents directEvents)
+            // {
+            //    this.ToComponent().DirectEvents = directEvents;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/
 			
  			/// <summary>
-			/// 
+			/// Set the checked state of this item.
 			/// </summary>
             public virtual CheckMenuItem.Builder SetChecked(bool value, bool suppressEvent)
             {
@@ -158,29 +124,11 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Set the checked state of this item.
 			/// </summary>
             public virtual CheckMenuItem.Builder SetChecked(bool value)
             {
                 this.ToComponent().SetChecked(value);
-                return this;
-            }
-            
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CheckMenuItem.Builder DisableCheckChange()
-            {
-                this.ToComponent().DisableCheckChange();
-                return this;
-            }
-            
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CheckMenuItem.Builder EnableCheckChange()
-            {
-                this.ToComponent().EnableCheckChange();
                 return this;
             }
             

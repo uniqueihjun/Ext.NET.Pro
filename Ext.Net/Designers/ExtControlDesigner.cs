@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -14,6 +14,8 @@ using System.Configuration;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.Design;
+
+using Ext.Net.Utilities;
 
 namespace Ext.Net
 {
@@ -30,17 +32,24 @@ namespace Ext.Net
         public override void Initialize(IComponent component)
         {
             base.Initialize(component); 
-            this.control = (BaseControl)component;
+            this.control = (XControl)component;
         }
 
-        BaseControl control;
-        internal BaseControl Control
+        XControl control;
+        internal XControl Control
         {
             get
             {
                 return this.control;
             }
         }
+
+        private DesignMode ReadDesignMode()
+        {            
+            return DesignMode.ActionsOnly;
+        }
+
+        private static DesignMode? designMode;
 
 		/// <summary>
 		/// 
@@ -88,7 +97,21 @@ namespace Ext.Net
         {
             get
             {
-                return base.CreatePlaceHolderDesignTimeHtml(this.Message);    
+                bool hide = false;
+                try
+                {
+                    if (this.Control is ResourceManager)
+                    {
+                        hide = (this.Control as ResourceManager).HideInDesign;
+                    }
+                    else
+                    {
+                        hide = this.Control.ResourceManager.HideInDesign;
+                    }
+                }
+                catch { }
+
+                return hide ? "" : this.Message;
             }
         }
 
@@ -96,9 +119,17 @@ namespace Ext.Net
         {
             get
             {
-                return @"<table style=""margin: 8px;"">
+                string id = this.Control.ID;
+                string temp = "";
+
+                if (id.IsNotEmpty() && !id.StartsWith("ctl"))
+                {
+                    temp = " [{0}]".FormatWith(id);
+                }
+
+                return @"<table style=""border:1px solid black;"">
                     <tr>
-                        <td style=""white-space: nowrap;padding-right:8px;"">Please configure in Source View.</td>
+                        <td style=""padding:4px;white-space: nowrap;font-size:12px !important;font-family: tahoma !important;"">" + this.Control.GetType().Name + temp + @"</td>
                     </tr>
                 </table>";
             }
@@ -132,6 +163,7 @@ namespace Ext.Net
             {
                 return this.EmptyDesignerText;
             }
+
             return this.XGetDesignTimeHtml(regions);
         }
 
@@ -191,6 +223,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
+        [Description("")]
         public override bool AllowResize
         {
             get
@@ -217,6 +250,72 @@ namespace Ext.Net
             }
         }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public string GetWebResourceUrl(string webResourceName)
+        {
+            IServiceProvider serviceProvider = this.Component.Site;
+            string result = "";
+
+            if (serviceProvider != null)
+            {
+                IResourceUrlGenerator urlGenerator =
+                    (IResourceUrlGenerator)serviceProvider.GetService(typeof(IResourceUrlGenerator));
+
+                if (urlGenerator != null)
+                {
+                    result = urlGenerator.GetResourceUrl(this.Component.GetType(), webResourceName);
+                }
+            }
+
+            return result;
+        }
+
+        List<Icon> icons = new List<Icon>();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public void AddIcon(Icon icon)
+        {
+            if (icon != Icon.None && !this.CurrentDesigner.icons.Contains(icon))
+            {
+                this.CurrentDesigner.icons.Add(icon);
+            }
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public string GetIconStyleBlock()
+        {
+            /*
+            try
+            {
+                if (this.icons.Count > 0)
+                {
+                    StringBuilder iconlist = new StringBuilder(128);
+
+                    foreach (Icon icon in this.icons)
+                    {
+                        iconlist.Append(this.Control.ResourceManager.GetIconClass(icon));
+                    }
+
+                    return string.Format(ResourceManager.StyleBlockTemplate, iconlist.ToString());
+                }
+            }
+            catch
+            {
+                // swallow Exception
+            }
+            */
+            return "";
+        }
+        
         /*  HTML
             -----------------------------------------------------------------------------------------------*/
 
@@ -229,7 +328,6 @@ namespace Ext.Net
         /// 
         /// </summary>
         public virtual string HtmlEnd { get { return ""; } }
-
 
         /*  Error Handeling
             -----------------------------------------------------------------------------------------------*/
@@ -274,5 +372,6 @@ return @"<br /><div class=""x-tip x-form-invalid-tip"" style=""position: autstar
 </div>";
             }
         }
+
     }
 }

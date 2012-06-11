@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class MenuCommand
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<MenuCommand, MenuCommand.Builder>
+        public partial class Builder : StateManagedItem.Builder<MenuCommand, MenuCommand.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -158,17 +155,15 @@ namespace Ext.Net
                 return this as MenuCommand.Builder;
             }
              
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of MenuCommand.Builder</returns>
-            public virtual MenuCommand.Builder Menu(Action<CommandMenu> action)
-            {
-                action(this.ToComponent().Menu);
-                return this as MenuCommand.Builder;
-            }
-			 
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder Menu(CommandMenu menu)
+            // {
+            //    this.ToComponent().Menu = menu;
+            //    return this as TBuilder;
+            // }
+             
  			/// <summary>
 			/// A function that will handle the click event of this menu item (defaults to undefined).
 			/// </summary>

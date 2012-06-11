@@ -1,11 +1,13 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
+using System;
+using System.ComponentModel.Design;
 using System.ComponentModel;
 
 namespace Ext.Net
@@ -14,14 +16,14 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class ViewCollection<T> : SingleItemCollection<T> where T : TableView 
+    public partial class GridViewCollection : SingleItemCollection<GridView>
     {
 		/// <summary>
 		/// 
 		/// </summary>
-        [ConfigOption("viewConfig", typeof(LazyControlJsonConverter))]
+        [ConfigOption(typeof(LazyControlJsonConverter))]
 		[Description("")]
-        public T View
+        public GridView View
         {
             get
             {
@@ -32,6 +34,50 @@ namespace Ext.Net
 
                 return null;
             }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [Description("")]
+    public partial class GridViewCollectionEditor : CollectionEditor
+    {
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public GridViewCollectionEditor(Type type) : base(type) { }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        protected override bool CanSelectMultipleInstances()
+        {
+            return false;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        protected override Type[] CreateNewItemTypes()
+        {
+            return new Type[]
+              {
+                typeof(GridView),
+                typeof(GroupingView)
+              };
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        protected override Type CreateCollectionItemType()
+        {
+            return typeof(GridView);
         }
     }
 }

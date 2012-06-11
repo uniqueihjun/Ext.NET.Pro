@@ -1,21 +1,20 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
-using System.Drawing;
 using System.Web.UI;
+using System.Drawing;
 
 namespace Ext.Net
 {
     /// <summary>
     /// A DragDrop implementation where the linked element follows the mouse cursor during a drag.
     /// </summary>
-    [Meta]
     [ToolboxItem(true)]
     [Designer(typeof(EmptyDesigner))]
     [ToolboxData("<{0}:DD runat=\"server\"></{0}:DD>")]
@@ -24,13 +23,6 @@ namespace Ext.Net
     [Description("A DragDrop implementation where the linked element follows the mouse cursor during a drag.")]
     public partial class DD : DragDrop
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public DD()
-        {
-        }
-
         /// <summary>
 		/// 
 		/// </summary>
@@ -47,7 +39,6 @@ namespace Ext.Net
         /// <summary>
         /// When set to true, the utility automatically tries to scroll the browser window when a drag and drop element is dragged near the viewport boundary. Defaults to true.
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("4. DD")]
         [DefaultValue(true)]
@@ -57,11 +48,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("Scroll", true);
+                object obj = this.ViewState["Scroll"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("Scroll", value);
+                this.ViewState["Scroll"] = value;
             }
         }
 

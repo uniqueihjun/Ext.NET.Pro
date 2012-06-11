@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,18 +15,12 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class FieldDirectEvents : AbstractComponentDirectEvents
+    public partial class FieldDirectEvents : BoxComponentDirectEvents
     {
-        public FieldDirectEvents() { }
-
-        public FieldDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent blur;
 
         /// <summary>
         /// Fires when this field loses input focus.
-        /// Parameters:
-        ///     item : Ext.form.field.Base
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "this")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -34,26 +28,23 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
         [Description("Fires when this field loses input focus.")]
-        public override ComponentDirectEvent Blur
+        public virtual ComponentDirectEvent Blur
         {
             get
             {
-                return this.blur ?? (this.blur = new ComponentDirectEvent(this));
+                if (this.blur == null)
+                {
+                    this.blur = new ComponentDirectEvent();
+                }
+
+                return this.blur;
             }
         }
 
         private ComponentDirectEvent change;
 
         /// <summary>
-        /// Fires when the value of a field is changed via the setValue method.
-        /// Parameters
-        /// item : Ext.form.field.Field
-        /// newValue : Mixed
-        ///     The new value
-        /// oldValue : Mixed
-        ///     The original value
-        /// options : Object
-        ///     The options object passed to Ext.util.Observable.addListener.
+        /// Fires just before the field blurs if the field value has changed.
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "this")]
         [ListenerArgument(1, "newValue", typeof(object), "The new value")]
@@ -62,84 +53,17 @@ namespace Ext.Net
         [ConfigOption("change", typeof(DirectEventJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fires when the value of a field is changed via the setValue method.")]
+        [Description("Fires just before the field blurs if the field value has changed.")]
         public virtual ComponentDirectEvent Change
         {
             get
             {
-                return this.change ?? (this.change = new ComponentDirectEvent(this));
-            }
-        }
+                if (this.change == null)
+                {
+                    this.change = new ComponentDirectEvent();
+                }
 
-        private ComponentDirectEvent dirtyChange;
-
-        /// <summary>
-        /// Fires when a change in the field's isDirty state is detected.
-        /// Parameters
-        /// item : Ext.form.field.Field
-        /// isDirty : Boolean
-        ///    Whether or not the field is now dirty
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Field), "this")]
-        [ListenerArgument(1, "isDirty ", typeof(bool), " Whether or not the field is now dirty")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("dirtychange", typeof(DirectEventJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("Fires when a change in the field's isDirty state is detected.")]
-        public virtual ComponentDirectEvent DirtyChange
-        {
-            get
-            {
-                return this.dirtyChange ?? (this.dirtyChange = new ComponentDirectEvent(this));
-            }
-        }
-
-        private ComponentDirectEvent validityChange;
-
-        /// <summary>
-        /// Fires when a change in the field's validity is detected.
-        /// Parameters
-        /// item : Ext.form.field.Field
-        /// isValid : Boolean
-        ///     Whether or not the field is now valid
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Field), "this")]
-        [ListenerArgument(1, "isValid", typeof(bool), "")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("validitychange", typeof(DirectEventJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("Fires when a change in the field's validity is detected.")]
-        public virtual ComponentDirectEvent ValidityChange
-        {
-            get
-            {
-                return this.validityChange ?? (this.validityChange = new ComponentDirectEvent(this));
-            }
-        }
-
-        private ComponentDirectEvent errorChange;
-
-        /// <summary>
-        /// Fires when the active error message is changed via setActiveError.
-        /// Parameters
-        /// item : Ext.form.Labelable
-        /// error : String
-        ///     The active error message
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Field), "this")]
-        [ListenerArgument(1, "error", typeof(object), "The active error message")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("errorchange", typeof(DirectEventJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("Fires when the active error message is changed via setActiveError.")]
-        public virtual ComponentDirectEvent ErrorChange
-        {
-            get
-            {
-                return this.errorChange ?? (this.errorChange = new ComponentDirectEvent(this));
+                return this.change;
             }
         }
 
@@ -154,22 +78,48 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
         [Description("Fires when this field receives input focus.")]
-        public override ComponentDirectEvent Focus
+        public virtual ComponentDirectEvent Focus
         {
             get
             {
-                return this.focus ?? (this.focus = new ComponentDirectEvent(this));
+                if (this.focus == null)
+                {
+                    this.focus = new ComponentDirectEvent();
+                }
+
+                return this.focus;
+            }
+        }
+
+        private ComponentDirectEvent invalid;
+
+        /// <summary>
+        /// Fires after the field has been marked as invalid.
+        /// </summary>
+        [ListenerArgument(0, "item", typeof(Field), "this")]
+        [ListenerArgument(1, "msg", typeof(string), "the validation message")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [ConfigOption("invalid", typeof(DirectEventJsonConverter))]
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [NotifyParentProperty(true)]
+        [Description("Fires after the field has been marked as invalid.")]
+        public virtual ComponentDirectEvent Invalid
+        {
+            get
+            {
+                if (this.invalid == null)
+                {
+                    this.invalid = new ComponentDirectEvent();
+                }
+
+                return this.invalid;
             }
         }
 
         private ComponentDirectEvent specialKey;
 
         /// <summary>
-        /// Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed. To handle other keys see Ext.util.KeyMap. You can check Ext.EventObject.getKey to determine which key was pressed. 
-        /// Parameters
-        /// item : Ext.form.field.Base
-        /// e : Ext.EventObject
-        ///     The event object
+        /// Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "this")]
         [ListenerArgument(1, "e", typeof(object), "The event object")]
@@ -177,12 +127,41 @@ namespace Ext.Net
         [ConfigOption("specialkey", typeof(DirectEventJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed. To handle other keys see Ext.util.KeyMap. You can check Ext.EventObject.getKey to determine which key was pressed.")]
+        [Description("Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.")]
         public virtual ComponentDirectEvent SpecialKey
         {
             get
             {
-                return this.specialKey ?? (this.specialKey = new ComponentDirectEvent(this));
+                if (this.specialKey == null)
+                {
+                    this.specialKey = new ComponentDirectEvent();
+                }
+
+                return this.specialKey;
+            }
+        }
+
+        private ComponentDirectEvent valid;
+
+        /// <summary>
+        /// Fires after the field has been validated with no errors.
+        /// </summary>
+        [ListenerArgument(0, "item", typeof(Field), "this")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [ConfigOption("valid", typeof(DirectEventJsonConverter))]
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [NotifyParentProperty(true)]
+        [Description("Fires after the field has been validated with no errors.")]
+        public virtual ComponentDirectEvent Valid
+        {
+            get
+            {
+                if (this.valid == null)
+                {
+                    this.valid = new ComponentDirectEvent();
+                }
+
+                return this.valid;
             }
         }
 
@@ -206,7 +185,7 @@ namespace Ext.Net
             {
                 if (this.remoteValidationFailure == null)
                 {
-                    this.remoteValidationFailure = new ComponentDirectEvent(this);
+                    this.remoteValidationFailure = new ComponentDirectEvent();
                 }
 
                 return this.remoteValidationFailure;
@@ -234,7 +213,7 @@ namespace Ext.Net
             {
                 if (this.remoteValidationValid == null)
                 {
-                    this.remoteValidationValid = new ComponentDirectEvent(this);
+                    this.remoteValidationValid = new ComponentDirectEvent();
                 }
 
                 return this.remoteValidationValid;
@@ -262,35 +241,10 @@ namespace Ext.Net
             {
                 if (this.remoteValidationInvalid == null)
                 {
-                    this.remoteValidationInvalid = new ComponentDirectEvent(this);
+                    this.remoteValidationInvalid = new ComponentDirectEvent();
                 }
 
                 return this.remoteValidationInvalid;
-            }
-        }
-
-        private ComponentDirectEvent beforeRemoteValidation;
-
-        /// <summary>
-        ///
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Field), "this")]
-        [ListenerArgument(1, "options", typeof(object), "")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("beforeremotevalidation", typeof(DirectEventJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("")]
-        public virtual ComponentDirectEvent BeforeRemoteValidation
-        {
-            get
-            {
-                if (this.beforeRemoteValidation == null)
-                {
-                    this.beforeRemoteValidation = new ComponentDirectEvent(this);
-                }
-
-                return this.beforeRemoteValidation;
             }
         }
 
@@ -312,34 +266,10 @@ namespace Ext.Net
             {
                 if (this.indicatorIconClick == null)
                 {
-                    this.indicatorIconClick = new ComponentDirectEvent(this);
+                    this.indicatorIconClick = new ComponentDirectEvent();
                 }
 
                 return this.indicatorIconClick;
-            }
-        }
-
-        private ComponentDirectEvent writeablechange;
-
-        /// <summary>
-        /// Fires when this field changes its read-only status.
-        /// Parameters
-        /// item : Ext.form.field.Base
-        /// read : Boolean
-        ///     only flag
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Field), "this")]
-        [ListenerArgument(1, "read", typeof(object), "")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("writeablechange", typeof(DirectEventJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("")]
-        public virtual ComponentDirectEvent WriteableChange
-        {
-            get
-            {
-                return this.writeablechange ?? (this.writeablechange = new ComponentDirectEvent(this));
             }
         }
     }

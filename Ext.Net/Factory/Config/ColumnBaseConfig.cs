@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,62 +15,41 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-	/// <summary>
-	/// 
-	/// </summary>
     public abstract partial class ColumnBase
     {
         /// <summary>
         /// 
         /// </summary>
-        new public abstract partial class Config : ComponentBase.Config 
+        new public abstract partial class Config : StateManagedItem.Config 
         { 
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
-			        
-			private ItemsCollection<AbstractComponent> headerItems = null;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public ItemsCollection<AbstractComponent> HeaderItems
-			{
-				get
-				{
-					if (this.headerItems == null)
-					{
-						this.headerItems = new ItemsCollection<AbstractComponent>();
-					}
 			
-					return this.headerItems;
-				}
-			}
-			
-			private bool hideTitleEl = false;
+			private bool wrap = false;
 
 			/// <summary>
 			/// 
 			/// </summary>
 			[DefaultValue(false)]
-			public virtual bool HideTitleEl 
+			public virtual bool Wrap 
 			{ 
 				get
 				{
-					return this.hideTitleEl;
+					return this.wrap;
 				}
 				set
 				{
-					this.hideTitleEl = value;
+					this.wrap = value;
 				}
 			}
 
-			private bool? locked = null;
+			private bool locked = false;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			[DefaultValue(null)]
-			public virtual bool? Locked 
+			[DefaultValue(false)]
+			public virtual bool Locked 
 			{ 
 				get
 				{
@@ -85,7 +64,7 @@ namespace Ext.Net
 			private Alignment align = Alignment.Left;
 
 			/// <summary>
-			/// Sets the alignment of the header and rendered columns. Defaults to 'left'.
+			/// (optional) Set the CSS text-align property of the column. Defaults to undefined.
 			/// </summary>
 			[DefaultValue(Alignment.Left)]
 			public virtual Alignment Align 
@@ -99,29 +78,29 @@ namespace Ext.Net
 					this.align = value;
 				}
 			}
-        
-			private ColumnCollection columns = null;
+
+			private string css = "";
 
 			/// <summary>
-			/// An optional array of sub-column definitions. This column becomes a group, and houses the columns defined in the columns config.
+			/// (optional) Set custom CSS for all table cells in the column (excluding headers). Defaults to undefined.
 			/// </summary>
-			public ColumnCollection Columns
-			{
+			[DefaultValue("")]
+			public virtual string Css 
+			{ 
 				get
 				{
-					if (this.columns == null)
-					{
-						this.columns = new ColumnCollection();
-					}
-			
-					return this.columns;
+					return this.css;
+				}
+				set
+				{
+					this.css = value;
 				}
 			}
-			
+
 			private string dataIndex = null;
 
 			/// <summary>
-			/// Required. The name of the field in the grid's Ext.data.Store's Ext.data.Model definition from which to draw the column's value.
+			/// (optional) The name of the field in the grid's Ext.data.Store's Ext.data.Record definition from which to draw the column's value. If not specified, the column's index is used as an index into the Record's data Array.
 			/// </summary>
 			[DefaultValue(null)]
 			public virtual string DataIndex 
@@ -135,29 +114,11 @@ namespace Ext.Net
 					this.dataIndex = value;
 				}
 			}
-
-			private Renderer editorRenderer = null;
-
-			/// <summary>
-			/// A renderer to be used in conjunction with RowEditing. This renderer is used to display a custom value for non-editable fields.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual Renderer EditorRenderer 
-			{ 
-				get
-				{
-					return this.editorRenderer;
-				}
-				set
-				{
-					this.editorRenderer = value;
-				}
-			}
         
 			private EditorCollection editor = null;
 
 			/// <summary>
-			/// An optional xtype or config object for a Field to use for editing. Only applicable if the grid is using an Editing plugin.
+			/// (optional) The Ext.form.Field to use when editing values in this column if editing is supported by the grid.
 			/// </summary>
 			public EditorCollection Editor
 			{
@@ -172,82 +133,82 @@ namespace Ext.Net
 				}
 			}
 			        
-			private JFunction editorStrategy = null;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public JFunction EditorStrategy
-			{
-				get
-				{
-					if (this.editorStrategy == null)
-					{
-						this.editorStrategy = new JFunction();
-					}
-			
-					return this.editorStrategy;
-				}
-			}
-			        
-			private CellEditorOptions editorOptions = null;
+			private GridEditorOptions editorOptions = null;
 
 			/// <summary>
 			/// Editor options
 			/// </summary>
-			public CellEditorOptions EditorOptions
+			public GridEditorOptions EditorOptions
 			{
 				get
 				{
 					if (this.editorOptions == null)
 					{
-						this.editorOptions = new CellEditorOptions();
+						this.editorOptions = new GridEditorOptions();
 					}
 			
 					return this.editorOptions;
 				}
 			}
 			
-			private string emptyCellText = "";
+			private bool _fixed = false;
 
 			/// <summary>
-			/// The text to diplay in empty cells (cells with a value of undefined, null, or ''). Defaults to &#160; aka &nbsp;.
+			/// (optional) True if the column width cannot be changed. Defaults to false.
 			/// </summary>
-			[DefaultValue("")]
-			public virtual string EmptyCellText 
+			[DefaultValue(false)]
+			public virtual bool Fixed 
 			{ 
 				get
 				{
-					return this.emptyCellText;
+					return this._fixed;
 				}
 				set
 				{
-					this.emptyCellText = value;
+					this._fixed = value;
 				}
 			}
 
-			private bool groupable = true;
+			private string header = "";
 
 			/// <summary>
-			/// If the grid uses a Ext.grid.feature.Grouping, this option may be used to disable the header menu item to group by the column selected. By default, the header menu group option is enabled. Set to false to disable (but still show) the group option in the header menu for the column.
+			/// The header text to display in the Grid view.
 			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool Groupable 
+			[DefaultValue("")]
+			public virtual string Header 
 			{ 
 				get
 				{
-					return this.groupable;
+					return this.header;
 				}
 				set
 				{
-					this.groupable = value;
+					this.header = value;
+				}
+			}
+
+			private bool hidden = false;
+
+			/// <summary>
+			/// (optional) True to hide the column. Defaults to false.
+			/// </summary>
+			[DefaultValue(false)]
+			public virtual bool Hidden 
+			{ 
+				get
+				{
+					return this.hidden;
+				}
+				set
+				{
+					this.hidden = value;
 				}
 			}
 
 			private bool hideable = true;
 
 			/// <summary>
-			/// Optional. Specify as false to prevent the user from hiding this column (defaults to true).
+			/// (optional) Specify as false to prevent the user from hiding this column. Defaults to true.
 			/// </summary>
 			[DefaultValue(true)]
 			public virtual bool Hideable 
@@ -262,10 +223,28 @@ namespace Ext.Net
 				}
 			}
 
+			private string columnID = "";
+
+			/// <summary>
+			/// (optional) Defaults to the column's initial ordinal position. A name which identifies this column. The id is used to create a CSS class name which is applied to all table cells (including headers) in that column.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string ColumnID 
+			{ 
+				get
+				{
+					return this.columnID;
+				}
+				set
+				{
+					this.columnID = value;
+				}
+			}
+
 			private bool menuDisabled = false;
 
 			/// <summary>
-			/// True to disabled the column header menu containing sort/hide options. Defaults to false.
+			/// (optional) True to disable the column menu. Defaults to false.
 			/// </summary>
 			[DefaultValue(false)]
 			public virtual bool MenuDisabled 
@@ -280,28 +259,10 @@ namespace Ext.Net
 				}
 			}
 
-			private string menuText = "";
-
-			/// <summary>
-			/// The text to render in the column visibility selection menu for this column. If not specified, will default to the text value. Defaults to: null
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string MenuText 
-			{ 
-				get
-				{
-					return this.menuText;
-				}
-				set
-				{
-					this.menuText = value;
-				}
-			}
-
 			private Renderer renderer = null;
 
 			/// <summary>
-			/// A renderer is an 'interceptor' method which can be used transform data (value, appearance, etc.) before it is rendered.
+			/// (optional) A function used to generate HTML markup for a cell given the cell's data value. If not specified, the default renderer uses the raw data value.
 			/// </summary>
 			[DefaultValue(null)]
 			public virtual Renderer Renderer 
@@ -313,6 +274,60 @@ namespace Ext.Net
 				set
 				{
 					this.renderer = value;
+				}
+			}
+
+			private Renderer groupRenderer = null;
+
+			/// <summary>
+			/// (optional) A function used to generate HTML markup for a cell given the cell's data value.
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual Renderer GroupRenderer 
+			{ 
+				get
+				{
+					return this.groupRenderer;
+				}
+				set
+				{
+					this.groupRenderer = value;
+				}
+			}
+
+			private bool groupable = true;
+
+			/// <summary>
+			/// (optional) False to disable grouping by this column. Defaults to true.
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool Groupable 
+			{ 
+				get
+				{
+					return this.groupable;
+				}
+				set
+				{
+					this.groupable = value;
+				}
+			}
+
+			private bool resizable = true;
+
+			/// <summary>
+			/// (optional) False to disable column resizing. Defaults to true.
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool Resizable 
+			{ 
+				get
+				{
+					return this.resizable;
+				}
+				set
+				{
+					this.resizable = value;
 				}
 			}
 
@@ -334,31 +349,13 @@ namespace Ext.Net
 				}
 			}
 
-			private bool resizable = true;
+			private bool sortable = true;
 
 			/// <summary>
-			/// False to prevent the column from being resizable. Defaults to: true
+			/// (optional) True if sorting is to be allowed on this column. Defaults to the value of the defaultSortable property. Whether local/remote sorting is used is specified in Ext.data.Store.remoteSort.
 			/// </summary>
 			[DefaultValue(true)]
-			public override bool Resizable 
-			{ 
-				get
-				{
-					return this.resizable;
-				}
-				set
-				{
-					this.resizable = value;
-				}
-			}
-
-			private bool? sortable = null;
-
-			/// <summary>
-			/// False to disable sorting of this column. Whether local/remote sorting is used is specified in Ext.data.Store.remoteSort. Defaults to: true
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual bool? Sortable 
+			public virtual bool Sortable 
 			{ 
 				get
 				{
@@ -370,42 +367,114 @@ namespace Ext.Net
 				}
 			}
 
-			private string tdCls = "";
+			private string tooltip = "";
 
 			/// <summary>
-			/// Optional. A CSS class names to apply to the table cells for this column.
+			/// (optional) A text string to use as the column header's tooltip. If Quicktips are enabled, this value will be used as the text of the quick tip, otherwise it will be set as the header's HTML title attribute. Defaults to ''.
 			/// </summary>
 			[DefaultValue("")]
-			public virtual string TdCls 
+			public virtual string Tooltip 
 			{ 
 				get
 				{
-					return this.tdCls;
+					return this.tooltip;
 				}
 				set
 				{
-					this.tdCls = value;
+					this.tooltip = value;
 				}
 			}
 
-			private string text = "";
+			private Unit width = Unit.Pixel(100);
 
 			/// <summary>
-			/// The header text to be used as innerHTML (html tags are accepted) to display in the Grid. Note: to have a clickable header with no text displayed you can use the default of &#160; aka &nbsp;. Defaults to: \"&#160;\"
+			/// (optional) The initial width in pixels of the column. Using this instead of Ext.grid.Grid.autoSizeColumns is more efficient.
 			/// </summary>
-			[DefaultValue("")]
-			public virtual string Text 
+			[DefaultValue(typeof(Unit), "100")]
+			public virtual Unit Width 
 			{ 
 				get
 				{
-					return this.text;
+					return this.width;
 				}
 				set
 				{
-					this.text = value;
+					this.width = value;
 				}
 			}
 
+			private bool editable = true;
+
+			/// <summary>
+			/// Optional. Defaults to true, enabling the configured editor. Set to false to initially disable editing on this column.
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool Editable 
+			{ 
+				get
+				{
+					return this.editable;
+				}
+				set
+				{
+					this.editable = value;
+				}
+			}
+
+			private string emptyGroupText = "";
+
+			/// <summary>
+			/// Optional. If the grid is being rendered by an Ext.grid.GroupingView, this option may be used to specify the text to display when there is an empty group value. Defaults to the Ext.grid.GroupingView.emptyGroupText.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string EmptyGroupText 
+			{ 
+				get
+				{
+					return this.emptyGroupText;
+				}
+				set
+				{
+					this.emptyGroupText = value;
+				}
+			}
+
+			private string groupName = "";
+
+			/// <summary>
+			/// Optional. If the grid is being rendered by an Ext.grid.GroupingView, this option may be used to specify the text with which to prefix the group field value in the group header line. See also groupRenderer and Ext.grid.GroupingView.showGroupName.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string GroupName 
+			{ 
+				get
+				{
+					return this.groupName;
+				}
+				set
+				{
+					this.groupName = value;
+				}
+			}
+        
+			private ConfigItemCollection customConfig = null;
+
+			/// <summary>
+			/// Collection of custom js config
+			/// </summary>
+			public ConfigItemCollection CustomConfig
+			{
+				get
+				{
+					if (this.customConfig == null)
+					{
+						this.customConfig = new ConfigItemCollection();
+					}
+			
+					return this.customConfig;
+				}
+			}
+			
         }
     }
 }

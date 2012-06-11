@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -24,7 +24,7 @@ namespace Ext.Net
         /// <param name="context"></param>
         /// <returns></returns>
         public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
-        {            
+        {
             if (this.values == null)
             {
                 this.values = new TypeConverter.StandardValuesCollection(new string[] { 
@@ -32,12 +32,15 @@ namespace Ext.Net
                     "AccordionLayout", 
                     "AnchorLayout", 
                     "BorderLayout", 
+                    "BoxLayout", 
                     "CardLayout", 
                     "ColumnLayout", 
-                    "AutoLayout", 
+                    "ContainerLayout", 
                     "FitLayout", 
+                    "FormLayout", 
                     "HBoxLayout", 
-                    "MenuLayout", 
+                    "MenuLayout",
+                    "RowLayout",
                     "TableLayout", 
                     "ToolbarLayout", 
                     "VBoxLayout" 

@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class Tip
     {
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TTip, TBuilder> : AbstractPanel.Builder<TTip, TBuilder>
+        new public abstract partial class Builder<TTip, TBuilder> : PanelBase.Builder<TTip, TBuilder>
             where TTip : Tip
             where TBuilder : Builder<TTip, TBuilder>
         {
@@ -40,7 +37,25 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
-			/// If true, then the tooltip will be automatically constrained to stay within the browser viewport. Defaults to: true
+			/// True to use height:'auto', false to use fixed height (defaults to true).
+			/// </summary>
+            public virtual TBuilder AutoHeight(bool autoHeight)
+            {
+                this.ToComponent().AutoHeight = autoHeight;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// True to render a close tool button into the tooltip header (defaults to false).
+			/// </summary>
+            public virtual TBuilder Closable(bool closable)
+            {
+                this.ToComponent().Closable = closable;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
 			/// </summary>
             public virtual TBuilder ConstrainPosition(bool constrainPosition)
             {
@@ -49,11 +64,29 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// Experimental. The default Ext.Element.alignTo anchor position value for this tip relative to its element of origin. Defaults to: \"tl-bl?\"
+			/// Experimental. The default Ext.Element.alignTo anchor position value for this tip relative to its element of origin (defaults to 'tl-bl?').
 			/// </summary>
             public virtual TBuilder DefaultAlign(string defaultAlign)
             {
                 this.ToComponent().DefaultAlign = defaultAlign;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The maximum width of the tip in pixels (defaults to 300). The maximum supported value is 500.
+			/// </summary>
+            public virtual TBuilder MaxWidth(Unit maxWidth)
+            {
+                this.ToComponent().MaxWidth = maxWidth;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The minimum width of the tip in pixels (defaults to 40).
+			/// </summary>
+            public virtual TBuilder MinWidth(Unit minWidth)
+            {
+                this.ToComponent().MinWidth = minWidth;
                 return this as TBuilder;
             }
             
@@ -62,7 +95,7 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			
  			/// <summary>
-			/// 
+			/// Shows this tip at the specified XY position.
 			/// </summary>
             public virtual TBuilder ShowAt(Unit x, Unit y)
             {
@@ -71,7 +104,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Experimental. Shows this tip at a position relative to another element using a standard Ext.Element.alignTo anchor position value.
 			/// </summary>
             public virtual TBuilder ShowBy(string id)
             {
@@ -80,7 +113,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Experimental. Shows this tip at a position relative to another element using a standard Ext.Element.alignTo anchor position value.
 			/// </summary>
             public virtual TBuilder ShowBy(string id, string position)
             {

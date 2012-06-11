@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -31,12 +31,13 @@ namespace Ext.Net
         {
             get
             {
-                bool defValue = this.ResourceManager != null ? this.Url.IsNotEmpty() : false;
-                return this.State.Get<bool>("CleanRequest", defValue);
+                bool defValue = this.ResourceManager != null ? (this.ResourceManager.IsMVC && this.Url.IsNotEmpty()) : false;
+                object obj = this.ViewState["CleanRequest"];
+                return obj != null ? (bool)obj : defValue;
             }
             set
             {
-                this.State.Set("CleanRequest", value);
+                this.ViewState["CleanRequest"] = value;
             }
         }
 
@@ -51,11 +52,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool?>("DisableCaching", null);
+                object obj = this.ViewState["DisableCaching"];
+                return obj != null ? (bool?)obj : null;
             }
             set
             {
-                this.State.Set("DisableCaching", value);
+                this.ViewState["DisableCaching"] = value;
             }
         }
 
@@ -70,11 +72,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("DisableCachingParam", "_dc");
+                return (string)this.ViewState["DisableCachingParam"] ?? "_dc";
             }
             set
             {
-                this.State.Set("DisableCachingParam", value);
+                this.ViewState["DisableCachingParam"] = value;
             }
         }
 
@@ -89,11 +91,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("IsUpload", false);
+                object obj = this.ViewState["IsUpload"];
+                return obj != null ? (bool)obj : false;
             }
             set
             {
-                this.State.Set("IsUpload", value);
+                this.ViewState["IsUpload"] = value;
             }
         }
 
@@ -108,11 +111,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("Json", false);
+                object obj = this.ViewState["Json"];
+                return obj != null ? (bool)obj : false;
             }
             set
             {
-                this.State.Set("Json", value);
+                this.ViewState["Json"] = value;
             }
         }
         
@@ -150,7 +154,7 @@ namespace Ext.Net
             }
             set
             {
-                this.State.Set("ViewStateMode", value);
+                this.ViewState["ViewStateMode"] = value;
             }
         }
 
@@ -161,15 +165,16 @@ namespace Ext.Net
         [DefaultValue(DirectEventType.Submit)]
         [NotifyParentProperty(true)]
         [Description("The type of DirectEvent to perform. The 'Submit' type will submit the &lt;form> and 'Load' will make a POST request to url set in the .Url property, or the current url if the .Url property has not been set.")]
-        public virtual DirectEventType Type
+        public DirectEventType Type
         {
             get
             {
-                return this.State.Get<DirectEventType>("Type", DirectEventType.Submit);
+                object obj = this.ViewState["Type"];
+                return obj != null ? (DirectEventType)obj : DirectEventType.Submit;
             }
             set
             {
-                this.State.Set("Type", value);
+                this.ViewState["Type"] = value;
             }
         }
 
@@ -183,11 +188,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("FormID", "");
+                return (string)this.ViewState["FormID"] ?? "";
             }
             set
             {
-                this.State.Set("FormID", value);
+                this.ViewState["FormID"] = value;
             }
         }
 
@@ -197,15 +202,15 @@ namespace Ext.Net
         [DefaultValue("")]
         [NotifyParentProperty(true)]
         [Description("The default URL to be used for requests to the server if DirectEventType.Request. (defaults to '')")]
-        public virtual string Url
+        public string Url
         {
             get
             {
-                return this.State.Get<string>("Url", "");
+                return (string)this.ViewState["Url"] ?? "";
             }
             set
             {
-                this.State.Set("Url", value);
+                this.ViewState["Url"] = value;
             }
         }
 
@@ -232,11 +237,6 @@ namespace Ext.Net
                     c = this.ResourceManager;
                 }
 
-                if (c is BaseControl)
-                {
-                    return ((BaseControl)c).ResolveUrlLink(this.Url);
-                }
-
                 return c != null ? c.ResolveUrl(this.Url) : this.Url;
             }
         }
@@ -252,11 +252,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<HttpMethod>("Method", HttpMethod.Default);
+                object obj = this.ViewState["Method"];
+                return (obj == null) ? HttpMethod.Default : (HttpMethod)obj;
             }
             set
             {
-                this.State.Set("Method", value);
+                this.ViewState["Method"] = value;
             }
         }
 
@@ -271,18 +272,19 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("Timeout", 30000);
+                object obj = this.ViewState["Timeout"];
+                return obj == null ? 30000 : (int)obj;
             }
             set
             {
-                this.State.Set("Timeout", value);
+                this.ViewState["Timeout"] = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        [ConfigOption("formId")]
+        [ConfigOption]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         [DefaultValue("")]
@@ -342,6 +344,7 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("")]
         public EventMask EventMask
         {
@@ -367,11 +370,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("ShowWarningOnFailure", true);
+                object obj = this.ViewState["ShowWarningOnFailure"];
+                return obj != null ? (bool)obj : true;
             }
             set
             {
-                this.State.Set("ShowWarningOnFailure", value);
+                this.ViewState["ShowWarningOnFailure"] = value;
             }
         }
     }
@@ -398,11 +402,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Msg", "Working...");
+                return (string)this.ViewState["Msg"] ?? "Working...";
             }
             set
             {
-                this.State.Set("Msg", value);
+                this.ViewState["Msg"] = value;
             }
         }
 
@@ -417,11 +421,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<MaskTarget>("Target", MaskTarget.Page);
+                object obj = this.ViewState["Target"];
+                return obj != null ? (MaskTarget)obj : MaskTarget.Page;
             }
             set
             {
-                this.State.Set("Target", value);
+                this.ViewState["Target"] = value;
             }
         }
 
@@ -436,11 +441,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("CustomTarget", "");
+                return (string)this.ViewState["CustomTarget"] ?? "";
             }
             set
             {
-                this.State.Set("CustomTarget", value);
+                this.ViewState["CustomTarget"] = value;
             }
         }
 
@@ -455,11 +460,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("MinDelay", 0);
+                object obj = this.ViewState["MinDelay"];
+                return obj != null ? (int)obj : 0;
             }
             set
             {
-                this.State.Set("MinDelay", value);
+                this.ViewState["MinDelay"] = value;
             }
         }
     }

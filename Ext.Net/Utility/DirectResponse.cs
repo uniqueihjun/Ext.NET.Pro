@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -31,7 +31,6 @@ namespace Ext.Net
         private string userResponse;
         private readonly bool internalUsing;
         private object result;
-        private bool isSerializing;
 
 		/// <summary>
 		/// 
@@ -69,9 +68,12 @@ namespace Ext.Net
 		[Description("")]
         public override string ToString()
         {
-            this.isSerializing = true;
+            if (this.Script.IsNotEmpty() && !this.Script.StartsWith("<string>"))
+            {
+                this.Script = "<string>" + this.Script;
+            }
+
             string serialize = new ClientConfig().Serialize(this);
-            this.isSerializing = false;
 
             if (!this.internalUsing && (this.IsUpload || this.NativeUpload))
             {
@@ -100,14 +102,11 @@ namespace Ext.Net
             }
             else
             {
+                HttpContext.Current.Response.ContentType = "text/html";
                 HttpContext.Current.Response.Write(this.ToString());
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public virtual string JsonResponse()
         {
             return this.ToString();
@@ -186,19 +185,8 @@ namespace Ext.Net
         public string Script
         {
             get 
-            {
-                if (!this.internalUsing && HttpContext.Current != null)
-                {
-                    var instanceScript = HttpContext.Current.Items[ResourceManager.INSTANCESCRIPT];
-                    if (instanceScript != null)
-                    {
-                        var iScript = instanceScript.ToString();
-                        iScript = this.isSerializing && iScript.IsNotEmpty() && !iScript.StartsWith("<string>") ? "<string>" + iScript : iScript;
-                        return iScript + (this.script ?? "");
-                    }
-                }
-
-                return this.isSerializing && this.script.IsNotEmpty() && !this.script.StartsWith("<string>") ? "<string>" + this.script : this.script; 
+            { 
+                return this.script; 
             }
             set 
             { 

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -28,7 +28,7 @@ namespace Ext.Net
         {
             if (!RequestManager.IsAjaxRequest)
             {
-            //    throw new InvalidOperationException("This operation requires an AjaxRequest");
+                throw new InvalidOperationException("This operation requires an AjaxRequest");
             }
         }
 
@@ -42,11 +42,6 @@ namespace Ext.Net
             {
                 if (HttpContext.Current != null && HttpContext.Current.Request != null)
                 {
-                    if (HttpContext.Current.Items["__Ext.Net.SuppressAjaxRequestMarker"] != null)
-                    {
-                        return false;
-                    }
-
                     return RequestManager.HasXHeader(HttpContext.Current.Request) || RequestManager.HasInputFieldMarker(HttpContext.Current.Request);
                 }
 
@@ -74,29 +69,6 @@ namespace Ext.Net
             }
         }
 
-        public static void SuppressAjaxRequestMarker()
-        {
-            if (HttpContext.Current == null)
-            {
-                return;
-            }
-
-            HttpContext.Current.Items["__Ext.Net.SuppressAjaxRequestMarker"] = true;
-        }
-
-        public static void ResumeAjaxRequestMarker()
-        {
-            if (HttpContext.Current == null)
-            {
-                return;
-            }
-
-            if (HttpContext.Current.Items.Contains("__Ext.Net.SuppressAjaxRequestMarker"))
-            {
-                HttpContext.Current.Items.Remove("__Ext.Net.SuppressAjaxRequestMarker");
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -117,7 +89,7 @@ namespace Ext.Net
 
                 if (marker.IsNotEmpty())
                 {
-                    if (marker.ToLowerInvariant().Contains("delta=true"))
+                    if (marker.ToLower().Contains("delta=true"))
                     {
                         return true;
                     }
@@ -145,7 +117,7 @@ namespace Ext.Net
             {
                 foreach (string value in values)
                 {
-                    if (value.ToLowerInvariant().Contains("delta=true"))
+                    if (value.ToLower().Contains("delta=true"))
                     {
                         return true;
                     }
@@ -164,18 +136,13 @@ namespace Ext.Net
         [Description("")]
         public static bool HasXMicrosoftAjaxHeader(HttpRequest request)
         {
-            if (HttpContext.Current == null)
-            {
-                return false;
-            }
-
             string[] values = HttpContext.Current.Request.Headers.GetValues("X-MicrosoftAjax");
 
             if (values != null)
             {
                 foreach (string value in values)
                 {
-                    if (value.ToLowerInvariant().Contains("delta=true"))
+                    if (value.ToLower().Contains("delta=true"))
                     {
                         return true;
                     }
@@ -197,7 +164,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("opera"));
+                return (HttpContext.Current != null && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("opera"));
             }
         }
 
@@ -209,7 +176,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("chrome"));
+                return (HttpContext.Current != null && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("chrome"));
             }
         }
 
@@ -221,7 +188,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("webkit"));
+                return (HttpContext.Current != null && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("webkit"));
             }
         }
 
@@ -233,7 +200,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && !RequestManager.IsChrome && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("safari"));
+                return (HttpContext.Current != null && !RequestManager.IsChrome && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("safari"));
             }
         }
 
@@ -245,7 +212,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && RequestManager.IsSafari && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("version/3"));
+                return (HttpContext.Current != null && RequestManager.IsSafari && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("version/3"));
             }
         }
 
@@ -257,7 +224,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && RequestManager.IsSafari && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("version/4"));
+                return (HttpContext.Current != null && RequestManager.IsSafari && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("version/4"));
             }
         }
 
@@ -269,7 +236,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && !RequestManager.IsOpera && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("msie"));
+                return (HttpContext.Current != null && !RequestManager.IsOpera && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("msie"));
             }
         }
 
@@ -294,7 +261,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && RequestManager.IsIE && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("msie 7"));
+                return (HttpContext.Current != null && RequestManager.IsIE && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("msie 7"));
             }
         }
 
@@ -306,7 +273,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && RequestManager.IsIE && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("msie 8"));
+                return (HttpContext.Current != null && RequestManager.IsIE && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("msie 8"));
             }
         }
 
@@ -318,7 +285,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && RequestManager.IsIE && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("msie 9"));
+                return (HttpContext.Current != null && RequestManager.IsIE && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("msie 9"));
             }
         }
 
@@ -330,7 +297,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && !RequestManager.IsWebKit && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("gecko"));
+                return (HttpContext.Current != null && !RequestManager.IsWebKit && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("gecko"));
             }
         }
 
@@ -342,7 +309,7 @@ namespace Ext.Net
         {
             get
             {
-                return (HttpContext.Current != null && RequestManager.IsGecko && (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant().Contains("rv:1.9"));
+                return (HttpContext.Current != null && RequestManager.IsGecko && (HttpContext.Current.Request.UserAgent ?? "").ToLower().Contains("rv:1.9"));
             }
         }
 
@@ -358,7 +325,7 @@ namespace Ext.Net
         {
             get
             {
-                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant();
+                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLower();
                 return (HttpContext.Current != null && (ua.Contains("windows") || ua.Contains("win32")));
             }
         }
@@ -371,8 +338,20 @@ namespace Ext.Net
         {
             get
             {
-                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant();
+                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLower();
                 return (HttpContext.Current != null && (ua.Contains("macintosh") || ua.Contains("mac os x")));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public static bool IsIOS
+        {
+            get
+            {
+                return IsMac && (IsIPhone || IsIPad || IsIPod); 
             }
         }
 
@@ -384,8 +363,66 @@ namespace Ext.Net
         {
             get
             {
-                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLowerInvariant();
+                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLower();
                 return (HttpContext.Current != null && ua.Contains("linux"));
+            }
+        }
+
+
+        /*  User Agent Detection (device)
+            -----------------------------------------------------------------------------------------------*/
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public static bool IsIPad
+        {
+            get
+            {
+                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLower();
+                return (HttpContext.Current != null && ua.Contains("ipad"));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public static bool IsIPhone
+        {
+            get
+            {
+                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLower();
+                return (HttpContext.Current != null && ua.Contains("iphone"));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public static bool IsIPod
+        {
+            get
+            {
+                string ua = (HttpContext.Current.Request.UserAgent ?? "").ToLower();
+                return (HttpContext.Current != null && ua.Contains("ipod"));
+            }
+        }
+
+        /*  Secure Connection Detection
+            -----------------------------------------------------------------------------------------------*/
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public static bool IsSecureConnection
+        {
+            get
+            {
+                return HttpContext.Current != null && HttpContext.Current.Request.IsSecureConnection;
             }
         }
     }

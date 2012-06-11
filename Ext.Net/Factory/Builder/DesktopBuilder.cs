@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class Desktop
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Observable.Builder<Desktop, Desktop.Builder>
+        public partial class Builder : Component.Builder<Desktop, Desktop.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -59,66 +56,96 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Desktop.Builder</returns>
-            public virtual Desktop.Builder Modules(Action<DesktopModulesCollection> action)
-            {
-                action(this.ToComponent().Modules);
-                return this as Desktop.Builder;
-            }
-			 
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder Modules(DesktopModulesCollection modules)
+            // {
+            //    this.ToComponent().Modules = modules;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder Shortcuts(DesktopShortcuts shortcuts)
+            // {
+            //    this.ToComponent().Shortcuts = shortcuts;
+            //    return this as TBuilder;
+            // }
+             
  			/// <summary>
 			/// 
 			/// </summary>
-            public virtual Desktop.Builder DesktopConfig(DesktopConfig desktopConfig)
+            public virtual Desktop.Builder XTickSize(int xTickSize)
             {
-                this.ToComponent().DesktopConfig = desktopConfig;
+                this.ToComponent().XTickSize = xTickSize;
                 return this as Desktop.Builder;
             }
              
  			/// <summary>
 			/// 
 			/// </summary>
-            public virtual Desktop.Builder StartMenu(DesktopStartMenu startMenu)
+            public virtual Desktop.Builder YTickSize(int yTickSize)
             {
-                this.ToComponent().StartMenu = startMenu;
+                this.ToComponent().YTickSize = yTickSize;
                 return this as Desktop.Builder;
             }
              
  			/// <summary>
 			/// 
 			/// </summary>
-            public virtual Desktop.Builder TaskBar(DesktopTaskBar taskBar)
+            public virtual Desktop.Builder BackgroundColor(string backgroundColor)
             {
-                this.ToComponent().TaskBar = taskBar;
+                this.ToComponent().BackgroundColor = backgroundColor;
                 return this as Desktop.Builder;
             }
              
  			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Desktop.Builder</returns>
-            public virtual Desktop.Builder Listeners(Action<DesktopListeners> action)
+			/// 
+			/// </summary>
+            public virtual Desktop.Builder ShortcutTextColor(string shortcutTextColor)
             {
-                action(this.ToComponent().Listeners);
+                this.ToComponent().ShortcutTextColor = shortcutTextColor;
                 return this as Desktop.Builder;
             }
-			 
+             
  			/// <summary>
-			/// Server-side DirectEventHandlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Desktop.Builder</returns>
-            public virtual Desktop.Builder DirectEvents(Action<DesktopDirectEvents> action)
+			/// 
+			/// </summary>
+            public virtual Desktop.Builder Wallpaper(string wallpaper)
             {
-                action(this.ToComponent().DirectEvents);
+                this.ToComponent().Wallpaper = wallpaper;
                 return this as Desktop.Builder;
             }
-			
+             
+ 			/// <summary>
+			/// The maximum length of Ext.ux.TaskBar.TaskButton's text to allow before truncating
+			/// </summary>
+            public virtual Desktop.Builder TextLengthToTruncate(int textLengthToTruncate)
+            {
+                this.ToComponent().TextLengthToTruncate = textLengthToTruncate;
+                return this as Desktop.Builder;
+            }
+             
+ 			// /// <summary>
+			// /// Client-side JavaScript Event Handlers
+			// /// </summary>
+            // public virtual TBuilder Listeners(DesktopListeners listeners)
+            // {
+            //    this.ToComponent().Listeners = listeners;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// Server-side DirectEventHandlers
+			// /// </summary>
+            // public virtual TBuilder DirectEvents(DesktopDirectEvents directEvents)
+            // {
+            //    this.ToComponent().DirectEvents = directEvents;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,19 +15,14 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class SpinnerFieldListeners : TriggerFieldListeners
+    public partial class SpinnerFieldListeners : NumberFieldListeners
     {
         private ComponentListener spin;
 
         /// <summary>
-        /// Fires when the spinner is made to spin up or down.
-        /// Parameters
-        /// item : Ext.form.field.Spinner
-        /// direction : String
-        ///     Either 'up' if spinning up, or 'down' if spinning down.
+        /// 
         /// </summary>
-        [ListenerArgument(0, "item", typeof(Field), "This field")]
-        [ListenerArgument(1, "direction")]
+        [ListenerArgument(0, "item", typeof(Field), "This trigger field")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("spin", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -37,14 +32,19 @@ namespace Ext.Net
         {
             get
             {
-                return this.spin ?? (this.spin = new ComponentListener());
+                if (this.spin == null)
+                {
+                    this.spin = new ComponentListener();
+                }
+
+                return this.spin;
             }
         }
 
         private ComponentListener spinup;
 
         /// <summary>
-        /// Fires when the spinner is made to spin up.
+        /// 
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This trigger field")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -56,14 +56,19 @@ namespace Ext.Net
         {
             get
             {
-                return this.spinup ?? (this.spinup = new ComponentListener());
+                if (this.spinup == null)
+                {
+                    this.spinup = new ComponentListener();
+                }
+
+                return this.spinup;
             }
         }
 
         private ComponentListener spindown;
 
         /// <summary>
-        /// Fires when the spinner is made to spin down.
+        /// 
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This trigger field")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -75,7 +80,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.spindown ?? (this.spindown = new ComponentListener());
+                if (this.spindown == null)
+                {
+                    this.spindown = new ComponentListener();
+                }
+
+                return this.spindown;
             }
         }
     }

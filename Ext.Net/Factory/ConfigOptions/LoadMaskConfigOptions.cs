@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class LoadMask
     {
         /// <summary>
@@ -40,8 +37,7 @@ namespace Ext.Net
                 list.Add("showMask", new ConfigOption("showMask", null, false, this.ShowMask ));
                 list.Add("msg", new ConfigOption("msg", null, "Loading...", this.Msg ));
                 list.Add("msgCls", new ConfigOption("msgCls", null, "x-mask-loading", this.MsgCls ));
-                list.Add("storeID", new ConfigOption("storeID", new SerializationOptions("store", JsonMode.ToClientID), "", this.StoreID ));
-                list.Add("useMsg", new ConfigOption("useMsg", null, true, this.UseMsg ));
+                list.Add("removeMask", new ConfigOption("removeMask", null, false, this.RemoveMask ));
 
                 return list;
             }

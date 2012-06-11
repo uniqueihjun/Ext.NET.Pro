@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ImageCommandColumn
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : CellCommandColumn.Builder<ImageCommandColumn, ImageCommandColumn.Builder>
+        public partial class Builder : Column.Builder<ImageCommandColumn, ImageCommandColumn.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -60,69 +57,68 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
-			/// True to disabled the column header menu containing sort/hide options. Defaults to false.
+			/// (optional) Specify as false to prevent the user from hiding this column. Defaults to true.
 			/// </summary>
-            public virtual ImageCommandColumn.Builder MenuDisabled(bool menuDisabled)
+            public virtual ImageCommandColumn.Builder Hideable(bool hideable)
             {
-                this.ToComponent().MenuDisabled = menuDisabled;
+                this.ToComponent().Hideable = hideable;
                 return this as ImageCommandColumn.Builder;
             }
              
  			/// <summary>
 			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of ImageCommandColumn.Builder</returns>
-            public virtual ImageCommandColumn.Builder GroupCommands(Action<GroupImageCommandCollection> action)
+			/// </summary>
+            public virtual ImageCommandColumn.Builder RightCommandAlign(bool rightCommandAlign)
             {
-                action(this.ToComponent().GroupCommands);
+                this.ToComponent().RightCommandAlign = rightCommandAlign;
                 return this as ImageCommandColumn.Builder;
             }
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of ImageCommandColumn.Builder</returns>
-            public virtual ImageCommandColumn.Builder PrepareGroupCommand(Action<JFunction> action)
-            {
-                action(this.ToComponent().PrepareGroupCommand);
-                return this as ImageCommandColumn.Builder;
-            }
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of ImageCommandColumn.Builder</returns>
-            public virtual ImageCommandColumn.Builder PrepareGroupCommands(Action<JFunction> action)
-            {
-                action(this.ToComponent().PrepareGroupCommands);
-                return this as ImageCommandColumn.Builder;
-            }
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of ImageCommandColumn.Builder</returns>
-            public virtual ImageCommandColumn.Builder Listeners(Action<ImageCommandColumnListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as ImageCommandColumn.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of ImageCommandColumn.Builder</returns>
-            public virtual ImageCommandColumn.Builder DirectEvents(Action<ImageCommandColumnDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as ImageCommandColumn.Builder;
-            }
-			
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder GroupCommands(GroupImageCommandCollection groupCommands)
+            // {
+            //    this.ToComponent().GroupCommands = groupCommands;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder PrepareGroupCommand(JFunction prepareGroupCommand)
+            // {
+            //    this.ToComponent().PrepareGroupCommand = prepareGroupCommand;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder PrepareGroupCommands(JFunction prepareGroupCommands)
+            // {
+            //    this.ToComponent().PrepareGroupCommands = prepareGroupCommands;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder PrepareCommand(JFunction prepareCommand)
+            // {
+            //    this.ToComponent().PrepareCommand = prepareCommand;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder PrepareCommands(JFunction prepareCommands)
+            // {
+            //    this.ToComponent().PrepareCommands = prepareCommands;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

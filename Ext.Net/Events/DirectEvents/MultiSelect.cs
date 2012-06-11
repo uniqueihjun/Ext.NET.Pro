@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,10 +17,6 @@ namespace Ext.Net
 	[Description("")]
     public partial class MultiSelectDirectEvents : FieldDirectEvents
     {
-        public MultiSelectDirectEvents() { }
-
-        public MultiSelectDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent click;
 
         /// <summary>
@@ -39,7 +35,7 @@ namespace Ext.Net
             {
                 if (this.click == null)
                 {
-                    this.click = new ComponentDirectEvent(this);
+                    this.click = new ComponentDirectEvent();
                 }
 
                 return this.click;
@@ -66,7 +62,7 @@ namespace Ext.Net
             {
                 if (this.dblClick == null)
                 {
-                    this.dblClick = new ComponentDirectEvent(this);
+                    this.dblClick = new ComponentDirectEvent();
                 }
 
                 return this.dblClick;
@@ -94,7 +90,7 @@ namespace Ext.Net
             {
                 if (this.beforeDrop == null)
                 {
-                    this.beforeDrop = new ComponentDirectEvent(this);
+                    this.beforeDrop = new ComponentDirectEvent();
                 }
 
                 return this.beforeDrop;
@@ -122,7 +118,7 @@ namespace Ext.Net
             {
                 if (this.afterDrop == null)
                 {
-                    this.afterDrop = new ComponentDirectEvent(this);
+                    this.afterDrop = new ComponentDirectEvent();
                 }
 
                 return this.afterDrop;

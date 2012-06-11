@@ -1,50 +1,33 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Web.UI;
 
 using Ext.Net.Utilities;
+using Newtonsoft.Json;
 
 namespace Ext.Net
 {
     /// <summary>
-    /// Grids are an excellent way of showing large amounts of tabular data on the client side. Essentially a supercharged table, GridPanel makes it easy to fetch, sort and filter large amounts of data.
-    /// 
-    /// Grids are composed of two main pieces - a Store full of data and a set of columns to render.
-    /// 
-    /// By default, each column is sortable and will toggle between ASC and DESC sorting when you click on its header. Each column header is also reorderable by default, and each gains a drop-down menu with options to hide and show columns.
-    /// 
-    /// As well as customizing columns, it's easy to alter the rendering of individual cells using renderers. A renderer is tied to a particular column and is passed the value that would be rendered into each cell in that column.
-    /// 
-    /// Sometimes all you want is to render data onto the screen for viewing, but usually it's necessary to interact with or update that data. Grids use a concept called a Selection Model, which is simply a mechanism for selecting some part of the data in the grid. The two main types of Selection Model are RowSelectionModel, where entire rows are selected, and CellSelectionModel, where individual cells are selected. 
-    /// Grids use a Row Selection Model by default. Specifying the cellmodel changes a couple of things. Firstly, clicking on a cell now selects just that cell (using a rowmodel will select the entire row), and secondly the keyboard navigation will walk from cell to cell instead of row to row. Cell-based selection models are usually used in conjunction with editing.
-    /// 
-    /// Grid has built-in support for in-line editing. There are two chief editing modes - cell editing and row editing.
-    /// 
-    /// Every grid is attached to a Store, which provides multi-sort and filtering capabilities.
-    /// 
-    /// Grid supports infinite scrolling as an alternative to using a paging toolbar. Your users can scroll through thousands of records without the performance penalties of renderering all the records on screen at once. The grid should be bound to a buffered store with a pageSize specified.
-    /// The number of rows rendered outside the visible area, and the buffering of pages of data from the remote server for immediate rendering upon scroll can be controlled by configuring the #verticalScroller.
-    /// You can tell it to create a larger table to provide more scrolling before a refresh is needed, and also to keep more pages of records in memory for faster refreshing when scrolling.
-    /// 
-    /// Grid supports paging through large sets of data via a PagingToolbar or PagingGridScroller (see the Infinite Scrolling section above). To leverage paging via a toolbar or scroller, you need to set a pageSize configuration on the Store.
-    /// 
-    /// When configured stateful, grids save their column state (order and width) encapsulated within the default Panel state of changed width and height and collapsed/expanded state.
-    /// Each column of the grid may be configured with a stateId which identifies that column locally within the grid.
+    /// This class represents the primary interface of a component based grid control.
     /// </summary>
     [Meta]
     [ToolboxData("<{0}:GridPanel runat=\"server\" Title=\"Title\" Height=\"300\"></{0}:GridPanel>")]
     [ToolboxBitmap(typeof(GridPanel), "Build.ToolboxIcons.GridPanel.bmp")]
     [Designer(typeof(EmptyDesigner))]
-    [Description("Grids are an excellent way of showing large amounts of tabular data on the client side.")]
+    [Description("This class represents the primary interface of a component based grid control.")]
     public partial class GridPanel : GridPanelBase
     {
         /// <summary>
@@ -62,7 +45,7 @@ namespace Ext.Net
         {
             get
             {
-                return "grid";
+                return "netgrid";
             }
         }
 
@@ -75,7 +58,40 @@ namespace Ext.Net
         {
             get
             {
-                return "Ext.grid.Panel";
+                return "Ext.net.GridPanel";
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        protected override List<ResourceItem> Resources
+        {
+            get
+            {
+                List<ResourceItem> baseList = base.Resources;
+
+                if (this.IsCommandColumnPresented || this.RegisterAllResources)
+                {
+                    baseList.Capacity += 1;
+                    baseList.Add(new ClientStyleItem("Ext.Net.Build.Ext.Net.ux.plugins.commandcolumn.commandcolumn-embedded.css", "/ux/plugins/commandcolumn/commandcolumn.css"));
+                }
+
+                if (this.IsHeaderRowPresented || this.RegisterAllResources)
+                {
+                    baseList.Capacity += 1;
+                    baseList.Add(new ClientStyleItem("Ext.Net.Build.Ext.Net.ux.extensions.multiheader.css.multiheader-embedded.css", "/ux/extensions/multiheader/css/commandcolumn.css"));
+                }
+
+                if(this.IsRatingColumnPresented || this.RegisterAllResources)
+                {
+                    baseList.Capacity += 2;
+                    baseList.Add(new ClientScriptItem("Ext.Net.Build.Ext.Net.ux.plugins.ratingcolumn.ratingcolumn.js", "/ux/plugins/ratingcolumn/ratingcolumn.js"));
+                    baseList.Add(new ClientStyleItem("Ext.Net.Build.Ext.Net.ux.plugins.ratingcolumn.resources.css.ratingcolumn-embedded.css", "/ux/plugins/ratingcolumn/resources/css/ratingcolumn.css"));
+                }
+                
+                return baseList;
             }
         }
 
@@ -92,6 +108,184 @@ namespace Ext.Net
             {
                 throw new Exception(string.Format("Please do not set both the StoreID property on {0} and <Store> inner property at the same time.", this.ID));
             }
+            
+            this.CheckColumns();
+
+            if (this.SelectionMemoryProxy && this.MemoryIDField.IsEmpty() && (this.Store.Primary != null || this.StoreID.IsNotEmpty()))
+            {
+                Store store = this.Store.Primary??(ControlUtils.FindControl(this, this.StoreID) as Store);
+
+                if (store != null && store.Reader.Count > 0)
+                {
+                    string id = store.Reader.Reader.IDField;
+            
+                    if (id.IsNotEmpty())
+                    {
+                        this.MemoryIDField = id;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public void RegisterColumnPlugins()
+        {
+            RequestManager.EnsureDirectEvent();
+            this.Call("initColumnPlugins", new JRawValue(this.GetColumnPlugins()), true);
+        }
+
+        private void CheckColumns()
+        {
+            string plugins = this.GetColumnPlugins();
+
+            if (plugins.Length > 2)
+            {
+                this.CustomConfig.Add(new ConfigItem("columnPlugins", plugins, ParameterMode.Raw));
+            }
+        }
+
+        private bool IsCommandColumnPresented
+        {
+            get
+            {
+                for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+                {
+                    CommandColumn cmdCol = this.ColumnModel.Columns[i] as CommandColumn;
+                    ImageCommandColumn imgCmdCol = this.ColumnModel.Columns[i] as ImageCommandColumn;
+                    Column column = this.ColumnModel.Columns[i] as Column;
+
+                    if (column != null && column.Commands.Count > 0 && imgCmdCol == null)
+                    {
+                        return true;
+                    }
+
+                    if (cmdCol != null || imgCmdCol != null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        private bool IsRatingColumnPresented
+        {
+            get
+            {
+                for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+                {
+                    RatingColumn ratingCol = this.ColumnModel.Columns[i] as RatingColumn;
+
+                    if (ratingCol != null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        private bool IsHeaderRowPresented
+        {
+            get
+            {
+                return this.View.Count > 0 && this.View[0].HeaderRows.Count > 0;
+            }
+        }
+
+        private string GetColumnPlugins()
+        {
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < this.ColumnModel.Columns.Count; i++)
+            {
+                CommandColumn cmdCol = this.ColumnModel.Columns[i] as CommandColumn;
+                ImageCommandColumn imgCmdCol = this.ColumnModel.Columns[i] as ImageCommandColumn;
+                Column column = this.ColumnModel.Columns[i] as Column;
+
+                if (column != null && column.Commands.Count > 0 && imgCmdCol == null)
+                {
+                    continue;
+                }
+
+                if (cmdCol != null || imgCmdCol != null)
+                {
+                    sb.Append(i + ",");
+                    continue;
+                }
+
+                CheckColumn cc = this.ColumnModel.Columns[i] as CheckColumn;
+
+                if (cc != null && cc.Editable)
+                {
+                    sb.Append(i + ",");
+                    continue;
+                }
+
+                RatingColumn rc = this.ColumnModel.Columns[i] as RatingColumn;
+
+                if (rc != null && rc.Editable)
+                {
+                    sb.Append(i + ",");
+                    continue;
+                }
+            }
+
+            if (sb[sb.Length - 1] == ',')
+            {
+                sb.Remove(sb.Length - 1, 1);
+            }
+
+            sb.Append("]");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        [Description("")]
+        protected override void OnAfterClientInit(Observable sender)
+        {
+            base.OnAfterClientInit(sender);
+
+            this.CheckAutoExpand();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        protected virtual void CheckAutoExpand()
+        {
+            if (this.AutoExpandColumn.IsNotEmpty())
+            {
+                if (this.AutoExpandColumn.Test("^\\d+$"))
+                {
+                    return;
+                }
+
+                bool found = false;
+                
+                foreach (ColumnBase column in this.ColumnModel.Columns)
+                {
+                    if (column.ColumnID == this.AutoExpandColumn)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    throw new ArgumentException("The AutoExpand Column with ID='".ConcatWith(this.AutoExpandColumn,"' was not found."));
+                }
+            }
         }
 
         private GridPanelListeners listeners;
@@ -104,7 +298,8 @@ namespace Ext.Net
         [Category("2. Observable")]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public GridPanelListeners Listeners
         {
@@ -129,7 +324,8 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption("directEvents", JsonMode.Object)]        
+        [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side Ajax Event Handlers")]
         public GridPanelDirectEvents DirectEvents
         {
@@ -137,11 +333,53 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new GridPanelDirectEvents(this);
+                    this.directEvents = new GridPanelDirectEvents();
                 }
 
                 return this.directEvents;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="postDataKey"></param>
+        /// <param name="postCollection"></param>
+        /// <returns></returns>
+        [Description("")]        
+        protected override bool LoadPostData(string postDataKey, NameValueCollection postCollection)
+        {
+            bool result = base.LoadPostData(postDataKey, postCollection);
+            string val = postCollection[this.ConfigID.ConcatWith("_SM")];
+
+            if (val != null && this.SelectionModel.Primary != null)
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
+                StringReader sr = new StringReader(val);
+                
+                if (this.SelectionModel.Primary is RowSelectionModel)
+                {
+                    SelectedRowCollection ids = (SelectedRowCollection)serializer.Deserialize(sr, typeof(SelectedRowCollection));
+                    (this.SelectionModel.Primary as RowSelectionModel).SetSelection(ids);
+                } 
+                else if (this.SelectionModel.Primary is CellSelectionModel)
+                {
+                    SelectedCellSerializable cell = (SelectedCellSerializable)serializer.Deserialize(sr, typeof(SelectedCellSerializable));
+
+                    if (cell != null)
+                    {
+                        CellSelectionModel sm = this.SelectionModel.Primary as CellSelectionModel;
+                        sm.SelectedCell.RowIndex = cell.RowIndex;
+                        sm.SelectedCell.ColIndex = cell.ColIndex;
+                        sm.SelectedCell.RecordID = cell.RecordID;
+                        sm.SelectedCell.Name = cell.Name;
+                        sm.SelectedCell.Value = cell.Value;
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

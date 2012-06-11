@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,10 +17,6 @@ namespace Ext.Net
     [Description("")]
     public partial class MouseDistanceSensorDirectEvents : ComponentDirectEvents
     {
-        public MouseDistanceSensorDirectEvents() { }
-
-        public MouseDistanceSensorDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent far;
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace Ext.Net
             {
                 if (this.far == null)
                 {
-                    this.far = new ComponentDirectEvent(this);
+                    this.far = new ComponentDirectEvent();
                 }
 
                 return this.far;
@@ -63,7 +59,7 @@ namespace Ext.Net
             {
                 if (this.near == null)
                 {
-                    this.near = new ComponentDirectEvent(this);
+                    this.near = new ComponentDirectEvent();
                 }
 
                 return this.near;
@@ -90,7 +86,7 @@ namespace Ext.Net
             {
                 if (this.distance == null)
                 {
-                    this.distance = new ComponentDirectEvent(this);
+                    this.distance = new ComponentDirectEvent();
                 }
 
                 return this.distance;

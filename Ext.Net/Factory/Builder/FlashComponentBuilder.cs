@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class FlashComponent
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ComponentBase.Builder<FlashComponent, FlashComponent.Builder>
+        public partial class Builder : BoxComponentBase.Builder<FlashComponent, FlashComponent.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -95,77 +92,42 @@ namespace Ext.Net
                 return this as FlashComponent.Builder;
             }
              
- 			/// <summary>
-			/// A set of key value pairs to be passed to the flash object as flash variables.
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of FlashComponent.Builder</returns>
-            public virtual FlashComponent.Builder FlashVars(Action<ParameterCollection> action)
-            {
-                action(this.ToComponent().FlashVars);
-                return this as FlashComponent.Builder;
-            }
-			 
- 			/// <summary>
-			/// A set of key value pairs to be passed to the flash object as parameters.
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of FlashComponent.Builder</returns>
-            public virtual FlashComponent.Builder FlashParams(Action<ParameterCollection> action)
-            {
-                action(this.ToComponent().FlashParams);
-                return this as FlashComponent.Builder;
-            }
-			 
- 			/// <summary>
-			/// The height of the embedded SWF movie inside the component. Defaults to \"100%\" so that the movie matches the height of the component.
-			/// </summary>
-            public virtual FlashComponent.Builder SwfHeight(string swfHeight)
-            {
-                this.ToComponent().SwfHeight = swfHeight;
-                return this as FlashComponent.Builder;
-            }
+ 			// /// <summary>
+			// /// A set of key value pairs to be passed to the flash object as flash variables.
+			// /// </summary>
+            // public virtual TBuilder FlashVars(ParameterCollection flashVars)
+            // {
+            //    this.ToComponent().FlashVars = flashVars;
+            //    return this as TBuilder;
+            // }
              
- 			/// <summary>
-			/// The width of the embedded SWF movie inside the component. Defaults to \"100%\" so that the movie matches the width of the component.
-			/// </summary>
-            public virtual FlashComponent.Builder SwfWidth(string swfWidth)
-            {
-                this.ToComponent().SwfWidth = swfWidth;
-                return this as FlashComponent.Builder;
-            }
+ 			// /// <summary>
+			// /// A set of key value pairs to be passed to the flash object as parameters.
+			// /// </summary>
+            // public virtual TBuilder FlashParams(ParameterCollection flashParams)
+            // {
+            //    this.ToComponent().FlashParams = flashParams;
+            //    return this as TBuilder;
+            // }
              
- 			/// <summary>
-			/// The wmode of the flash object. This can be used to control layering. Set to 'transparent' to ignore the backgroundColor and make the background of the Flash movie transparent.
-			/// </summary>
-            public virtual FlashComponent.Builder WMode(string wMode)
-            {
-                this.ToComponent().WMode = wMode;
-                return this as FlashComponent.Builder;
-            }
+ 			// /// <summary>
+			// /// Client-side JavaScript Event Handlers
+			// /// </summary>
+            // public virtual TBuilder Listeners(FlashComponentListeners listeners)
+            // {
+            //    this.ToComponent().Listeners = listeners;
+            //    return this as TBuilder;
+            // }
              
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of FlashComponent.Builder</returns>
-            public virtual FlashComponent.Builder Listeners(Action<FlashComponentListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as FlashComponent.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of FlashComponent.Builder</returns>
-            public virtual FlashComponent.Builder DirectEvents(Action<FlashComponentDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as FlashComponent.Builder;
-            }
-			
+ 			// /// <summary>
+			// /// Server-side Ajax Event Handlers
+			// /// </summary>
+            // public virtual TBuilder DirectEvents(FlashComponentDirectEvents directEvents)
+            // {
+            //    this.ToComponent().DirectEvents = directEvents;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

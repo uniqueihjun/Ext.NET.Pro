@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TimeField
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : PickerField.Builder<TimeField, TimeField.Builder>
+        public partial class Builder : ComboBox.Builder<TimeField, TimeField.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -60,6 +57,15 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
+			/// The fields null value.
+			/// </summary>
+            public virtual TimeField.Builder EmptyValue(object emptyValue)
+            {
+                this.ToComponent().EmptyValue = emptyValue;
+                return this as TimeField.Builder;
+            }
+             
+ 			/// <summary>
 			/// 
 			/// </summary>
             public virtual TimeField.Builder SelectedTime(TimeSpan selectedTime)
@@ -78,7 +84,16 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// Multiple date formats separated by \" | \" to try when parsing a user input value and it doesn't match the defined format (defaults to 'g:ia|g:iA|g:i a|g:i A|h:i|g:i|H:i|ga|ha|gA|h a|g a|g A|gi|hi|gia|hia|g|H|gi a|hi a|giA|hiA|gi A|hi A').
+			/// 
+			/// </summary>
+            public virtual TimeField.Builder Value(object value)
+            {
+                this.ToComponent().Value = value;
+                return this as TimeField.Builder;
+            }
+             
+ 			/// <summary>
+			/// Multiple date formats separated by \" | \" to try when parsing a user input value and it doesn't match the defined format (defaults to 'm/d/Y|m-d-y|m-d-Y|m/d|m-d|d').
 			/// </summary>
             public virtual TimeField.Builder AltFormats(string altFormats)
             {
@@ -87,7 +102,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The default time format string which can be overriden for localization support. The format must be valid according to Ext.Date.parse (defaults to 'g:i A', e.g., '3:15 PM'). For 24-hour time format try 'H:i' instead.
+			/// The default date format string which can be overriden for localization support. The format must be valid according to Date.parseDate (defaults to 'h:mm tt', e.g., '3:15 PM'). For 24-hour time format try 'H:mm' instead.
 			/// </summary>
             public virtual TimeField.Builder Format(string format)
             {
@@ -105,7 +120,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The error text to display when the entered time is after maxValue (defaults to 'The time in this field must be equal to or before {0}').
+			/// The error text to display when the time is after maxValue (defaults to 'The time in this field must be equal to or before {0}').
 			/// </summary>
             public virtual TimeField.Builder MaxText(string maxText)
             {
@@ -114,7 +129,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The maximum allowed time. Can be either a Javascript date object with a valid time value or a string time in a valid format -- see format and altFormats (defaults to undefined).
+			/// The maximum allowed time. Can be either a Javascript date object or a string date in a valid format (defaults to null).
 			/// </summary>
             public virtual TimeField.Builder MaxTime(TimeSpan maxTime)
             {
@@ -123,7 +138,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The minimum allowed time. Can be either a Javascript date object with a valid time value or a string time in a valid format -- see format and altFormats (defaults to undefined).
+			/// The minimum allowed time. Can be either a Javascript date object or a string date in a valid format (defaults to null).
 			/// </summary>
             public virtual TimeField.Builder MinTime(TimeSpan minTime)
             {
@@ -132,72 +147,14 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The error text to display when the entered time is before minValue (defaults to 'The time in this field must be equal to or after {0}').
+			/// The error text to display when the date in the cell is before minValue (defaults to 'The time in this field must be equal to or after {0}').
 			/// </summary>
             public virtual TimeField.Builder MinText(string minText)
             {
                 this.ToComponent().MinText = minText;
                 return this as TimeField.Builder;
             }
-             
- 			/// <summary>
-			/// The maximum height of the Ext.picker.Time dropdown. Defaults to 300.
-			/// </summary>
-            public virtual TimeField.Builder PickerMaxHeight(int pickerMaxHeight)
-            {
-                this.ToComponent().PickerMaxHeight = pickerMaxHeight;
-                return this as TimeField.Builder;
-            }
-             
- 			/// <summary>
-			/// Whether the Tab key should select the currently highlighted item. Defaults to true.
-			/// </summary>
-            public virtual TimeField.Builder SelectOnTab(bool selectOnTab)
-            {
-                this.ToComponent().SelectOnTab = selectOnTab;
-                return this as TimeField.Builder;
-            }
-             
- 			/// <summary>
-			/// Specify as true to enforce that only values on the increment boundary are accepted. Defaults to: false
-			/// </summary>
-            public virtual TimeField.Builder SnapToIncrement(bool snapToIncrement)
-            {
-                this.ToComponent().SnapToIncrement = snapToIncrement;
-                return this as TimeField.Builder;
-            }
-             
- 			/// <summary>
-			/// The date format string which will be submitted to the server. The format must be valid according to Ext.Date.parse (defaults to format).
-			/// </summary>
-            public virtual TimeField.Builder SubmitFormat(string submitFormat)
-            {
-                this.ToComponent().SubmitFormat = submitFormat;
-                return this as TimeField.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TimeField.Builder</returns>
-            public virtual TimeField.Builder Listeners(Action<PickerFieldListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as TimeField.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TimeField.Builder</returns>
-            public virtual TimeField.Builder DirectEvents(Action<PickerFieldDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as TimeField.Builder;
-            }
-			
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

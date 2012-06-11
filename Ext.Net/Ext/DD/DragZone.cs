@@ -1,14 +1,14 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
-using System.Drawing;
 using System.Web.UI;
+using System.Drawing;
 
 namespace Ext.Net
 {
@@ -18,7 +18,6 @@ namespace Ext.Net
     /// If you wish to provide draggability for an arbitrary number of DOM nodes, each of which represent some application object (For example nodes in a DataView) then use of this class is the most efficient way to "activate" those nodes.
     /// By default, this class requires that draggable child nodes are registered with Ext.dd.Registry. However a simpler way to allow a DragZone to manage any number of draggable elements is to configure the DragZone with an implementation of the getDragData method which interrogates the passed mouse event to see if it has taken place within an element, or class of elements. This is easily done by using the event's getTarget method to identify a node based on a Ext.DomQuery selector.
     /// </summary>
-    [Meta]
     [ToolboxItem(true)]
     [Designer(typeof(EmptyDesigner))]
     [ToolboxData("<{0}:DragZone runat=\"server\"></{0}:DragZone>")]
@@ -27,13 +26,6 @@ namespace Ext.Net
     [Description("This class provides a container DD instance that allows dragging of multiple child source nodes.")]
     public partial class DragZone : DragSource
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public DragZone()
-        {
-        }
-
         /// <summary>
 		/// 
 		/// </summary>
@@ -50,7 +42,6 @@ namespace Ext.Net
         /// <summary>
         /// True to register this container with the Scrollmanager for auto scrolling during drag operations.
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("7. DragZone")]
         [DefaultValue(false)]
@@ -60,14 +51,34 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("ContainerScroll", false);
+                object obj = this.ViewState["ContainerScroll"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("ContainerScroll", value);
+                this.ViewState["ContainerScroll"] = value;
             }
         }
-        
+
+        /// <summary>
+        /// The color to use when visually highlighting the drag source in the afterRepair method after a failed drop (defaults to "c3daf9" - light blue)
+        /// </summary>
+        [ConfigOption("hlColor")]
+        [Category("7. DragZone")]
+        [DefaultValue("c3daf9")]
+        [Description("The color to use when visually highlighting the drag source in the afterRepair method after a failed drop (defaults to \"c3daf9\" - light blue)")]
+        public virtual string HighlightingColor
+        {
+            get
+            {
+                return (string)this.ViewState["HighlightingColor"] ?? "c3daf9";
+            }
+            set
+            {
+                this.ViewState["HighlightingColor"] = value;
+            }
+        }
+
         private JFunction afterRepair;
 
         /// <summary>
@@ -75,7 +86,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("7. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called after a repair of an invalid drop. By default, highlights this.dragData.ddel")]
@@ -102,7 +113,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("7. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called before a repair of an invalid drop to get the XY to animate to. By default returns the XY of this.dragData.ddel")]
@@ -133,7 +144,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("7. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called once drag threshold has been reached to initialize the proxy element. By default, it clones the this.dragData.ddel")]

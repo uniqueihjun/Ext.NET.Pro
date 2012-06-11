@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class SliderBase
     {
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TSliderBase, TBuilder> : Field.Builder<TSliderBase, TBuilder>
+        new public abstract partial class Builder<TSliderBase, TBuilder> : BoxComponentBase.Builder<TSliderBase, TBuilder>
             where TSliderBase : SliderBase
             where TBuilder : Builder<TSliderBase, TBuilder>
         {
@@ -40,20 +37,11 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
-			/// True for single thumb slider
+			/// The Number (int) to initialize this field with.
 			/// </summary>
-            public virtual TBuilder Single(bool single)
+            public virtual TBuilder Value(int value)
             {
-                this.ToComponent().Single = single;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// Thumbs value
-			/// </summary>
-            public virtual TBuilder Number(double? number)
-            {
-                this.ToComponent().Number = number;
+                this.ToComponent().Value = value;
                 return this as TBuilder;
             }
              
@@ -114,7 +102,7 @@ namespace Ext.Net
  			/// <summary>
 			/// The maximum value for the Slider. Defaults to 100.
 			/// </summary>
-            public virtual TBuilder MaxValue(double maxValue)
+            public virtual TBuilder MaxValue(int maxValue)
             {
                 this.ToComponent().MaxValue = maxValue;
                 return this as TBuilder;
@@ -123,7 +111,7 @@ namespace Ext.Net
  			/// <summary>
 			/// The minimum value for the Slider. Defaults to 0.
 			/// </summary>
-            public virtual TBuilder MinValue(double minValue)
+            public virtual TBuilder MinValue(int minValue)
             {
                 this.ToComponent().MinValue = minValue;
                 return this as TBuilder;
@@ -139,40 +127,11 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// Set to true to calculate snap points based on increments from zero as opposed to from this Slider's minValue.
+			/// The number used to set the z index of the top thumb
 			/// </summary>
-            public virtual TBuilder ZeroBasedSnapping(bool zeroBasedSnapping)
+            public virtual TBuilder TopThumbZIndex(int topThumbZIndex)
             {
-                this.ToComponent().ZeroBasedSnapping = zeroBasedSnapping;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// True to use an Ext.slider.Tip to display tips for the value. Defaults to: true
-			/// </summary>
-            public virtual TBuilder UseTips(bool useTips)
-            {
-                this.ToComponent().UseTips = useTips;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// A function used to display custom text for the slider tip. Defaults to null, which will use the default on the plugin.
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TBuilder</returns>
-            public virtual TBuilder TipText(Action<JFunction> action)
-            {
-                action(this.ToComponent().TipText);
-                return this as TBuilder;
-            }
-			 
- 			/// <summary>
-			/// A value to initialize this field with.
-			/// </summary>
-            public virtual TBuilder Value(object value)
-            {
-                this.ToComponent().Value = value;
+                this.ToComponent().TopThumbZIndex = topThumbZIndex;
                 return this as TBuilder;
             }
             
@@ -181,11 +140,47 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			
  			/// <summary>
-			/// Synchronizes thumbs position to the proper proportion of the total component width based on the current slider value. This will be called automatically when the Slider is resized by a layout, but if it is rendered auto width, this method can be called from another resize handler to sync the Slider if necessary.
+			/// Programmatically sets the value of the Slider. Ensures that the value is constrained within the minValue and maxValue.
 			/// </summary>
-            public virtual TBuilder SyncThumbs()
+            public virtual TBuilder SetValue(int value)
             {
-                this.ToComponent().SyncThumbs();
+                this.ToComponent().SetValue(value);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// Programmatically sets the value of the Slider. Ensures that the value is constrained within the minValue and maxValue.
+			/// </summary>
+            public virtual TBuilder SetValue(int index, int value)
+            {
+                this.ToComponent().SetValue(index, value);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// Programmatically sets the value of the Slider. Ensures that the value is constrained within the minValue and maxValue.
+			/// </summary>
+            public virtual TBuilder SetValue(int value, bool animate)
+            {
+                this.ToComponent().SetValue(value, animate);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// Programmatically sets the value of the Slider. Ensures that the value is constrained within the minValue and maxValue.
+			/// </summary>
+            public virtual TBuilder SetValue(int index, int value, bool animate)
+            {
+                this.ToComponent().SetValue(index, value, animate);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// Synchronizes the thumb position to the proper proportion of the total component width based on the current slider value. This will be called automatically when the Slider is resized by a layout, but if it is rendered auto width, this method can be called from another resize handler to sync the Slider if necessary.
+			/// </summary>
+            public virtual TBuilder SyncThumb()
+            {
+                this.ToComponent().SyncThumb();
                 return this as TBuilder;
             }
             

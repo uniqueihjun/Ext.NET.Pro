@@ -1,11 +1,12 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
+using System;
 using System.ComponentModel;
 using System.Text;
 
@@ -18,7 +19,7 @@ namespace Ext.Net
     /// </summary>
     [Meta]
     [Description("")]
-    public partial class SelectedListItem : BaseItem
+    public partial class SelectedListItem : StateManagedItem
     {
 		/// <summary>
 		/// 
@@ -61,12 +62,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Text", "");
+                return (string)this.ViewState["Text"] ?? "";
             }
             internal set
             {
                 string oldValue = this.Text;
-                this.State.Set("Text", value);
+                this.ViewState["Text"] = value;
 
                 if (this.Value.IsEmpty() || oldValue == this.Value)
                 {
@@ -86,11 +87,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Value", "");
+                return (string)this.ViewState["Value"] ?? "";
             }
             set
             {
-                this.State.Set("Value", value);
+                this.ViewState["Value"] = value;
             }
         }
 
@@ -105,11 +106,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("Index", -1);
+                object obj = this.ViewState["Index"];
+                return obj == null  ? -1 : (int)obj;
             }
             set
             {
-                this.State.Set("Index", value);
+                this.ViewState["Index"] = value;
             }
         }
 
@@ -144,7 +146,7 @@ namespace Ext.Net
     /// 
     /// </summary>
     [Description("")]
-    public partial class SelectedListItemCollection : BaseItemCollection<SelectedListItem>
+    public partial class SelectedListItemCollection : StateManagedCollection<SelectedListItem>
     {
 		/// <summary>
 		/// 

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -31,7 +31,7 @@ namespace Ext.Net
 		[Description("")]
         public ExtControlActionList(IComponent component) : base(component) 
         {
-            this.Control = component as BaseControl;
+            this.Control = component as XControl;
         }
 
 		/// <summary>
@@ -50,13 +50,13 @@ namespace Ext.Net
             }
         }
 
-        private BaseControl control;
+        private XControl control;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[Description("")]
-        public BaseControl Control
+        public XControl Control
         {
             get
             {
@@ -99,7 +99,7 @@ namespace Ext.Net
 		[Description("")]
         public void LaunchForums()
         {
-            System.Diagnostics.Process.Start("http://www.ext.net/forums/");
+            System.Diagnostics.Process.Start("http://forums.ext.net/");
         }
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace Ext.Net
 		[Description("")]
         public void LaunchDocumentation()
         {
-            System.Diagnostics.Process.Start("http://www.ext.net/docs/");
+            System.Diagnostics.Process.Start("http://docs.ext.net/");
         }
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace Ext.Net
 		[Description("")]
         public void LaunchExamples()
         {
-            System.Diagnostics.Process.Start("http://www.ext.net/examples/");
+            System.Diagnostics.Process.Start("http://examples.ext.net/");
         }
 
 		/// <summary>
@@ -144,10 +144,10 @@ namespace Ext.Net
             this.AddHeaderItem(new DesignerActionHeaderItem("Properties", "500"));
             this.AddHeaderItem(new DesignerActionHeaderItem("Support [Version " + this.Control.Version + "]", "1000"));
 
-            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchExamples", "Examples Explorer", "1000", "View the Ext.Net examples online"));
-            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchForums", "Online Forums", "1000", "Visit the Ext.Net Forums"));
-            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchSupportHome", "Ext.Net Support Home", "1000", "Visit the Ext.Net website for more support options", true));
-            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchDocumentation", "Online Documentation", "1000", "View online documentation"));
+            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchForums", "Community Forums", "1000", "Visit the Ext.NET Forums"));
+            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchExamples", "Examples Explorer", "1000", "View Ext.NET examples online"));
+            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchDocumentation", "Documentation", "1000", "View online Ext.NET documentation"));
+            this.AddMethodItem(new DesignerActionMethodItem(this, "LaunchSupportHome", "Support Home", "1000", "Visit the Ext.NET website for more support options", true));
 
             this.Items = new DesignerActionItemCollection();
 
@@ -184,6 +184,7 @@ namespace Ext.Net
                     return;
                 }
             }
+
             this.Headers.Add(item);
         }
 
@@ -198,6 +199,7 @@ namespace Ext.Net
                 if (item.DisplayName == header.DisplayName)
                 {
                     this.Headers.Remove(header);
+
                     return;
                 }
             }

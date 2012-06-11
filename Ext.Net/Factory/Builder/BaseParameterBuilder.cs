@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class BaseParameter
     {
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TBaseParameter, TBuilder> : BaseItem.Builder<TBaseParameter, TBuilder>
+        new public abstract partial class Builder<TBaseParameter, TBuilder> : StateManagedItem.Builder<TBaseParameter, TBuilder>
             where TBaseParameter : BaseParameter
             where TBuilder : Builder<TBaseParameter, TBuilder>
         {
@@ -75,17 +72,15 @@ namespace Ext.Net
                 return this as TBuilder;
             }
              
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TBuilder</returns>
-            public virtual TBuilder Params(Action<ParameterCollection> action)
-            {
-                action(this.ToComponent().Params);
-                return this as TBuilder;
-            }
-			
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder Params(ParameterCollection _params)
+            // {
+            //    this.ToComponent().Params = _params;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

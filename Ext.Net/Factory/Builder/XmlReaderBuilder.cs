@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class XmlReader
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractReader.Builder<XmlReader, XmlReader.Builder>
+        public partial class Builder : DataReader.Builder<XmlReader, XmlReader.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -60,11 +57,38 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
+			/// The DomQuery path relative from the record element to the element that contains a record identifier value.
+			/// </summary>
+            public virtual XmlReader.Builder IDPath(string iDPath)
+            {
+                this.ToComponent().IDPath = iDPath;
+                return this as XmlReader.Builder;
+            }
+             
+ 			/// <summary>
 			/// The DomQuery path to the repeated element which contains record information.
 			/// </summary>
             public virtual XmlReader.Builder Record(string record)
             {
                 this.ToComponent().Record = record;
+                return this as XmlReader.Builder;
+            }
+             
+ 			/// <summary>
+			/// The DomQuery path to the success attribute used by forms.
+			/// </summary>
+            public virtual XmlReader.Builder Success(string success)
+            {
+                this.ToComponent().Success = success;
+                return this as XmlReader.Builder;
+            }
+             
+ 			/// <summary>
+			/// The DomQuery path from which to retrieve the total number of records in the dataset. This is only needed if the whole dataset is not passed in one go, but is being paged from the remote server.
+			/// </summary>
+            public virtual XmlReader.Builder TotalProperty(string totalProperty)
+            {
+                this.ToComponent().TotalProperty = totalProperty;
                 return this as XmlReader.Builder;
             }
             

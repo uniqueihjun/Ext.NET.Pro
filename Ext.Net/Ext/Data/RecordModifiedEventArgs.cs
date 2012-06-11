@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -9,10 +9,8 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-
+using System.Xml;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Ext.Net
 {
@@ -26,18 +24,18 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public RecordModifiedEventArgs(JToken record)
+        public RecordModifiedEventArgs(XmlNode record)
         {
             this.record = record;
         }
 
-        private JToken record;
+        private XmlNode record;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[Description("")]
-        public JToken Record
+        public XmlNode Record
         {
             get { return record; }
         }
@@ -47,9 +45,10 @@ namespace Ext.Net
 		/// </summary>
 		[Description("")]
         public T Object<T>()
-		{
-		    string json = this.Record.ToString(Formatting.None);
-            
+        {
+            string json = JsonConvert.SerializeXmlNode(this.Record);
+            json = json.Substring(10, json.Length - 11);
+
             JsonSerializer serializer = new JsonSerializer();
             serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
             StringReader sr = new StringReader(json);

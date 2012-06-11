@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class FormPanelDirectEvents
     {
         /// <summary>
@@ -37,14 +34,10 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
+                list.Add("clientValidation", new ConfigOption("clientValidation", new SerializationOptions("clientvalidation", typeof(DirectEventJsonConverter)), null, this.ClientValidation ));
                 list.Add("actionComplete", new ConfigOption("actionComplete", new SerializationOptions("actioncomplete", typeof(DirectEventJsonConverter)), null, this.ActionComplete ));
                 list.Add("actionFailed", new ConfigOption("actionFailed", new SerializationOptions("actionfailed", typeof(DirectEventJsonConverter)), null, this.ActionFailed ));
                 list.Add("beforeAction", new ConfigOption("beforeAction", new SerializationOptions("beforeaction", typeof(DirectEventJsonConverter)), null, this.BeforeAction ));
-                list.Add("dirtyChange", new ConfigOption("dirtyChange", new SerializationOptions("dirtychange", typeof(DirectEventJsonConverter)), null, this.DirtyChange ));
-                list.Add("validityChange", new ConfigOption("validityChange", new SerializationOptions("validitychange", typeof(DirectEventJsonConverter)), null, this.ValidityChange ));
-                list.Add("fieldErrorChange", new ConfigOption("fieldErrorChange", new SerializationOptions("fielderrorchange", typeof(DirectEventJsonConverter)), null, this.FieldErrorChange ));
-                list.Add("fieldValidityChange", new ConfigOption("fieldValidityChange", new SerializationOptions("fieldvaliditychange", typeof(DirectEventJsonConverter)), null, this.FieldValidityChange ));
-                list.Add("fieldChange", new ConfigOption("fieldChange", new SerializationOptions("fieldchange", typeof(DirectEventJsonConverter)), null, this.FieldChange ));
 
                 return list;
             }

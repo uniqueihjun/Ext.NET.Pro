@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,12 +15,8 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class ColumnDirectEvents : AbstractComponentDirectEvents
+    public partial class ColumnDirectEvents : ComponentBaseDirectEvents
     {
-        public ColumnDirectEvents() { }
-
-        public ColumnDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent columnMoved;
 
         /// <summary>
@@ -40,7 +36,7 @@ namespace Ext.Net
             {
                 if (this.columnMoved == null)
                 {
-                    this.columnMoved = new ComponentDirectEvent(this);
+                    this.columnMoved = new ComponentDirectEvent();
                 }
 
                 return this.columnMoved;
@@ -64,7 +60,7 @@ namespace Ext.Net
             {
                 if (this.configChanged == null)
                 {
-                    this.configChanged = new ComponentDirectEvent(this);
+                    this.configChanged = new ComponentDirectEvent();
                 }
 
                 return this.configChanged;
@@ -90,7 +86,7 @@ namespace Ext.Net
             {
                 if (this.headerChange == null)
                 {
-                    this.headerChange = new ComponentDirectEvent(this);
+                    this.headerChange = new ComponentDirectEvent();
                 }
 
                 return this.headerChange;
@@ -116,7 +112,7 @@ namespace Ext.Net
             {
                 if (this.hiddenChange == null)
                 {
-                    this.hiddenChange = new ComponentDirectEvent(this);
+                    this.hiddenChange = new ComponentDirectEvent();
                 }
 
                 return this.hiddenChange;
@@ -142,7 +138,7 @@ namespace Ext.Net
             {
                 if (this.widthChange == null)
                 {
-                    this.widthChange = new ComponentDirectEvent(this);
+                    this.widthChange = new ComponentDirectEvent();
                 }
 
                 return this.widthChange;

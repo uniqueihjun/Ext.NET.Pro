@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-	/// <summary>
-	/// 
-	/// </summary>
     public abstract partial class TriggerFieldBase
     {
         /// <summary>
@@ -46,24 +43,6 @@ namespace Ext.Net
 				}
 			}
 			
-			private bool editable = true;
-
-			/// <summary>
-			/// false to prevent the user from typing text directly into the field; the field can only have its value set via an action invoked by the trigger. (defaults to true).
-			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool Editable 
-			{ 
-				get
-				{
-					return this.editable;
-				}
-				set
-				{
-					this.editable = value;
-				}
-			}
-
 			private bool hideTrigger = false;
 
 			/// <summary>
@@ -82,21 +61,21 @@ namespace Ext.Net
 				}
 			}
 
-			private bool hideBaseTrigger = false;
+			private bool editable = true;
 
 			/// <summary>
-			/// True to hide the predefined trigger element (defaults to false).
+			/// False to prevent the user from typing text directly into the field, the field will only respond to a click on the trigger to set the value. (defaults to true).
 			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool HideBaseTrigger 
+			[DefaultValue(true)]
+			public virtual bool Editable 
 			{ 
 				get
 				{
-					return this.hideBaseTrigger;
+					return this.editable;
 				}
 				set
 				{
-					this.hideBaseTrigger = value;
+					this.editable = value;
 				}
 			}
 
@@ -118,39 +97,21 @@ namespace Ext.Net
 				}
 			}
 
-			private bool repeatTriggerClick = false;
-
-			/// <summary>
-			/// True to attach a click repeater to the trigger. Defaults to false.
-			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool RepeatTriggerClick 
-			{ 
-				get
-				{
-					return this.repeatTriggerClick;
-				}
-				set
-				{
-					this.repeatTriggerClick = value;
-				}
-			}
-
-			private string triggerCls = "";
+			private string triggerClass = "";
 
 			/// <summary>
 			/// A CSS class to apply to the trigger.
 			/// </summary>
 			[DefaultValue("")]
-			public virtual string TriggerCls 
+			public virtual string TriggerClass 
 			{ 
 				get
 				{
-					return this.triggerCls;
+					return this.triggerClass;
 				}
 				set
 				{
-					this.triggerCls = value;
+					this.triggerClass = value;
 				}
 			}
 

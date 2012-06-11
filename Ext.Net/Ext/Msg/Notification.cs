@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -44,9 +44,9 @@ namespace Ext.Net
         {
             if (this.currentConfig != null && this.currentConfig.Icon != Icon.None)
             {
-                if (this.ResourceManager != null)
+                if (ResourceManager.HasResourceManager)
                 {
-                    this.ResourceManager.RegisterIcon(this.currentConfig.Icon);
+                    ResourceManager.GetInstance().RegisterIcon(this.currentConfig.Icon);
                 }
             }
 
@@ -548,28 +548,6 @@ namespace Ext.Net
             }
         }
 
-        private bool preventHeader = false;
-
-        /// <summary>
-        /// Prevent a Header from being created and shown.
-        /// </summary>
-        [ConfigOption]
-        [Category("NotificationConfig Options")]
-        [DefaultValue(false)]
-        [NotifyParentProperty(true)]
-        [Description("Prevent a Header from being created and shown.")]
-        public virtual bool PreventHeader
-        {
-            get
-            {
-                return this.preventHeader;
-            }
-            set
-            {
-                this.preventHeader = value;
-            }
-        }
-
 
         private bool plain = false;
 
@@ -779,7 +757,7 @@ namespace Ext.Net
         {
             get
             {
-                return this.PinEvent.ToLowerInvariant();
+                return this.PinEvent.ToLower();
             }
         }
 
@@ -905,7 +883,7 @@ namespace Ext.Net
             {
                 if (this.Icon != Icon.None)
                 {
-                    return "#" + this.Icon.ToString();
+                    return ResourceManager.GetIconClassName(this.Icon);
                 }
 
                 return this.IconCls;

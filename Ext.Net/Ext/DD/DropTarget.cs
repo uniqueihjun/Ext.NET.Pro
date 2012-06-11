@@ -1,38 +1,30 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
+using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Web.UI;
-
 using Ext.Net.Utilities;
+using System.Drawing;
 
 namespace Ext.Net
 {
     /// <summary>
-    /// A simple class that provides the basic implementation needed to make any element a drop target that can have draggable items dropped onto it. The drop has no effect until an implementation of notifyDrop is provided.
+    /// This class provides a container DD instance that allows dragging of multiple child source nodes.
     /// </summary>
-    [Meta]
     [ToolboxItem(true)]
     [Designer(typeof(EmptyDesigner))]
     [ToolboxData("<{0}:DropTarget runat=\"server\"></{0}:DropTarget>")]
     [ToolboxBitmap(typeof(DropTarget), "Build.ToolboxIcons.DragDrop.bmp")]
     [Designer(typeof(EmptyDesigner))]
-    [Description("A simple class that provides the basic implementation needed to make any element a drop target that can have draggable items dropped onto it. The drop has no effect until an implementation of notifyDrop is provided.")]
+    [Description("This class provides a container DD instance that allows dragging of multiple child source nodes.")]
     public partial class DropTarget : DDTarget
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public DropTarget()
-        {
-        }
-
         /// <summary>
 		/// 
 		/// </summary>
@@ -57,7 +49,7 @@ namespace Ext.Net
             //    throw new Exception("You should define Target");
             //}
 
-            return "window.{0}=new Ext.net.ProxyDDCreator({{target: {1}, config: {2}, type: {3}}});".FormatWith(
+            return "this.{0}=new Ext.net.ProxyDDCreator({{target: {1}, config: {2}, type: {3}}});".FormatWith(
                       this.ClientID,
                       this.ParsedTarget,
                       new ClientConfig().Serialize(this, true),
@@ -70,7 +62,6 @@ namespace Ext.Net
         /// <summary>
         /// A named drag drop group to which this object belongs. If a group is specified, then this object will only interact with other drag drop objects in the same group (defaults to undefined).
         /// </summary>
-        [Meta]
         [ConfigOption("ddGroup")]
         [Category("5. DropTarget")]
         [DefaultValue("")]
@@ -79,18 +70,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Group", "");
+                return (string)this.ViewState["Group"] ?? "";
             }
             set
             {
-                this.State.Set("Group", value);
+                this.ViewState["Group"] = value;
             }
         }
 
         /// <summary>
         /// The CSS class returned to the drag source when drop is allowed (defaults to "x-dd-drop-ok").
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("5. DropTarget")]
         [DefaultValue("x-dd-drop-ok")]
@@ -99,18 +89,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("DropAllowed", "x-dd-drop-ok");
+                return (string)this.ViewState["DropAllowed"] ?? "x-dd-drop-ok";
             }
             set
             {
-                this.State.Set("DropAllowed", value);
+                this.ViewState["DropAllowed"] = value;
             }
         }
 
         /// <summary>
         /// The CSS class returned to the drag source when drop is not allowed (defaults to "x-dd-drop-nodrop").
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("5. DropTarget")]
         [DefaultValue("x-dd-drop-nodrop")]
@@ -119,18 +108,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("DropNotAllowed", "x-dd-drop-nodrop");
+                return (string)this.ViewState["DropNotAllowed"] ?? "x-dd-drop-nodrop";
             }
             set
             {
-                this.State.Set("DropNotAllowed", value);
+                this.ViewState["DropNotAllowed"] = value;
             }
         }
 
         /// <summary>
         /// The CSS class applied to the drop target element while the drag source is over it (defaults to "").
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("5. DropTarget")]
         [DefaultValue("")]
@@ -139,18 +127,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("OverClass", "");
+                return (string)this.ViewState["OverClass"] ?? "";
             }
             set
             {
-                this.State.Set("OverClass", value);
+                this.ViewState["OverClass"] = value;
             }
         }
 
         /// <summary>
         /// True to register this container with the Scrollmanager for auto scrolling during drag operations.
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("5. DropTarget")]
         [DefaultValue(false)]
@@ -160,11 +147,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("ContainerScroll", false);
+                object obj = this.ViewState["ContainerScroll"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("ContainerScroll", value);
+                this.ViewState["ContainerScroll"] = value;
             }
         }
 
@@ -179,7 +167,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("5. DropTarget")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("The function a Ext.dd.DragSource calls once to notify this drop target that the dragged item has been dropped on it. This method has no default implementation and returns false, so you must provide an implementation that does something to process the drop event and returns true so that the drag source's repair action does not run.")]
@@ -212,7 +200,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("5. DropTarget")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("The function a Ext.dd.DragSource calls once to notify this drop target that the source is now over the target. This default implementation adds the CSS class specified by overClass (if any) to the drop element and returns the dropAllowed config value. This method should be overridden if drop validation is required.")]
@@ -245,7 +233,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("5. DropTarget")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("The function a Ext.dd.DragSource calls once to notify this drop target that the source has been dragged out of the target without dropping. This default implementation simply removes the CSS class specified by overClass (if any) from the drop element.")]
@@ -278,7 +266,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("5. DropTarget")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("The function a Ext.dd.DragSource calls continuously while it is being dragged over the target. This method will be called on every mouse movement while the drag source is over the drop target. This default implementation simply returns the dropAllowed config value.")]

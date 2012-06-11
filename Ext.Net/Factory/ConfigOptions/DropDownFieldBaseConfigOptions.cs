@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class DropDownFieldBase
     {
         /// <summary>
@@ -37,11 +34,12 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
-                list.Add("valueHiddenName", new ConfigOption("valueHiddenName", null, "", this.ValueHiddenName ));
                 list.Add("text", new ConfigOption("text", null, "", this.Text ));
                 list.Add("mode", new ConfigOption("mode", new SerializationOptions(JsonMode.ToLower), DropDownMode.Text, this.Mode ));
                 list.Add("allowBlur", new ConfigOption("allowBlur", null, false, this.AllowBlur ));
-                list.Add("component", new ConfigOption("component", new SerializationOptions("component", typeof(SingleItemCollectionJsonConverter)), null, this.Component ));
+                list.Add("lazyInit", new ConfigOption("lazyInit", null, true, this.LazyInit ));
+                list.Add("componentAlign", new ConfigOption("componentAlign", null, "", this.ComponentAlign ));
+                list.Add("component", new ConfigOption("component", new SerializationOptions("component", typeof(ItemCollectionJsonConverter)), null, this.Component ));
                 list.Add("componentRenderTo", new ConfigOption("componentRenderTo", null, "", this.ComponentRenderTo ));
                 list.Add("syncValue", new ConfigOption("syncValue", new SerializationOptions(JsonMode.Raw), null, this.SyncValue ));
 

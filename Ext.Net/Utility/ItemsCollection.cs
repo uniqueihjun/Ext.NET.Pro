@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -9,6 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
+
+using Ext.Net.Utilities;
 
 namespace Ext.Net
 {
@@ -16,9 +19,9 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class ItemsCollection<T> : List<T>
+    public partial class ItemsCollection<T> : List<T> where T : Observable, IXObject
     {
-	    /// <summary>
+        /// <summary>
         /// 
         /// </summary>
         [Browsable(false)]
@@ -178,7 +181,14 @@ namespace Ext.Net
         {
             if (this.SingleItemMode && this.Count > 0)
             {
-                throw new InvalidOperationException("Only one item is allowed in this Collection.");
+                throw new InvalidOperationException("Only one Component allowed in this Collection.");
+            }
+
+            Component cmp = item as Component;
+
+            if (cmp != null)
+            {
+                cmp.AutoRender = false;
             }
         }
 
@@ -200,13 +210,57 @@ namespace Ext.Net
             }
         }
 
-        public delegate void BeforeItemAddHandler(T item);
-        public event BeforeItemAddHandler BeforeItemAdd;
+        internal delegate void BeforeItemAddHandler(T item);
+        internal event BeforeItemAddHandler BeforeItemAdd;
 
-        public delegate void AfterItemAddHandler(T item);
-        public event AfterItemAddHandler AfterItemAdd;
+        internal delegate void AfterItemAddHandler(T item);
+        internal event AfterItemAddHandler AfterItemAdd;
 
-        public delegate void AfterItemRemoveHandler(T item);
-        public event AfterItemRemoveHandler AfterItemRemove;
+        internal delegate void AfterItemRemoveHandler(T item);
+        internal event AfterItemRemoveHandler AfterItemRemove;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [Description("")]
+    public partial class ItemTCollectionEditor : CollectionEditor
+    {
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ItemTCollectionEditor(Type type) : base(type) { }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        protected override bool CanSelectMultipleInstances()
+        {
+            return false;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        protected override Type[] CreateNewItemTypes()
+        {
+            return new Type[]
+              {
+                typeof(Panel),
+                typeof(TabPanel)
+              };
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        protected override Type CreateCollectionItemType()
+        {
+            return typeof(Panel);
+        }
     }
 }

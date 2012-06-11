@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class TriggerFieldBase
     {
         /// <summary>
@@ -38,12 +35,10 @@ namespace Ext.Net
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
                 list.Add("triggers", new ConfigOption("triggers", new SerializationOptions("triggersConfig", JsonMode.AlwaysArray), null, this.Triggers ));
-                list.Add("editable", new ConfigOption("editable", null, true, this.Editable ));
                 list.Add("hideTrigger", new ConfigOption("hideTrigger", null, false, this.HideTrigger ));
-                list.Add("hideBaseTrigger", new ConfigOption("hideBaseTrigger", null, false, this.HideBaseTrigger ));
+                list.Add("editable", new ConfigOption("editable", null, true, this.Editable ));
                 list.Add("firstBaseTrigger", new ConfigOption("firstBaseTrigger", null, false, this.FirstBaseTrigger ));
-                list.Add("repeatTriggerClick", new ConfigOption("repeatTriggerClick", null, false, this.RepeatTriggerClick ));
-                list.Add("triggerIconClsProxy", new ConfigOption("triggerIconClsProxy", new SerializationOptions("triggerCls", JsonMode.Raw), "", this.TriggerIconClsProxy ));
+                list.Add("triggerIconClsProxy", new ConfigOption("triggerIconClsProxy", new SerializationOptions("triggerClass"), "", this.TriggerIconClsProxy ));
 
                 return list;
             }

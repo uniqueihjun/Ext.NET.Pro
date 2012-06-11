@@ -1,11 +1,15 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.ComponentModel;
 
 namespace Ext.Net
@@ -15,9 +19,6 @@ namespace Ext.Net
     /// </summary>    
     public partial class ObservableDirectEvent : BaseDirectEvent
     {
-        /// <new date="2010-01-26" owner="geoff" key="DirectEvent">
-        /// The .After handler is called immediately after the DirectEvent is fired and before the response is returned from the server.
-        /// </new>
         /// <summary>
         /// After handler with params: el, extraParams. Called immediately after DirectEvent has been requested.
         /// </summary>
@@ -29,11 +30,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("After", "");
+                return (string)this.ViewState["After"] ?? "";
             }
             set
             {
-                this.State.Set("After", value);
+                this.ViewState["After"] = value;
             }
         }
 
@@ -48,11 +49,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Before", "");
+                return (string)this.ViewState["Before"] ?? "";
             }
             set
             {
-                this.State.Set("Before", value);
+                this.ViewState["Before"] = value;
             }
         }
 
@@ -67,11 +68,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Success", "");
+                return (string)this.ViewState["Success"] ?? "";
             }
             set
             {
-                this.State.Set("Success", value);
+                this.ViewState["Success"] = value;
             }
         }
 
@@ -86,11 +87,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Failure", "");
+                return (string)this.ViewState["Failure"] ?? "";
             }
             set
             {
-                this.State.Set("Failure", value);
+                this.ViewState["Failure"] = value;
             }
         }
 
@@ -105,11 +106,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Complete", "");
+                return (string)this.ViewState["Complete"] ?? "";
             }
             set
             {
-                this.State.Set("Complete", value);
+                this.ViewState["Complete"] = value;
             }
         }
 

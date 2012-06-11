@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class PropertyGridParameter
     {
         /// <summary>
@@ -59,28 +56,15 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			 
- 			/// <summary>
-			/// (optional) The Ext.form.Field to use when editing values in this column if editing is supported by the grid.
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of PropertyGridParameter.Builder</returns>
-            public virtual PropertyGridParameter.Builder Editor(Action<EditorCollection> action)
-            {
-                action(this.ToComponent().Editor);
-                return this as PropertyGridParameter.Builder;
-            }
-			 
- 			/// <summary>
-			/// Editor options
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of PropertyGridParameter.Builder</returns>
-            public virtual PropertyGridParameter.Builder EditorOptions(Action<CellEditorOptions> action)
-            {
-                action(this.ToComponent().EditorOptions);
-                return this as PropertyGridParameter.Builder;
-            }
-			 
+ 			// /// <summary>
+			// /// (optional) The Ext.form.Field to use when editing values in this column if editing is supported by the grid.
+			// /// </summary>
+            // public virtual TBuilder Editor(EditorCollection editor)
+            // {
+            //    this.ToComponent().Editor = editor;
+            //    return this as TBuilder;
+            // }
+             
  			/// <summary>
 			/// 
 			/// </summary>

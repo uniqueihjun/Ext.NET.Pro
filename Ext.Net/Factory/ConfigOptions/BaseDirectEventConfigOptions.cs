@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class BaseDirectEvent
     {
         /// <summary>
@@ -47,7 +44,7 @@ namespace Ext.Net
                 list.Add("urlProxy", new ConfigOption("urlProxy", new SerializationOptions("url"), "", this.UrlProxy ));
                 list.Add("method", new ConfigOption("method", new SerializationOptions("method"), HttpMethod.Default, this.Method ));
                 list.Add("timeout", new ConfigOption("timeout", null, 30000, this.Timeout ));
-                list.Add("formProxyArg", new ConfigOption("formProxyArg", new SerializationOptions("formId"), "", this.FormProxyArg ));
+                list.Add("formProxyArg", new ConfigOption("formProxyArg", null, "", this.FormProxyArg ));
                 list.Add("extraParams", new ConfigOption("extraParams", new SerializationOptions(JsonMode.ArrayToObject), null, this.ExtraParams ));
                 list.Add("eventMask", new ConfigOption("eventMask", new SerializationOptions(JsonMode.Object), null, this.EventMask ));
                 list.Add("showWarningOnFailure", new ConfigOption("showWarningOnFailure", null, true, this.ShowWarningOnFailure ));

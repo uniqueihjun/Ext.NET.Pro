@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ClickRepeater
     {
         /// <summary>
@@ -41,7 +38,7 @@ namespace Ext.Net
                 list.Add("delay", new ConfigOption("delay", new SerializationOptions(JsonMode.Raw), 250, this.Delay ));
                 list.Add("targetProxy", new ConfigOption("targetProxy", new SerializationOptions("el", JsonMode.Raw), "", this.TargetProxy ));
                 list.Add("interval", new ConfigOption("interval", new SerializationOptions(JsonMode.Raw), 20, this.Interval ));
-                list.Add("pressedCls", new ConfigOption("pressedCls", null, "", this.PressedCls ));
+                list.Add("pressClass", new ConfigOption("pressClass", null, "", this.PressClass ));
                 list.Add("preventDefault", new ConfigOption("preventDefault", null, false, this.PreventDefault ));
                 list.Add("stopDefault", new ConfigOption("stopDefault", null, false, this.StopDefault ));
                 list.Add("handler", new ConfigOption("handler", new SerializationOptions(JsonMode.Raw), "", this.Handler ));

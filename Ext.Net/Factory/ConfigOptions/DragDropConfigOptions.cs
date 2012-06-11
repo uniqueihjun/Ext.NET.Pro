@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class DragDrop
     {
         /// <summary>
@@ -38,7 +35,6 @@ namespace Ext.Net
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
                 list.Add("configIDProxy", new ConfigOption("configIDProxy", new SerializationOptions(JsonMode.Ignore), "", this.ConfigIDProxy ));
-                list.Add("defaultPadding", new ConfigOption("defaultPadding", new SerializationOptions("defaultPadding", JsonMode.Raw), null, this.DefaultPadding ));
                 list.Add("groups", new ConfigOption("groups", new SerializationOptions("groups", JsonMode.Raw), null, this.Groups ));
                 list.Add("hasOuterHandles", new ConfigOption("hasOuterHandles", null, false, this.HasOuterHandles ));
                 list.Add("ignoreSelf", new ConfigOption("ignoreSelf", null, true, this.IgnoreSelf ));
@@ -52,7 +48,6 @@ namespace Ext.Net
                 list.Add("primaryButtonOnly", new ConfigOption("primaryButtonOnly", null, true, this.PrimaryButtonOnly ));
                 list.Add("xTicks", new ConfigOption("xTicks", new SerializationOptions(typeof(IntArrayJsonConverter)), null, this.XTicks ));
                 list.Add("yTicks", new ConfigOption("yTicks", new SerializationOptions(typeof(IntArrayJsonConverter)), null, this.YTicks ));
-                list.Add("getDragEl", new ConfigOption("getDragEl", new SerializationOptions(JsonMode.Raw), null, this.GetDragEl ));
                 list.Add("endDrag", new ConfigOption("endDrag", new SerializationOptions(JsonMode.Raw), null, this.EndDrag ));
                 list.Add("onAvailable", new ConfigOption("onAvailable", new SerializationOptions(JsonMode.Raw), null, this.OnAvailable ));
                 list.Add("onDrag", new ConfigOption("onDrag", new SerializationOptions(JsonMode.Raw), null, this.OnDrag ));

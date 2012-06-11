@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class CheckboxBase
     {
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TCheckboxBase, TBuilder> : Field.Builder<TCheckboxBase, TBuilder>
+        new public abstract partial class Builder<TCheckboxBase, TBuilder> : Field.Builder<TCheckboxBase, TBuilder>
             where TCheckboxBase : CheckboxBase
             where TBuilder : Builder<TCheckboxBase, TBuilder>
         {
@@ -40,56 +37,11 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the box label text. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual TBuilder AfterBoxLabelTextTpl(XTemplate afterBoxLabelTextTpl)
-            {
-                this.ToComponent().AfterBoxLabelTextTpl = afterBoxLabelTextTpl;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the box label element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual TBuilder AfterBoxLabelTpl(XTemplate afterBoxLabelTpl)
-            {
-                this.ToComponent().AfterBoxLabelTpl = afterBoxLabelTpl;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the box label text. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual TBuilder BeforeBoxLabelTextTpl(XTemplate beforeBoxLabelTextTpl)
-            {
-                this.ToComponent().BeforeBoxLabelTextTpl = beforeBoxLabelTextTpl;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the box label text. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual TBuilder BeforeBoxLabelTpl(XTemplate beforeBoxLabelTpl)
-            {
-                this.ToComponent().BeforeBoxLabelTpl = beforeBoxLabelTpl;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// An optional text label that will appear next to the checkbox. Whether it appears before or after the checkbox is determined by the boxLabelAlign config (defaults to after).
+			/// The text that appears beside the checkbox (defaults to '').
 			/// </summary>
             public virtual TBuilder BoxLabel(string boxLabel)
             {
                 this.ToComponent().BoxLabel = boxLabel;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// The position relative to the checkbox where the boxLabel should appear. Recognized values are 'before' and 'after'. Defaults to 'after'.
-			/// </summary>
-            public virtual TBuilder BoxLabelAlign(BoxLabelAlign boxLabelAlign)
-            {
-                this.ToComponent().BoxLabelAlign = boxLabelAlign;
                 return this as TBuilder;
             }
              
@@ -103,15 +55,6 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup inside the box label element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual TBuilder BoxLabelAttrTpl(XTemplate boxLabelAttrTpl)
-            {
-                this.ToComponent().BoxLabelAttrTpl = boxLabelAttrTpl;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
 			/// 
 			/// </summary>
             public virtual TBuilder BoxLabelCls(string boxLabelCls)
@@ -121,7 +64,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// True if the the checkbox should render already checked (defaults to false).
+			/// True if the checkbox should render already checked (defaults to false).
 			/// </summary>
             public virtual TBuilder Checked(bool _checked)
             {
@@ -130,7 +73,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The CSS class added to the component's main element when it is in the checked state.
+			/// The CSS class to use when the control is checked (defaults to 'x-form-check-checked'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
             public virtual TBuilder CheckedCls(string checkedCls)
             {
@@ -139,16 +82,16 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// A function called when the checked value changes (can be used instead of handling the change event).
+			/// The CSS class to use when the control receives input focus (defaults to 'x-form-check-focus'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
-            public virtual TBuilder Handler(string handler)
+            public virtual TBuilder FocusCls(string focusCls)
             {
-                this.ToComponent().Handler = handler;
+                this.ToComponent().FocusCls = focusCls;
                 return this as TBuilder;
             }
              
  			/// <summary>
-			/// The value that should go into the generated input element's value attribute and should be used as the parameter value when submitting as part of a form. Defaults to \"on\".
+			/// The value that should go into the generated input element's value attribute (defaults to undefined, with no value attribute)
 			/// </summary>
             public virtual TBuilder InputValue(string inputValue)
             {
@@ -157,20 +100,29 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// An object to use as the scope ('this' reference) of the handler function. Defaults to this Checkbox.
+			/// The CSS class to use when the control is being actively clicked (defaults to 'x-form-check-down'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
-            public virtual TBuilder Scope(string scope)
+            public virtual TBuilder MouseDownCls(string mouseDownCls)
             {
-                this.ToComponent().Scope = scope;
+                this.ToComponent().MouseDownCls = mouseDownCls;
                 return this as TBuilder;
             }
              
  			/// <summary>
-			/// If configured, this will be submitted as the checkbox's value during form submit if the checkbox is unchecked. By default this is undefined, which results in nothing being submitted for the checkbox field when the form is submitted (the default behavior of HTML checkboxes).
+			/// The CSS class to use when the control is hovered over (defaults to 'x-form-check-over'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
-            public virtual TBuilder UncheckedValue(string uncheckedValue)
+            public virtual TBuilder OverCls(string overCls)
             {
-                this.ToComponent().UncheckedValue = uncheckedValue;
+                this.ToComponent().OverCls = overCls;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Tag(string tag)
+            {
+                this.ToComponent().Tag = tag;
                 return this as TBuilder;
             }
             

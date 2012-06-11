@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -64,7 +64,7 @@ namespace Ext.Net
     /// 
     /// </summary>
     [Description("")]
-    public partial class ConfigItemCollection : BaseItemCollection<ConfigItem>
+    public partial class ConfigItemCollection : StateManagedCollection<ConfigItem>
     {
         private bool camelName = true;
 
@@ -103,8 +103,8 @@ namespace Ext.Net
                     {
                         sb.Append(",");
                     }
-
-                    sb.Append(JSON.Serialize(this.CamelName ? Ext.Net.Utilities.StringUtils.ToLowerCamelCase(item.Name) : item.Name));
+                    
+                    sb.Append(item.Name);
                     sb.Append(":");
                     sb.Append(item.ValueToString());
                     needComma = true;

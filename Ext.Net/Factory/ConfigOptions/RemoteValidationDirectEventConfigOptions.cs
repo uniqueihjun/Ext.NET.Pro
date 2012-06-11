@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class RemoteValidationDirectEvent
     {
         /// <summary>
@@ -43,7 +40,7 @@ namespace Ext.Net
                 list.Add("busyIconClsProxy", new ConfigOption("busyIconClsProxy", new SerializationOptions("busyIconCls"), "", this.BusyIconClsProxy ));
                 list.Add("busyIconCls", new ConfigOption("busyIconCls", null, "loading-indicator", this.BusyIconCls ));
                 list.Add("validationEvent", new ConfigOption("validationEvent", new SerializationOptions(JsonMode.ToLower), "keyup", this.ValidationEvent ));
-                list.Add("eventOwner", new ConfigOption("eventOwner", new SerializationOptions(JsonMode.ToLower), ValidationEventOwner.Input, this.EventOwner ));
+                list.Add("eventOwner", new ConfigOption("eventOwner", new SerializationOptions(JsonMode.ToLower), ValidatioEventOwner.Element, this.EventOwner ));
                 list.Add("initValueValidation", new ConfigOption("initValueValidation", new SerializationOptions(JsonMode.ToLower), InitValueValidation.Valid, this.InitValueValidation ));
 
                 return list;

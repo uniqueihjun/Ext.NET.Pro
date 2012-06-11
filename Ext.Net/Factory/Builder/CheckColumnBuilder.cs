@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class CheckColumn
     {
         /// <summary>
@@ -76,38 +73,7 @@ namespace Ext.Net
                 this.ToComponent().SingleSelect = singleSelect;
                 return this as CheckColumn.Builder;
             }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CheckColumn.Builder StopSelection(bool stopSelection)
-            {
-                this.ToComponent().StopSelection = stopSelection;
-                return this as CheckColumn.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of CheckColumn.Builder</returns>
-            public virtual CheckColumn.Builder Listeners(Action<CheckColumnListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as CheckColumn.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of CheckColumn.Builder</returns>
-            public virtual CheckColumn.Builder DirectEvents(Action<CheckColumnDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as CheckColumn.Builder;
-            }
-			
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

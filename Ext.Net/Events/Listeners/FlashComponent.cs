@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,47 +15,29 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class FlashComponentListeners : AbstractComponentListeners
+    public partial class FlashComponentListeners : BoxComponentListeners
     {
-        private ComponentListener failure;
+        private ComponentListener initialize;
 
         /// <summary>
-        /// Fired when the Flash movie embedding fails
-        /// Parameters
-        ///     item : Ext.flash.Component
+        /// Fires after the component is initialized.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(FlashComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("failure", typeof(ListenerJsonConverter))]
+        [ConfigOption("initialize", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fired when the Flash movie embedding fails")]
-        public virtual ComponentListener Failure
+        [Description("Fires after the flash is initialized.")]
+        public virtual ComponentListener Initialize
         {
             get
             {
-                return this.failure ?? (this.failure = new ComponentListener());
-            }
-        }
+                if (this.initialize == null)
+                {
+                    this.initialize = new ComponentListener();
+                }
 
-        private ComponentListener success;
-
-        /// <summary>
-        /// Fired when the Flash movie has been successfully embedded
-        /// Parameters
-        ///     item : Ext.flash.Component
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(FlashComponent), "this")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("success", typeof(ListenerJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("Fired when the Flash movie has been successfully embedded")]
-        public virtual ComponentListener Success
-        {
-            get
-            {
-                return this.success ?? (this.success = new ComponentListener());
+                return this.initialize;
             }
         }
     }

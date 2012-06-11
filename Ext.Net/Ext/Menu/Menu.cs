@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -13,16 +13,13 @@ using System.Web.UI;
 namespace Ext.Net
 {
     /// <summary>
-    /// A menu object. This is the container to which you may add menu items.
-    /// Menus may contain either menu items, or general Components. Menus may also contain docked items because it extends Ext.panel.Panel.
-    /// To make a contained general Component line up with other menu items, specify plain: true. This reserves a space for an icon, and indents the Component in line with the other menu items.
-    /// By default, Menus are absolutely positioned, floating Components. By configuring a Menu with floating: false, a Menu may be used as a child of a Container.
+    /// A menu object. This is the container to which you add all other menu items. Menu can also serve as a base class when you want a specialized menu based off of another component.
     /// </summary>
     [Meta]
     [ToolboxData("<{0}:Menu runat=\"server\"><Items><{0}:MenuItem runat=\"server\" Text=\"Item1\" /><{0}:MenuItem runat=\"server\" Text=\"Item2\" /><{0}:MenuItem runat=\"server\" Text=\"Item3\" /></Items></ext:Menu>")]
     [ToolboxBitmap(typeof(Menu), "Build.ToolboxIcons.Menu.bmp")]
     [Designer(typeof(EmptyDesigner))]
-    [Description("A menu object. This is the container to which you may add menu items.")]
+    [Description("A menu object. This is the container to which you add all other menu items. Menu can also serve as a base class when you want a specialized menu based off of another component.")]
     public partial class Menu : MenuBase
     {
         /// <summary>
@@ -67,7 +64,8 @@ namespace Ext.Net
         [Category("2. Observable")]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public MenuListeners Listeners
         {
@@ -92,7 +90,8 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption("directEvents", JsonMode.Object)]        
+        [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side DirectEventHandlers")]
         public MenuDirectEvents DirectEvents
         {
@@ -100,7 +99,7 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new MenuDirectEvents(this);
+                    this.directEvents = new MenuDirectEvents();
                 }
 
                 return this.directEvents;

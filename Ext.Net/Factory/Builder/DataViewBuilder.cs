@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class DataView
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractDataView.Builder<DataView, DataView.Builder>
+        public partial class Builder : DataViewBase.Builder<DataView, DataView.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -59,57 +56,24 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DataView.Builder DeselectOnContainerClick(bool deselectOnContainerClick)
-            {
-                this.ToComponent().DeselectOnContainerClick = deselectOnContainerClick;
-                return this as DataView.Builder;
-            }
+ 			// /// <summary>
+			// /// Client-side JavaScript Event Handlers
+			// /// </summary>
+            // public virtual TBuilder Listeners(DataViewListeners listeners)
+            // {
+            //    this.ToComponent().Listeners = listeners;
+            //    return this as TBuilder;
+            // }
              
- 			/// <summary>
-			/// Turns on/off keyboard navigation within the DataView. 
-			/// </summary>
-            public virtual DataView.Builder EnableKeyNav(bool enableKeyNav)
-            {
-                this.ToComponent().EnableKeyNav = enableKeyNav;
-                return this as DataView.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DataView.Builder</returns>
-            public virtual DataView.Builder Listeners(Action<DataViewListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as DataView.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DataView.Builder</returns>
-            public virtual DataView.Builder DirectEvents(Action<DataViewDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as DataView.Builder;
-            }
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DataView.Builder</returns>
-            public virtual DataView.Builder SelectedRows(Action<SelectedRowCollection> action)
-            {
-                action(this.ToComponent().SelectedRows);
-                return this as DataView.Builder;
-            }
-			
+ 			// /// <summary>
+			// /// Server-side Ajax Event Handlers
+			// /// </summary>
+            // public virtual TBuilder DirectEvents(DataViewDirectEvents directEvents)
+            // {
+            //    this.ToComponent().DirectEvents = directEvents;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -24,7 +24,7 @@ namespace Ext.Net
     [ToolboxBitmap(typeof(MenuPanel), "Build.ToolboxIcons.MenuPanel.bmp")]
     [Designer(typeof(EmptyDesigner))]
     [Description("")]
-    public partial class MenuPanel : AbstractPanel
+    public partial class MenuPanel : PanelBase
     {
         /// <summary>
         /// 
@@ -154,11 +154,12 @@ namespace Ext.Net
         /// <summary>
         /// Items Collection
         /// </summary>
+        [Meta]
         [ConfigOption(JsonMode.Ignore)]
         [Browsable(false)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [Description("")]
-        public override ItemsCollection<AbstractComponent> Items
+        public override ItemsCollection<Component> Items
         {
             get
             {
@@ -207,11 +208,34 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("SaveSelection", true);
+                object obj = this.ViewState["SaveSelection"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("SaveSelection", value);
+                this.ViewState["SaveSelection"] = value;
+            }
+        }
+
+        /// <summary>
+        /// Fit menu's height
+        /// </summary>
+        [Meta]
+        [ConfigOption]
+        [Category("7. MenuPanel")]
+        [DefaultValue(true)]
+        [NotifyParentProperty(true)]
+        [Description("Fit menu's height")]
+        public virtual bool FitHeight
+        {
+            get
+            {
+                object obj = this.ViewState["FitHeight"];
+                return (obj == null) ? true : (bool)obj;
+            }
+            set
+            {
+                this.ViewState["FitHeight"] = value;
             }
         }
 
@@ -229,11 +253,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("SelectedIndex", -1);
+                object obj = this.ViewState["SelectedIndex"];
+                return (obj == null) ? -1 : (int)obj;
             }
             set
             {
-                this.State.Set("SelectedIndex", value);
+                this.ViewState["SelectedIndex"] = value;
             }
         }
 
@@ -247,7 +272,8 @@ namespace Ext.Net
         [Category("2. Observable")]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public PanelListeners Listeners
         {
@@ -272,7 +298,8 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption("directEvents", JsonMode.Object)]        
+        [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side Ajax Event Handlers")]
         public PanelDirectEvents DirectEvents
         {
@@ -280,7 +307,7 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new PanelDirectEvents(this);
+                    this.directEvents = new PanelDirectEvents();
                 }
 
                 return this.directEvents;

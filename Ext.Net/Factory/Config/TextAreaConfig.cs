@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TextArea
     {
 		/*  Ctor
@@ -63,46 +60,46 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
-			private int cols = 20;
+			private Unit growMax = Unit.Pixel(1000);
 
 			/// <summary>
-			/// An initial value for the 'cols' attribute on the textarea element. This is only used if the component has no configured width and is not given a width by its container's layout. Defaults to 4.
+			/// The maximum width to allow when grow = true (defaults to 800).
 			/// </summary>
-			[DefaultValue(20)]
-			public virtual int Cols 
+			[DefaultValue(typeof(Unit), "1000")]
+			public override Unit GrowMax 
 			{ 
 				get
 				{
-					return this.cols;
+					return this.growMax;
 				}
 				set
 				{
-					this.cols = value;
+					this.growMax = value;
 				}
 			}
 
-			private bool enterIsSpecial = false;
+			private Unit growMin = Unit.Pixel(60);
 
 			/// <summary>
-			/// True if you want the ENTER key to be classed as a special key and the specialkey event to be fired when ENTER is pressed. Defaults to: false
+			/// The minimum width to allow when grow = true (defaults to 60).
 			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool EnterIsSpecial 
+			[DefaultValue(typeof(Unit), "60")]
+			public override Unit GrowMin 
 			{ 
 				get
 				{
-					return this.enterIsSpecial;
+					return this.growMin;
 				}
 				set
 				{
-					this.enterIsSpecial = value;
+					this.growMin = value;
 				}
 			}
 
 			private bool preventScrollbars = false;
 
 			/// <summary>
-			/// true to prevent scrollbars from appearing regardless of how much text is in the field. This option is only relevant when grow is true. Equivalent to setting overflow: hidden, defaults to false.
+			/// True to prevent scrollbars from appearing regardless of how much text is in the field (equivalent to setting overflow: hidden, defaults to false).
 			/// </summary>
 			[DefaultValue(false)]
 			public virtual bool PreventScrollbars 
@@ -114,24 +111,6 @@ namespace Ext.Net
 				set
 				{
 					this.preventScrollbars = value;
-				}
-			}
-
-			private int rows = 4;
-
-			/// <summary>
-			/// An initial value for the 'rows' attribute on the textarea element. This is only used if the component has no configured height and is not given a height by its container's layout. Defaults to 4.
-			/// </summary>
-			[DefaultValue(4)]
-			public virtual int Rows 
-			{ 
-				get
-				{
-					return this.rows;
-				}
-				set
-				{
-					this.rows = value;
 				}
 			}
         

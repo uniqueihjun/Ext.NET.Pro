@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -31,14 +31,21 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        protected ContentScriptBuilder(BaseControl control) : base(control)
+        protected ContentScriptBuilder(XControl control) : base(control)
         {
             items = new List<object>(0);
             if (control is IItems)
             {
                 items = ((IItems) control).ItemsList;
 
-                layoutItems = items;
+                if (items.Count == 1 && items[0] is Layout)
+                {
+                    layoutItems = ((Layout) items[0]).Items;
+                }
+                else
+                {
+                    layoutItems = items;
+                }
             }
 
             if (control is IContent)
@@ -47,10 +54,10 @@ namespace Ext.Net
             }
         }
 
-		/// <summary>
+        /// <summary>
 		/// 
 		/// </summary>
-		[Description("")]
+        [Description("")]
         public override string Build(bool selfRendering)
         {
             return this.Build(selfRendering, false);
@@ -73,13 +80,12 @@ namespace Ext.Net
                 {
                     pageHolder = new SelfRenderingPage();
 
-                    ResourceManager rm = new ResourceManager(true);
+                    ResourceManager rm = new ResourceManager();
                     rm.RenderScripts = ResourceLocationType.None;
                     rm.RenderStyles = ResourceLocationType.None;
-                    rm.IDMode = IDMode.Explicit;
+                    rm.IDMode = IDMode.Client;
                     rm.IsDynamic = true;
                     pageHolder.Controls.Add(rm);
-                    this.ResourceManager = Ext.Net.ResourceManager.GetInstance() ?? rm;
 
                     pageHolder.Controls.Add(this.Control);
                 }
@@ -87,7 +93,6 @@ namespace Ext.Net
                 {
                     pageHolder = this.Control.Page;
                     ResourceManager newMgr = Ext.Net.Utilities.ControlUtils.FindControl<ResourceManager>(pageHolder);
-                    this.ResourceManager = Ext.Net.ResourceManager.GetInstance() ?? newMgr;
                     if (newMgr != null)
                     {
                         newMgr.IsDynamic = true;
@@ -97,15 +102,15 @@ namespace Ext.Net
                 StringBuilder sb = new StringBuilder();
 
                 this.Control.ContentUpdated = this.Control.HasContent();
-                AbstractContainer container = this.Control as AbstractContainer;
-                if (container != null)
+                ContainerBase container = this.Control as ContainerBase;
+                if (container != null && container.Items.Count > 0)
                 {
                     sb.AppendFormat("{0}.removeAll();", this.Control.ClientID);
                 }
 
-                List<BaseControl> childControls = this.FindControls(this.Control, selfRendering, sb, null, null);
+                List<XControl> childControls = this.FindControls(this.Control, selfRendering, sb, null);
 
-                foreach (BaseControl c in childControls)
+                foreach (XControl c in childControls)
                 {
                     if (c.Visible)
                     {
@@ -121,21 +126,17 @@ namespace Ext.Net
                 {
                     this.RegisterHtml(sb, pageHolder);
 
-                    foreach (BaseControl c in childControls)
+                    foreach (XControl c in childControls)
                     {
                         c.DeferInitScriptGeneration = false;
                     }
 
-                    List<BaseControl> newChildControls = this.FindControls(this.Control, false, sb, null, null);
+                    List<XControl> newChildControls = this.FindControls(this.Control, false, sb, null);
+                    newChildControls.Insert(0, this.Control);
 
-                    if (this.Control.AutoDataBind)
+                    foreach (XControl c in newChildControls)
                     {
-                        this.Control.DataBind();
-                    }
-
-                    foreach (BaseControl c in newChildControls)
-                    {
-                        if (!childControls.Contains(c) && c.Visible)
+                        if (!childControls.Contains(c) && (c.Visible || Object.ReferenceEquals(c, this.Control)))
                         {
                             if (c.AutoDataBind)
                             {
@@ -147,7 +148,7 @@ namespace Ext.Net
                     childControls = newChildControls;
                 }
 
-                foreach (BaseControl c in childControls)
+                foreach (XControl c in childControls)
                 {
                     if (c.Visible)
                     {
@@ -156,22 +157,19 @@ namespace Ext.Net
                     }
                 }
 
-                foreach (BaseControl c in childControls)
+                foreach (XControl c in childControls)
                 {
                     if (c.Visible)
                     {
                         string initScript = c.BuildInitScript();
                         if (!string.IsNullOrEmpty(initScript))
-                        {   if (this.layoutItems.Contains(c))
+                        {
+                            if (this.layoutItems.Contains(c))
                             {
                                 this.ScriptClientInitBag.Add(c.ClientInitID, this.Control.ClientID.ConcatWith(".add(", initScript, ");"));
                             }
                             else
                             {
-                                initScript = Transformer.NET.Net.CreateToken(typeof(Transformer.NET.ItemTag), new Dictionary<string, string>{                        
-                                                {"ref", c.IsLazy ? c.ClientInitID : "init_script"},
-                                                {"index", ResourceManager.ScriptOrderNumber.ToString()}
-                                            }, initScript);    
                                 this.ScriptClientInitBag.Add(c.ClientInitID, initScript);
                             }
                         }
@@ -192,7 +190,7 @@ namespace Ext.Net
                 {
                     foreach (KeyValuePair<string, string> item in this.ScriptClientInitBag)
                     {
-                        sb.Append(this.ScriptClientInitBag[item.Key]);
+                        sb.Append(this.Combine(item.Key));
                     }
                 }
 
@@ -200,19 +198,21 @@ namespace Ext.Net
                 {
                     sb.Append(script.Value);
                 }
-               
+
+                //if (selfRendering)
+                //{
+                //    this.RegisterHtml(sb, pageHolder);
+                //}
+
                 if (container != null && container.Items.Count > 0)
                 {
                     sb.AppendFormat("{0}.doLayout();", this.Control.ClientID);
                 }
 
-                sb.Append(Transformer.NET.Net.CreateToken(typeof(Transformer.NET.AnchorTag), new Dictionary<string, string>{                        
-                                                {"id", "init_script"}                            
-                                            }));
                 this.script = this.RegisterResources(sb.ToString());
             }
 
-            return Transformer.NET.Html.HtmlTransformer.Transform(this.script);
+            return this.script;
         }
 
 		/// <summary>
@@ -228,7 +228,7 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public static ContentScriptBuilder Create(BaseControl control)
+        public static ContentScriptBuilder Create(XControl control)
         {
             return new ContentScriptBuilder(control);
         }

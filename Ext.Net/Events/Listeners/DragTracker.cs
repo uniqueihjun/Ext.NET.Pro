@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,41 +17,10 @@ namespace Ext.Net
 	[Description("")]
     public partial class DragTrackerListeners : ComponentListeners
     {
-        private ComponentListener beforestart;
-
-        /// <summary>
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Button), "this")]
-        [ListenerArgument(1, "e", typeof(object), "Event object")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("beforestart", typeof(ListenerJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("")]
-        public virtual ComponentListener BeforeStart
-        {
-            get
-            {
-                if (this.beforestart == null)
-                {
-                    this.beforestart = new ComponentListener();
-                }
-
-                return this.beforestart;
-            }
-        }
-        
         private ComponentListener drag;
 
         /// <summary>
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
+        /// 
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "Event object")]
@@ -76,10 +45,7 @@ namespace Ext.Net
         private ComponentListener dragend;
 
         /// <summary>
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
+        /// 
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "Event object")]
@@ -103,12 +69,9 @@ namespace Ext.Net
 
         private ComponentListener dragstart;
 
-        /// <summary>
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
-        /// </summary>
+		/// <summary>
+		/// 
+		/// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "Event object")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -132,12 +95,7 @@ namespace Ext.Net
         private ComponentListener mousedown;
 
 		/// <summary>
-		/// Fires when the mouse button is pressed down, but before a drag operation begins. The drag operation begins after either the mouse has been moved by tolerance pixels, or after the autoStart timer fires.
-        /// Return false to veto the drag operation.
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
+		/// 
 		/// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "Event object")]
@@ -162,11 +120,7 @@ namespace Ext.Net
         private ComponentListener mousemove;
 
 		/// <summary>
-        /// Fired when the mouse is moved. Returning false cancels the drag operation.
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
+		/// 
 		/// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "Event object")]
@@ -191,10 +145,7 @@ namespace Ext.Net
         private ComponentListener mouseup;
 
 		/// <summary>
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
+		/// 
 		/// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "Event object")]
@@ -213,69 +164,6 @@ namespace Ext.Net
                 }
 
                 return this.mouseup;
-            }
-        }
-
-        private ComponentListener mouseout;
-
-        /// <summary>
-        /// Fires when the mouse exits the DragTracker's target element (or if delegate is used, when the mouse exits a delegate element).
-        /// Only available when trackOver is true
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Button), "this")]
-        [ListenerArgument(1, "e", typeof(object), "Event object")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("mouseout", typeof(ListenerJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("")]
-        public virtual ComponentListener MouseOut
-        {
-            get
-            {
-                if (this.mouseout == null)
-                {
-                    this.mouseout = new ComponentListener();
-                }
-
-                return this.mouseout;
-            }
-        }
-
-        private ComponentListener mouseover;
-
-        /// <summary>
-        /// Fires when the mouse enters the DragTracker's target element (or if delegate is used, when the mouse enters a delegate element).
-        /// Only available when trackOver is true
-        /// Parameters
-        /// item : Object
-        /// e : Object
-        ///     event object
-        /// target : HTMLElement
-        ///     The element mouseovered.
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(Button), "this")]
-        [ListenerArgument(1, "e", typeof(object), "Event object")]
-        [ListenerArgument(2, "target", typeof(object), "The element mouseovered.")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("mouseover", typeof(ListenerJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("")]
-        public virtual ComponentListener MouseOver
-        {
-            get
-            {
-                if (this.mouseover == null)
-                {
-                    this.mouseover = new ComponentListener();
-                }
-
-                return this.mouseover;
             }
         }
     }

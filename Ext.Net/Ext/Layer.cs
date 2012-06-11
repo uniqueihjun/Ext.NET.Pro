@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -14,19 +14,19 @@ using Ext.Net.Utilities;
 namespace Ext.Net
 {
 	/// <summary>
-    /// An extended Ext.Element object that supports a shadow and shim, constrain to viewport and automatic maintaining of shadow/shim positions.
+	/// 
 	/// </summary>
-    [Description("An extended Ext.Element object that supports a shadow and shim, constrain to viewport and automatic maintaining of shadow/shim positions.")]
+	[Description("")]
     public class Layer : Element
     {
 		/// <summary>
-        /// Creates new Layer.
+		/// 
 		/// </summary>
+		[Description("")]
         public Layer(LayerConfig config) : base(config.Serialize(true)) { }
 
         /// <summary>
-        /// Sets the z-index of this layer and adjusts any shadow and shim z-indexes. The layer z-index is automatically incremented depending upon the presence of a shim or a shadow in so that it always shows above those two associated elements.
-        /// Any shim, will be assigned the passed z-index. A shadow will be assigned the next highet z-index, and the Layer's element will receive the highest z-index.
+        /// Sets the z-index of this layer and adjusts any shadow and shim z-indexes. The layer z-index is automatically incremented by two more than the value passed in so that it always shows above any shadow or shim (the shadow element, if any, will be assigned z-index + 1, and the shim element, if any, will be assigned the unmodified z-index).
         /// </summary>
         /// <param name="zindex">The new z-index to set</param>
         /// <returns>This layer</returns>
@@ -37,10 +37,9 @@ namespace Ext.Net
         }
 
 		/// <summary>
-        /// Synchronize this Layer's associated elements, the shadow, and possibly the shim.
+		/// 
 		/// </summary>
-        /// <param name="show">Pass true to ensure that the shadow is shown.</param>
-        /// <returns>This layer</returns>
+		[Description("")]
         public virtual Layer Sync(bool show)
         {
             this.Call("sync", show);
@@ -48,9 +47,9 @@ namespace Ext.Net
         }
 
 		/// <summary>
-        /// Synchronize this Layer's associated elements, the shadow, and possibly the shim.
+		/// 
 		/// </summary>
-        /// <returns>This layer</returns>
+		[Description("")]
         public virtual Layer Sync()
         {
             this.Call("sync");
@@ -58,7 +57,7 @@ namespace Ext.Net
         }
     }
 
-    public partial class LayerConfig : BaseItem
+    public partial class LayerConfig : StateManagedItem
     {
         /// <summary>
         /// CSS class to add to the element
@@ -70,11 +69,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Cls", "");
+                return (string)this.ViewState["Cls"] ?? "";
             }
             set
             {
-                this.State.Set("Cls", value);
+                this.ViewState["Cls"] = value;
             }
         }
 
@@ -88,11 +87,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("ID", "");
+                return (string)this.ViewState["ID"] ?? "";
             }
             set
             {
-                this.State.Set("ID", value);
+                this.ViewState["ID"] = value;
             }
         }
 
@@ -106,11 +105,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("Constrain", true);
+                object obj = this.ViewState["Constrain"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("Constrain", value);
+                this.ViewState["Constrain"] = value;
             }
         }
 
@@ -135,29 +135,6 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// A String which specifies how this AbstractComponent's encapsulating DOM element will be hidden. Values may be
-        /// 'display' : The AbstractComponent will be hidden using the display: none style.
-        /// 'visibility' : The AbstractComponent will be hidden using the visibility: hidden style.
-        /// 'offsets' : The AbstractComponent will be hidden by absolutely positioning it out of the visible area of the document. This is useful when a hidden AbstractComponent must maintain measurable dimensions. Hiding using display results in a AbstractComponent having zero dimensions.
-        /// </summary>
-        [Meta]
-        [ConfigOption(JsonMode.ToLower)]
-        [DefaultValue(null)]
-        [NotifyParentProperty(true)]
-        [Description("A String which specifies how this AbstractComponent's encapsulating DOM element will be hidden.")]
-        public virtual HideMode? HideMode
-        {
-            get
-            {
-                return this.State.Get<HideMode?>("HideMode", null);
-            }
-            set
-            {
-                this.State.Set("HideMode", value);
-            }
-        }
-
-        /// <summary>
         /// True to automatically create an Ext.Shadow, or a string indicating the shadow's display Ext.Shadow.mode. False to disable the shadow. (defaults to false)
         /// </summary>
         [Meta]
@@ -167,11 +144,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<ShadowMode>("Shadow", ShadowMode.None);
+                object obj = this.ViewState["Shadow"];
+                return (obj == null) ? ShadowMode.None : (ShadowMode)obj;
             }
             set
             {
-                this.State.Set("Shadow", value);
+                this.ViewState["Shadow"] = value;
             }
         }
 
@@ -185,11 +163,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("ShadowOffset", 4);
+                object obj = this.ViewState["ShadowOffset"];
+                return (obj == null) ? 4 : (int)obj;
             }
             set
             {
-                this.State.Set("ShadowOffset", value);
+                this.ViewState["ShadowOffset"] = value;
             }
         }
 
@@ -203,11 +182,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("Shim", true);
+                object obj = this.ViewState["Shim"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("Shim", value);
+                this.ViewState["Shim"] = value;
             }
         }
 
@@ -221,29 +201,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("UseDisplay", false);
+                object obj = this.ViewState["UseDisplay"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("UseDisplay", value);
-            }
-        }
-
-        /// <summary>
-        /// The CSS class name to add in order to hide this Layer if this layer is configured with hideMode: 'asclass'
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [DefaultValue("")]
-        public virtual string VisibilityCls
-        {
-            get
-            {
-                return this.State.Get<string>("VisibilityCls", "");
-            }
-            set
-            {
-                this.State.Set("VisibilityCls", value);
+                this.ViewState["UseDisplay"] = value;
             }
         }
 
@@ -257,11 +220,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("ZIndex", 11000);
+                object obj = this.ViewState["ZIndex"];
+                return (obj == null) ? 11000 : (int)obj;
             }
             set
             {
-                this.State.Set("ZIndex", value);
+                this.ViewState["ZIndex"] = value;
             }
         }
 

@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class BaseTriggerField
     {
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TBaseTriggerField, TBuilder> : TriggerFieldBase.Builder<TBaseTriggerField, TBuilder>
+        new public abstract partial class Builder<TBaseTriggerField, TBuilder> : TriggerFieldBase.Builder<TBaseTriggerField, TBuilder>
             where TBaseTriggerField : BaseTriggerField
             where TBuilder : Builder<TBaseTriggerField, TBuilder>
         {
@@ -42,9 +39,9 @@ namespace Ext.Net
  			/// <summary>
 			/// 
 			/// </summary>
-            public virtual TBuilder PostBackEvent(string postBackEvent)
+            public virtual TBuilder TriggerClass(string triggerClass)
             {
-                this.ToComponent().PostBackEvent = postBackEvent;
+                this.ToComponent().TriggerClass = triggerClass;
                 return this as TBuilder;
             }
             

@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ToolbarDroppable
     {
         /// <summary>
@@ -37,13 +34,14 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
+                list.Add("configIDProxy", new ConfigOption("configIDProxy", new SerializationOptions("proxyId"), null, this.ConfigIDProxy ));
                 list.Add("createItem", new ConfigOption("createItem", new SerializationOptions(JsonMode.Raw), null, this.CreateItem ));
                 list.Add("canDrop", new ConfigOption("canDrop", new SerializationOptions(JsonMode.Raw), null, this.CanDrop ));
                 list.Add("calculateEntryIndex", new ConfigOption("calculateEntryIndex", new SerializationOptions(JsonMode.Raw), null, this.CalculateEntryIndex ));
                 list.Add("directEventConfig", new ConfigOption("directEventConfig", new SerializationOptions(JsonMode.Object), null, this.DirectEventConfig ));
-                list.Add("remote", new ConfigOption("remote", null, false, this.Remote ));
-                list.Add("listeners", new ConfigOption("listeners", new SerializationOptions("listeners", JsonMode.Object), null, this.Listeners ));
-                list.Add("directEvents", new ConfigOption("directEvents", new SerializationOptions("directEvents", JsonMode.Object), null, this.DirectEvents ));
+                list.Add("mode", new ConfigOption("mode", new SerializationOptions(JsonMode.ToLower), DataLoadMode.Local, this.Mode ));
+                list.Add("beforeRemoteCreate", new ConfigOption("beforeRemoteCreate", new SerializationOptions(JsonMode.Raw), null, this.BeforeRemoteCreate ));
+                list.Add("afterRemoteCreate", new ConfigOption("afterRemoteCreate", new SerializationOptions(JsonMode.Raw), null, this.AfterRemoteCreate ));
 
                 return list;
             }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -104,7 +104,7 @@ namespace Ext.Net
 
             if (isUpdate != null && (bool)isUpdate)
             {
-                this.ExtractUpdates(raw, buffer);
+                this.ExtractUpdates(raw, ref buffer);
             }
 
             string dynamicHtml = this.ExtractDynamicHtml(raw);
@@ -186,7 +186,7 @@ namespace Ext.Net
             this.response.Flush();
         }
 
-        private static Regex DynamicHtml_RE = new Regex(string.Concat(BaseControl.TOP_DYNAMIC_CONTROL_TAG_S, "(.*?)", BaseControl.TOP_DYNAMIC_CONTROL_TAG_E), RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex DynamicHtml_RE = new Regex(string.Concat(XControl.TOP_DYNAMIC_CONTROL_TAG_S, "(.*?)", XControl.TOP_DYNAMIC_CONTROL_TAG_E), RegexOptions.Compiled | RegexOptions.Singleline);
         
         private string ExtractDynamicHtml(string html)
         {
@@ -205,7 +205,7 @@ namespace Ext.Net
 
         private static Regex ExtractUpdates_RE = new Regex("<Ext.Net.Direct.Update id=\\\"(?<id>\\w*[^\"])+\\\"[^<]*>(?<html>.*?)</Ext.Net.Direct.Update>", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
         
-        private void ExtractUpdates(string html, StringBuilder buffer)
+        private void ExtractUpdates(string html, ref StringBuilder buffer)
         {
             MatchCollection m1 = ExtractUpdates_RE.Matches(html);
 

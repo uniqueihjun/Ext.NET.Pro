@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class Column
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : CellCommandColumn.Builder<Column, Column.Builder>
+        public partial class Builder : ColumnBase.Builder<Column, Column.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -60,27 +57,50 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Column.Builder</returns>
-            public virtual Column.Builder Listeners(Action<CellCommandColumnListeners> action)
+			/// 
+			/// </summary>
+            public virtual Column.Builder XType(string xType)
             {
-                action(this.ToComponent().Listeners);
+                this.ToComponent().XType = xType;
                 return this as Column.Builder;
             }
-			 
+             
  			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Column.Builder</returns>
-            public virtual Column.Builder DirectEvents(Action<CellCommandColumnDirectEvents> action)
+			/// 
+			/// </summary>
+            public virtual Column.Builder RightCommandAlign(bool rightCommandAlign)
             {
-                action(this.ToComponent().DirectEvents);
+                this.ToComponent().RightCommandAlign = rightCommandAlign;
                 return this as Column.Builder;
             }
-			
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder Commands(ImageCommandCollection commands)
+            // {
+            //    this.ToComponent().Commands = commands;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder PrepareCommand(JFunction prepareCommand)
+            // {
+            //    this.ToComponent().PrepareCommand = prepareCommand;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder PrepareCommands(JFunction prepareCommands)
+            // {
+            //    this.ToComponent().PrepareCommands = prepareCommands;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

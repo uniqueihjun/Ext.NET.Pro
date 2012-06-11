@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-	/// <summary>
-	/// 
-	/// </summary>
     public abstract partial class CheckboxBase
     {
         /// <summary>
@@ -28,82 +25,10 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
-			private XTemplate afterBoxLabelTextTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the box label text. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate AfterBoxLabelTextTpl 
-			{ 
-				get
-				{
-					return this.afterBoxLabelTextTpl;
-				}
-				set
-				{
-					this.afterBoxLabelTextTpl = value;
-				}
-			}
-
-			private XTemplate afterBoxLabelTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the box label element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate AfterBoxLabelTpl 
-			{ 
-				get
-				{
-					return this.afterBoxLabelTpl;
-				}
-				set
-				{
-					this.afterBoxLabelTpl = value;
-				}
-			}
-
-			private XTemplate beforeBoxLabelTextTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the box label text. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate BeforeBoxLabelTextTpl 
-			{ 
-				get
-				{
-					return this.beforeBoxLabelTextTpl;
-				}
-				set
-				{
-					this.beforeBoxLabelTextTpl = value;
-				}
-			}
-
-			private XTemplate beforeBoxLabelTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the box label text. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate BeforeBoxLabelTpl 
-			{ 
-				get
-				{
-					return this.beforeBoxLabelTpl;
-				}
-				set
-				{
-					this.beforeBoxLabelTpl = value;
-				}
-			}
-
 			private string boxLabel = "";
 
 			/// <summary>
-			/// An optional text label that will appear next to the checkbox. Whether it appears before or after the checkbox is determined by the boxLabelAlign config (defaults to after).
+			/// The text that appears beside the checkbox (defaults to '').
 			/// </summary>
 			[DefaultValue("")]
 			public virtual string BoxLabel 
@@ -115,24 +40,6 @@ namespace Ext.Net
 				set
 				{
 					this.boxLabel = value;
-				}
-			}
-
-			private BoxLabelAlign boxLabelAlign = BoxLabelAlign.After;
-
-			/// <summary>
-			/// The position relative to the checkbox where the boxLabel should appear. Recognized values are 'before' and 'after'. Defaults to 'after'.
-			/// </summary>
-			[DefaultValue(BoxLabelAlign.After)]
-			public virtual BoxLabelAlign BoxLabelAlign 
-			{ 
-				get
-				{
-					return this.boxLabelAlign;
-				}
-				set
-				{
-					this.boxLabelAlign = value;
 				}
 			}
 
@@ -151,24 +58,6 @@ namespace Ext.Net
 				set
 				{
 					this.boxLabelStyle = value;
-				}
-			}
-
-			private XTemplate boxLabelAttrTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup inside the box label element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate BoxLabelAttrTpl 
-			{ 
-				get
-				{
-					return this.boxLabelAttrTpl;
-				}
-				set
-				{
-					this.boxLabelAttrTpl = value;
 				}
 			}
 
@@ -193,7 +82,7 @@ namespace Ext.Net
 			private bool _checked = false;
 
 			/// <summary>
-			/// True if the the checkbox should render already checked (defaults to false).
+			/// True if the checkbox should render already checked (defaults to false).
 			/// </summary>
 			[DefaultValue(false)]
 			public virtual bool Checked 
@@ -208,12 +97,12 @@ namespace Ext.Net
 				}
 			}
 
-			private string checkedCls = "";
+			private string checkedCls = "x-form-check-checked";
 
 			/// <summary>
-			/// The CSS class added to the component's main element when it is in the checked state.
+			/// The CSS class to use when the control is checked (defaults to 'x-form-check-checked'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
-			[DefaultValue("")]
+			[DefaultValue("x-form-check-checked")]
 			public virtual string CheckedCls 
 			{ 
 				get
@@ -226,28 +115,28 @@ namespace Ext.Net
 				}
 			}
 
-			private string handler = "";
+			private string focusCls = "x-form-check-focus";
 
 			/// <summary>
-			/// A function called when the checked value changes (can be used instead of handling the change event).
+			/// The CSS class to use when the control receives input focus (defaults to 'x-form-check-focus'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
-			[DefaultValue("")]
-			public virtual string Handler 
+			[DefaultValue("x-form-check-focus")]
+			public virtual string FocusCls 
 			{ 
 				get
 				{
-					return this.handler;
+					return this.focusCls;
 				}
 				set
 				{
-					this.handler = value;
+					this.focusCls = value;
 				}
 			}
 
 			private string inputValue = "";
 
 			/// <summary>
-			/// The value that should go into the generated input element's value attribute and should be used as the parameter value when submitting as part of a form. Defaults to \"on\".
+			/// The value that should go into the generated input element's value attribute (defaults to undefined, with no value attribute)
 			/// </summary>
 			[DefaultValue("")]
 			public virtual string InputValue 
@@ -262,39 +151,57 @@ namespace Ext.Net
 				}
 			}
 
-			private string scope = null;
+			private string mouseDownCls = "x-form-check-down";
 
 			/// <summary>
-			/// An object to use as the scope ('this' reference) of the handler function. Defaults to this Checkbox.
+			/// The CSS class to use when the control is being actively clicked (defaults to 'x-form-check-down'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
-			[DefaultValue(null)]
-			public virtual string Scope 
+			[DefaultValue("x-form-check-down")]
+			public virtual string MouseDownCls 
 			{ 
 				get
 				{
-					return this.scope;
+					return this.mouseDownCls;
 				}
 				set
 				{
-					this.scope = value;
+					this.mouseDownCls = value;
 				}
 			}
 
-			private string uncheckedValue = null;
+			private string overCls = "x-form-check-over";
 
 			/// <summary>
-			/// If configured, this will be submitted as the checkbox's value during form submit if the checkbox is unchecked. By default this is undefined, which results in nothing being submitted for the checkbox field when the form is submitted (the default behavior of HTML checkboxes).
+			/// The CSS class to use when the control is hovered over (defaults to 'x-form-check-over'). Note that this class applies to both checkboxes and radio buttons and is added to the control's wrapper element.
 			/// </summary>
-			[DefaultValue(null)]
-			public virtual string UncheckedValue 
+			[DefaultValue("x-form-check-over")]
+			public override string OverCls 
 			{ 
 				get
 				{
-					return this.uncheckedValue;
+					return this.overCls;
 				}
 				set
 				{
-					this.uncheckedValue = value;
+					this.overCls = value;
+				}
+			}
+
+			private string tag = "";
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string Tag 
+			{ 
+				get
+				{
+					return this.tag;
+				}
+				set
+				{
+					this.tag = value;
 				}
 			}
 

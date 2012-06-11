@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -13,9 +13,9 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
 using Ext.Net.Utilities;
 using Newtonsoft.Json;
+using System.Drawing;
 
 namespace Ext.Net
 {
@@ -25,7 +25,6 @@ namespace Ext.Net
     ///    handle element(s): The drag operation only occurs if the element that was clicked matches a handle element. By default this is the linked element, but there are times that you will want only a portion of the linked element to initiate the drag operation, and the setHandleElId() method provides a way to define this.
     ///    drag element: this represents the element that would be moved along with the cursor during a drag operation. By default, this is the linked element itself as in Ext.dd.DD. setDragElId() lets you define a separate element that would be moved, as in Ext.dd.DDProxy.
     /// </summary>
-    [Meta]
     [Description("Defines the interface and base operation of items that that can be dragged or can be drop targets.")]
     public abstract partial class DragDrop : Observable, ICustomConfigSerialization
     {
@@ -80,12 +79,12 @@ namespace Ext.Net
         /// <summary>
         /// Provides default constraint padding to "constrainTo" elements (defaults to {left: 0, right:0, top:0, bottom:0}).
         /// </summary>
-        [Meta]
         [ConfigOption("defaultPadding", JsonMode.Raw)]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Description("Provides default constraint padding to \"constrainTo\" elements (defaults to {left: 0, right:0, top:0, bottom:0}).")]
+        //[DefaultValue("{top:0,right:0,bottom:0,left:0}")]
         [Category("3. DragDrop")]
         public Paddings DefaultPadding
         {
@@ -105,11 +104,11 @@ namespace Ext.Net
         /// <summary>
         /// The group defines a logical collection of DragDrop objects that are related. Instances only get events when interacting with other DragDrop object in the same group. This lets us define multiple groups using a single DragDrop subclass if we want.
         /// </summary>
-        [Meta]
         [ConfigOption("groups", JsonMode.Raw)]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        [DefaultValue(null)]
         [Category("3. DragDrop")]
         [Description("The group defines a logical collection of DragDrop objects that are related. Instances only get events when interacting with other DragDrop object in the same group. This lets us define multiple groups using a single DragDrop subclass if we want.")]
         public DragDropGroups Groups
@@ -128,7 +127,6 @@ namespace Ext.Net
         /// <summary>
         /// By default, drags can only be initiated if the mousedown occurs in the region the linked element is. This is done in part to work around a bug in some browsers that mis-report the mousedown if the previous mouseup happened outside of the window. This property is set to true if outer handles are defined.
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("3. DragDrop")]
         [DefaultValue(false)]
@@ -138,37 +136,36 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("HasOuterHandles", false);
+                object obj = this.ViewState["HasOuterHandles"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("HasOuterHandles", value);
+                this.ViewState["HasOuterHandles"] = value;
             }
         }
 
         /// <summary>
-        /// The id of the element associated with this object. This is what we refer to as the "linked element" because the size and position of this element is used to determine when the drag and drop objects have interacted.
+        /// ID of the element that is linked to this instance
         /// </summary>
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue("")]
-        [Description("The id of the element associated with this object. This is what we refer to as the \"linked element\" because the size and position of this element is used to determine when the drag and drop objects have interacted.")]
+        [Description("ID of the element that is linked to this instance")]
         public virtual string Target
         {
             get
             {
-                return this.State.Get<string>("Target", "");
+                return (string)this.ViewState["Target"] ?? "";
             }
             set
             {
-                this.State.Set("Target", value);
+                this.ViewState["Target"] = value;
             }
         }
 
         /// <summary>
         /// The group of related DragDrop objects
         /// </summary>
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue("default")]
         [Description("The group of related DragDrop objects")]
@@ -176,18 +173,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Group", "default");
+                return (string)this.ViewState["Group"] ?? "default";
             }
             set
             {
-                this.State.Set("Group", value);
+                this.ViewState["Group"] = value;
             }
         }
 
         /// <summary>
         /// Set to false to enable a DragDrop object to fire drag events while dragging over its own Element. Defaults to true - DragDrop objects do not by default fire drag events to themselves.
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("3. DragDrop")]
         [DefaultValue(true)]
@@ -197,18 +193,18 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("IgnoreSelf", true);
+                object obj = this.ViewState["IgnoreSelf"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("IgnoreSelf", value);
+                this.ViewState["IgnoreSelf"] = value;
             }
         }
 
         /// <summary>
         /// An Array of CSS class names for elements to be considered in valid as drag handles.
         /// </summary>
-        [Meta]
         [ConfigOption(typeof(StringArrayJsonConverter))]
         [TypeConverter(typeof(StringArrayConverter))]
         [Category("3. DragDrop")]
@@ -218,21 +214,18 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string[]>("InvalidHandleClasses", null);
+                object obj = this.ViewState["InvalidHandleClasses"];
+                return (obj == null) ? null : (string[])obj;
             }
             set
             {
-                this.State.Set("InvalidHandleClasses", value);
+                this.ViewState["InvalidHandleClasses"] = value;
             }
         }
 
         /// <summary>
-        /// An object who's property names identify HTML tags to be considered invalid as drag handles. A non-null property value identifies the tag as invalid. Defaults to the following value which prevents drag operations from being initiated by <a> elements:
-        /// {
-        ///     A: "A"
-        /// }
+        /// An array who's items identify HTML tags to be considered invalid as drag handles.
         /// </summary>
-        [Meta]
         [TypeConverter(typeof(StringArrayConverter))]
         [Category("3. DragDrop")]
         [DefaultValue(null)]
@@ -241,11 +234,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string[]>("InvalidHandleTypes", null);
+                object obj = this.ViewState["InvalidHandleTypes"];
+                return (obj == null) ? null : (string[])obj;
             }
             set
             {
-                this.State.Set("InvalidHandleTypes", value);
+                this.ViewState["InvalidHandleTypes"] = value;
             }
         }
 
@@ -284,12 +278,8 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// An object who's property names identify the IDs of elements to be considered invalid as drag handles. A non-null property value identifies the ID as invalid. For example, to prevent dragging from being initiated on element ID "foo", use:
-        /// {
-        ///     foo: true
-        /// }
+        /// An array who's items identify the IDs of elements to be considered invalid as drag handles
         /// </summary>
-        [Meta]
         [TypeConverter(typeof(StringArrayConverter))]
         [Category("3. DragDrop")]
         [DefaultValue(null)]
@@ -298,11 +288,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string[]>("InvalidHandleIds", null);
+                object obj = this.ViewState["InvalidHandleIds"];
+                return (obj == null) ? null : (string[])obj;
             }
             set
             {
-                this.State.Set("InvalidHandleIds", value);
+                this.ViewState["InvalidHandleIds"] = value;
             }
         }
 
@@ -344,7 +335,6 @@ namespace Ext.Net
         /// By default, all instances can be a drop target. This can be disabled by setting isTarget to false.
         /// </summary>
         [ConfigOption]
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue(true)]
         [NotifyParentProperty(true)]
@@ -353,11 +343,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("IsTarget", true);
+                object obj = this.ViewState["IsTarget"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("IsTarget", value);
+                this.ViewState["IsTarget"] = value;
             }
         }
 
@@ -365,7 +356,6 @@ namespace Ext.Net
         /// Maintain offsets when we resetconstraints. Set to true when you want the position of the element relative to its parent to stay the same when the page changes
         /// </summary>
         [ConfigOption]
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue(false)]
         [NotifyParentProperty(true)]
@@ -374,11 +364,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("MaintainOffset", false);
+                object obj = this.ViewState["MaintainOffset"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("MaintainOffset", value);
+                this.ViewState["MaintainOffset"] = value;
             }
         }
 
@@ -386,7 +377,6 @@ namespace Ext.Net
         /// When set to true, other DD objects in cooperating DDGroups do not receive notification events when this DD object is dragged over them. Defaults to false.
         /// </summary>
         [ConfigOption]
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue(false)]
         [NotifyParentProperty(true)]
@@ -395,32 +385,33 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("MoveOnly", false);
+                object obj = this.ViewState["MoveOnly"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("MoveOnly", value);
+                this.ViewState["MoveOnly"] = value;
             }
         }
 
         /// <summary>
-        /// The padding configured for this drag and drop object for calculating the drop zone intersection with this object. An array containing the 4 padding values: [top, right, bottom, left]
+        /// An Array of CSS class names for elements to be considered in valid as drag handles.
         /// </summary>
-        [Meta]
         [ConfigOption(typeof(IntArrayJsonConverter))]
         [TypeConverter(typeof(IntArrayConverter))]
         [Category("3. DragDrop")]
         [DefaultValue(null)]
-        [Description("The padding configured for this drag and drop object for calculating the drop zone intersection with this object. An array containing the 4 padding values: [top, right, bottom, left]")]
+        [Description("An Array of CSS class names for elements to be considered in valid as drag handles.")]
         public virtual int[] Padding
         {
             get
             {
-                return this.State.Get<int[]>("Padding", null);
+                object obj = this.ViewState["Padding"];
+                return (obj == null) ? null : (int[])obj;
             }
             set
             {
-                this.State.Set("Padding", value);
+                this.ViewState["Padding"] = value;
             }
         }
 
@@ -428,7 +419,6 @@ namespace Ext.Net
         /// By default the drag and drop instance will only respond to the primary button click (left button for a right-handed mouse). Set to true to allow drag and drop to start with any mouse click that is propogated by the browser
         /// </summary>
         [ConfigOption]
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue(true)]
         [NotifyParentProperty(true)]
@@ -437,11 +427,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("PrimaryButtonOnly", true);
+                object obj = this.ViewState["PrimaryButtonOnly"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("PrimaryButtonOnly", value);
+                this.ViewState["PrimaryButtonOnly"] = value;
             }
         }
 
@@ -451,7 +442,7 @@ namespace Ext.Net
 		[Description("")]
         public virtual string ToScript(Control owner)
         {
-            return "window.{0}=new Ext.net.ProxyDDCreator({{target:{1},group:{2},config:{3},type:{4}}});".FormatWith(
+            return "this.{0}=new Ext.net.ProxyDDCreator({{target:{1},group:{2},config:{3},type:{4}}});".FormatWith(
                       this.ClientID,
                       this.ParsedTarget, 
                       JSON.Serialize(this.Group),
@@ -481,7 +472,6 @@ namespace Ext.Net
         /// <summary>
         /// Array of pixel locations the element will snap to if we specified a horizontal graduation/interval. This array is generated automatically when you define a tick interval.
         /// </summary>
-        [Meta]
         [ConfigOption(typeof(IntArrayJsonConverter))]
         [TypeConverter(typeof(IntArrayConverter))]
         [Category("3. DragDrop")]
@@ -491,18 +481,18 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int[]>("XTicks", null);
+                object obj = this.ViewState["XTicks"];
+                return (obj == null) ? null : (int[])obj;
             }
             set
             {
-                this.State.Set("XTicks", value);
+                this.ViewState["XTicks"] = value;
             }
         }
 
         /// <summary>
         /// Array of pixel locations the element will snap to if we specified a vertical graduation/interval. This array is generated automatically when you define a tick interval.
         /// </summary>
-        [Meta]
         [ConfigOption(typeof(IntArrayJsonConverter))]
         [TypeConverter(typeof(IntArrayConverter))]
         [Category("3. DragDrop")]
@@ -512,35 +502,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int[]>("YTicks", null);
+                object obj = this.ViewState["YTicks"];
+                return (obj == null) ? null : (int[])obj;
             }
             set
             {
-                this.State.Set("YTicks", value);
-            }
-        }
-
-        private JFunction getDragEl;
-
-        /// <summary>
-        /// Returns a reference to the actual element to drag. By default this is the same as the html element, but it can be assigned to another element. An example of this can be found in Ext.dd.DDProxy
-        /// </summary>
-        [ConfigOption(JsonMode.Raw)]
-        [Category("3. DragDrop")]
-        [Meta]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [Description("Returns a reference to the actual element to drag. By default this is the same as the html element, but it can be assigned to another element. An example of this can be found in Ext.dd.DDProxy")]
-        public virtual JFunction GetDragEl
-        {
-            get
-            {
-                if (this.getDragEl == null)
-                {
-                    this.getDragEl = new JFunction();
-                }
-
-                return this.getDragEl;
+                this.ViewState["YTicks"] = value;
             }
         }
 
@@ -553,7 +520,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Fired when we are done dragging the object")]
@@ -582,7 +549,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Override the onAvailable method to do what is needed after the initial position was determined.")]
@@ -608,7 +575,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Abstract method called during the onMouseMove event while dragging an object.")]
@@ -640,7 +607,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Abstract method called when this item is dropped on another DragDrop obj")]
@@ -672,7 +639,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Abstract method called when this element fist begins hovering over another DragDrop obj")]
@@ -704,7 +671,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Abstract method called when we are no longer hovering over an element")]
@@ -736,7 +703,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Abstract method called when this element is hovering over another DragDrop obj")]
@@ -767,7 +734,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Abstract method called when this item is dropped on an area with no drop target")]
@@ -798,7 +765,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Event handler that fires when a drag/drop obj gets a mousedown")]
@@ -829,7 +796,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Event handler that fires when a drag/drop obj gets a mouseup")]
@@ -860,7 +827,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Event handler that fires when a drag/drop obj gets a mouseup")]

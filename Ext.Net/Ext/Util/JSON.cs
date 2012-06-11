@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -11,10 +11,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using Formatting = Newtonsoft.Json.Formatting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Ext.Net
 {
@@ -28,6 +27,25 @@ namespace Ext.Net
         /// Serializes the specified object to a Json object.
         /// </summary>
         /// <param name="obj">The object to serialize.</param>
+        /// <param name="formatting">Format the JSON serialized string.</param>
+        /// <param name="converters">A List of JsonConverter objects to customize serialization.</param>
+        /// <param name="quoteName">Gets or Sets a value indicating whether object names will be surrounded with quotes.</param>
+        /// <param name="resolver">The IContractResolver object to customize serialization.</param>
+        /// <returns>A Json string representation of the object.</returns>
+        [Description("Serializes the specified object to a Json object.")]
+        public static string Serialize(object obj, Formatting formatting, List<JsonConverter> converters, bool quoteName, IContractResolver resolver)
+        {
+            return JsonConvert.SerializeObject(obj, formatting, new JsonSerializerSettings { 
+                ContractResolver = resolver,
+                Converters = converters,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+        }
+
+        /// <summary>
+        /// Serializes the specified object to a Json object.
+        /// </summary>
+        /// <param name="obj">The object to serialize.</param>
         /// <param name="converters">A List of JsonConverter objects to customize serialization.</param>
         /// <param name="quoteName">Gets or Sets a value indicating whether object names will be surrounded with quotes.</param>
         /// <param name="resolver">The IContractResolver object to customize serialization.</param>
@@ -35,11 +53,7 @@ namespace Ext.Net
         [Description("Serializes the specified object to a Json object.")]
         public static string Serialize(object obj, List<JsonConverter> converters, bool quoteName, IContractResolver resolver)
         {
-            return JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings { 
-                ContractResolver = resolver,
-                Converters = converters,             
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+            return JSON.Serialize(obj, Formatting.None, converters, quoteName, resolver);
         }
 
         /// <summary>
@@ -81,6 +95,18 @@ namespace Ext.Net
         /// Serializes the specified object to a Json object.
         /// </summary>
         /// <param name="obj">The object to serialize.</param>
+        /// <param name="formatting">Format the serialized JSON string.</param>
+        /// <returns>A Json string representation of the object.</returns>
+        [Description("Serializes the specified object to a Json object.")]
+        public static string Serialize(object obj, bool formatting)
+        {
+            return JSON.Serialize(obj, formatting ? Formatting.Indented : Formatting.None, JSON.ConvertersInternal, true, null);
+        }
+
+        /// <summary>
+        /// Serializes the specified object to a Json object.
+        /// </summary>
+        /// <param name="obj">The object to serialize.</param>
         /// <returns>A Json string representation of the object.</returns>
         [Description("Serializes the specified object to a Json object.")]
         public static string Serialize(object obj)
@@ -104,62 +130,18 @@ namespace Ext.Net
         /// 
         /// </summary>
         [Description("")]
-        private static List<JsonConverter> BaseConverters
+        public static List<JsonConverter> Converters
         {
             get
             {
                 List<JsonConverter> converters = new List<JsonConverter>();
+                converters.Add(new JSONDateTimeJsonConverter());
                 converters.Add(new EnumJsonConverter());
                 converters.Add(new GuidJsonConverter());
                 converters.Add(new JFunctionJsonConverter());
                 converters.Add(new JRawValueJsonConverter());
 
                 return converters;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        public static List<JsonConverter> Converters
-        {
-            get
-            {
-                List<JsonConverter> converters = JSON.BaseConverters;
-                converters.Add(new JSONDateTimeJsonConverter());
-                
-                return converters;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        public static List<JsonConverter> DateMsConverters
-        {
-            get
-            {
-                List<JsonConverter> converters = JSON.BaseConverters;
-                converters.Add(new JSONDateTimeJsonConverter { RenderMilliseconds = true });
-
-                return converters;
-            }
-        }
-
-        private static List<JsonConverter> dateMsConvertersInternal;
-
-        internal static List<JsonConverter> DateMsConvertersInternal
-        {
-            get
-            {
-                if (dateMsConvertersInternal == null)
-                {
-                    dateMsConvertersInternal = JSON.DateMsConverters;
-                }
-
-                return dateMsConvertersInternal;
             }
         }
 
@@ -183,29 +165,33 @@ namespace Ext.Net
         /// 
         /// </summary>
         [Description("")]
-        public static List<JsonConverter> ScriptConverters
+        public static List<JsonConverter> AltConverters
         {
             get
             {
-                List<JsonConverter> converters = JSON.BaseConverters;
+                List<JsonConverter> converters = new List<JsonConverter>();
                 converters.Add(new CtorDateTimeJsonConverter());
+                converters.Add(new EnumJsonConverter());
+                converters.Add(new GuidJsonConverter());
+                converters.Add(new JFunctionJsonConverter());
+                converters.Add(new JRawValueJsonConverter());
 
                 return converters;
             }
         }
 
-        private static List<JsonConverter> scriptConvertersInternal;
+        private static List<JsonConverter> altConvertersInternal;
        
-        internal static List<JsonConverter> ScriptConvertersInternal
+        internal static List<JsonConverter> AltConvertersInternal
         {
             get
             {
-                if (scriptConvertersInternal == null)
+                if (altConvertersInternal == null)
                 {
-                    scriptConvertersInternal = JSON.ScriptConverters;
+                    altConvertersInternal = JSON.AltConverters;
                 }
 
-                return scriptConvertersInternal;
+                return altConvertersInternal;
             }
         }
 
@@ -306,24 +292,6 @@ namespace Ext.Net
         public static XmlNode DeserializeXmlNode(string value)
         {
             return JsonConvert.DeserializeXmlNode(value);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public static string ToString(JToken token)
-        {
-            switch (token.Type)
-            {
-                case JTokenType.Property:
-                    return JSON.ToString(((JProperty)token).Value);
-                case JTokenType.String:
-                    return (string) token;
-            }
-
-            return token.ToString(Formatting.None);
         }
     }
 }

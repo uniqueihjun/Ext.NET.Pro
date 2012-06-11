@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class FlashComponent
     {
 		/*  Ctor
@@ -46,7 +43,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        new public partial class Config : ComponentBase.Config 
+        new public partial class Config : BoxComponentBase.Config 
         { 
 			/*  Implicit FlashComponent.Config Conversion to FlashComponent.Builder
 				-----------------------------------------------------------------------------------------------*/
@@ -170,61 +167,7 @@ namespace Ext.Net
 					return this.flashParams;
 				}
 			}
-			
-			private string swfHeight = "";
-
-			/// <summary>
-			/// The height of the embedded SWF movie inside the component. Defaults to \"100%\" so that the movie matches the height of the component.
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string SwfHeight 
-			{ 
-				get
-				{
-					return this.swfHeight;
-				}
-				set
-				{
-					this.swfHeight = value;
-				}
-			}
-
-			private string swfWidth = "";
-
-			/// <summary>
-			/// The width of the embedded SWF movie inside the component. Defaults to \"100%\" so that the movie matches the width of the component.
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string SwfWidth 
-			{ 
-				get
-				{
-					return this.swfWidth;
-				}
-				set
-				{
-					this.swfWidth = value;
-				}
-			}
-
-			private string wMode = "";
-
-			/// <summary>
-			/// The wmode of the flash object. This can be used to control layering. Set to 'transparent' to ignore the backgroundColor and make the background of the Flash movie transparent.
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string WMode 
-			{ 
-				get
-				{
-					return this.wMode;
-				}
-				set
-				{
-					this.wMode = value;
-				}
-			}
-        
+			        
 			private FlashComponentListeners listeners = null;
 
 			/// <summary>

@@ -1,14 +1,13 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
 using System.Web.UI;
-
 using Ext.Net.Utilities;
 
 namespace Ext.Net
@@ -18,7 +17,7 @@ namespace Ext.Net
     /// </summary>
     [ToolboxItem(false)]
     [Description("")]
-    public partial class BaseLoadConfig : BaseItem
+    public partial class BaseLoadConfig : StateManagedItem
     {
 		/// <summary>
 		/// 
@@ -51,11 +50,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Url", "");
+                return (string)this.ViewState["Url"] ?? "";
             }
             set
             {
-                this.State.Set("Url", value);
+                this.ViewState["Url"] = value;
             }
         }
 
@@ -83,11 +82,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Callback", "");
+                return (string)this.ViewState["Callback"] ?? "";
             }
             set
             {
-                this.State.Set("Callback", value);
+                this.ViewState["Callback"] = value;
             }
         }
 
@@ -121,11 +120,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Scope", "");
+                return (string)this.ViewState["Scope"] ?? "";
             }
             set
             {
-                this.State.Set("Scope", value);
+                this.ViewState["Scope"] = value;
             }
         }
 
@@ -140,11 +139,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("DiscardUrl", false);
+                object obj = this.ViewState["DiscardUrl"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("DiscardUrl", value);
+                this.ViewState["DiscardUrl"] = value;
             }
         }
 
@@ -159,11 +159,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("NoCache", false);
+                object obj = this.ViewState["NoCache"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("NoCache", value);
+                this.ViewState["NoCache"] = value;
             }
         }
 
@@ -178,11 +179,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Text", "");
+                return (string)this.ViewState["Text"] ?? "";
             }
             set
             {
-                this.State.Set("Text", value);
+                this.ViewState["Text"] = value;
             }
         }
 
@@ -196,11 +197,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("Scripts", true);
+                object obj = this.ViewState["Scripts"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("Scripts", value);
+                this.ViewState["Scripts"] = value;
             }
         }
 
@@ -226,14 +228,15 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [Description("")]
         public virtual int Timeout
-        {   
+        {
             get
             {
-                return this.State.Get<int>("Timeout", 0);
+                object obj = this.ViewState["Timeout"];
+                return (obj == null) ? 0 : (int)obj;
             }
             set
             {
-                this.State.Set("Timeout", value);
+                this.ViewState["Timeout"] = value;
             }
         }
 
@@ -271,11 +274,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<HttpMethod>("Method", HttpMethod.Default);
+                object obj = this.ViewState["Method"];
+                return (obj == null) ? HttpMethod.Default : (HttpMethod)obj;
             }
             set
             {
-                this.State.Set("Method", value);
+                this.ViewState["Method"] = value;
             }
         }
     }

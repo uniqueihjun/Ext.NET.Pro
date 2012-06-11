@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -21,8 +21,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires after the window has been maximized.
-        /// Parameters
-        /// item : Ext.window.Window
         /// </summary>
         [ListenerArgument(0, "item", typeof(Window), "this")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -34,7 +32,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.maximize ?? (this.maximize = new ComponentListener());
+                if (this.maximize == null)
+                {
+                    this.maximize = new ComponentListener();
+                }
+
+                return this.maximize;
             }
         }
 
@@ -42,8 +45,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires after the window has been minimized.
-        /// Parameters
-        /// item : Ext.window.Window
         /// </summary>
         [ListenerArgument(0, "item", typeof(Window), "this")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -55,7 +56,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.minimize ?? (this.minimize = new ComponentListener());
+                if (this.minimize == null)
+                {
+                    this.minimize = new ComponentListener();
+                }
+
+                return this.minimize;
             }
         }
 
@@ -63,8 +69,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires after the window has been restored to its original size after being maximized.
-        /// Parameters
-        /// item : Ext.window.Window
         /// </summary>
         [ListenerArgument(0, "item", typeof(Window), "this")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -76,7 +80,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.restore ?? (this.restore = new ComponentListener());
+                if (this.restore == null)
+                {
+                    this.restore = new ComponentListener();
+                }
+
+                return this.restore;
             }
         }
     }

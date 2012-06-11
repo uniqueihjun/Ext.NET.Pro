@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TreePanel
     {
         /// <summary>
@@ -58,73 +55,6 @@ namespace Ext.Net
             
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual TreePanel.Builder RemoteEditUrl(string remoteEditUrl)
-            {
-                this.ToComponent().RemoteEditUrl = remoteEditUrl;
-                return this as TreePanel.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual TreePanel.Builder RemoteRemoveUrl(string remoteRemoveUrl)
-            {
-                this.ToComponent().RemoteRemoveUrl = remoteRemoveUrl;
-                return this as TreePanel.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual TreePanel.Builder RemoteAppendUrl(string remoteAppendUrl)
-            {
-                this.ToComponent().RemoteAppendUrl = remoteAppendUrl;
-                return this as TreePanel.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual TreePanel.Builder RemoteInsertUrl(string remoteInsertUrl)
-            {
-                this.ToComponent().RemoteInsertUrl = remoteInsertUrl;
-                return this as TreePanel.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual TreePanel.Builder RemoteMoveUrl(string remoteMoveUrl)
-            {
-                this.ToComponent().RemoteMoveUrl = remoteMoveUrl;
-                return this as TreePanel.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TreePanel.Builder</returns>
-            public virtual TreePanel.Builder Listeners(Action<TreePanelListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as TreePanel.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side DirectEventHandlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TreePanel.Builder</returns>
-            public virtual TreePanel.Builder DirectEvents(Action<TreePanelDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as TreePanel.Builder;
-            }
 			
 
 			/*  Methods

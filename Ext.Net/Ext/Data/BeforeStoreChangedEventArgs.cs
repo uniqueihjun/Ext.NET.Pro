@@ -1,16 +1,14 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
-using System.Collections.Generic;
+using System.Xml;
 using System.ComponentModel;
-
-using Newtonsoft.Json.Linq;
 
 namespace Ext.Net
 {
@@ -20,66 +18,33 @@ namespace Ext.Net
 	[Description("")]
     public partial class BeforeStoreChangedEventArgs : EventArgs
     {
-        private readonly StoreAction action;
         private readonly string jsonData;
         private bool cancel;
-        private readonly JToken parameters;
+        private readonly XmlNode ajaxPostBackParams;
+        private ConfirmationList confirmationList;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[Description("")]
-        public BeforeStoreChangedEventArgs(string action, string jsonData)
+        public BeforeStoreChangedEventArgs(string jsonData, ConfirmationList confirmationList)
         {
             this.jsonData = jsonData;
-		    this.action = Store.Action(action);
-		    this.cancel = false;
+            this.cancel = false;
+            this.confirmationList = confirmationList;
         }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[Description("")]
-        public BeforeStoreChangedEventArgs(string action, string jsonData, JToken parameters)
-            : this(action, jsonData)
-		{
-		    this.parameters = parameters;
-		}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        public BeforeStoreChangedEventArgs(string action, string jsonData, JToken parameters, List<object> responseRecords)
-            : this(action, jsonData, parameters)
+        public BeforeStoreChangedEventArgs(string jsonData, ConfirmationList confirmationList, XmlNode callbackParams)
+            : this(jsonData, confirmationList)
         {
-            this.responseRecords = responseRecords;
+            this.ajaxPostBackParams = callbackParams;
         }
 
-        List<object> responseRecords;
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<object> ResponseRecords
-        {
-            get
-            {
-                return this.responseRecords;
-            }
-        }
-
-	    /// <summary>
-	    /// 
-	    /// </summary>
-        public StoreAction Action
-	    {
-	        get
-	        {
-	            return action;
-	        }
-	    }
-
-	    /// <summary>
+		/// <summary>
 		/// 
 		/// </summary>
 		[Description("")]
@@ -87,6 +52,18 @@ namespace Ext.Net
         {
             get { return cancel; }
             set { cancel = value; }
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public XmlNode AjaxPostBackParams
+        {
+            get
+            {
+                return this.ajaxPostBackParams;
+            }
         }
 
         private ParameterCollection p;
@@ -104,14 +81,30 @@ namespace Ext.Net
                     return p;
                 }
 
-                if (this.parameters == null)
+                if (this.ajaxPostBackParams == null)
                 {
                     return new ParameterCollection();
                 }
 
-                p = ResourceManager.JTokenToParams(this.parameters);
+                p = ResourceManager.XmlToParams(this.ajaxPostBackParams);
 
                 return p;
+            }
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ConfirmationList ConfirmationList
+        {
+            get
+            {
+                return confirmationList;
+            }
+            internal set
+            {
+                confirmationList = value;
             }
         }
 
@@ -125,7 +118,12 @@ namespace Ext.Net
         {
             get
             {
-                return dataHandler ?? (dataHandler = new StoreDataHandler(jsonData));
+                if (dataHandler == null)
+                {
+                    dataHandler = new StoreDataHandler(jsonData);
+                }
+
+                return dataHandler;
             }
         }
     }

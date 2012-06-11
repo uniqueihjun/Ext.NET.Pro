@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,15 +17,7 @@ using Ext.Net.Utilities;
 namespace Ext.Net
 {
     /// <summary>
-    /// Single checkbox field. Can be used as a direct replacement for traditional checkbox fields. Also serves as a parent class for radio buttons.
-    /// 
-    /// Labeling: In addition to the standard field labeling options, checkboxes may be given an optional boxLabel which will be displayed immediately after checkbox. Also see Ext.form.CheckboxGroup for a convenient method of grouping related checkboxes.
-    /// 
-    /// Values: The main value of a checkbox is a boolean, indicating whether or not the checkbox is checked. The following values will check the checkbox: true 'true' '1' 'on'
-    /// 
-    /// Any other value will uncheck the checkbox.
-    /// 
-    /// In addition to the main boolean value, you may also specify a separate inputValue. This will be sent as the parameter value when the form is submitted. You will want to set this value if you have multiple checkboxes with the same name. If not specified, the value on will be used.
+    /// Single checkbox field. Can be used as a direct replacement for traditional Checkbox controls.
     /// </summary>
     [Meta]
     [ToolboxData("<{0}:Checkbox runat=\"server\" />")]
@@ -36,6 +28,7 @@ namespace Ext.Net
     [ParseChildren(true)]
     [PersistChildren(false)]
     [SupportsEventValidation]
+    [Designer(typeof(CheckboxDesigner))]
     [ToolboxBitmap(typeof(Checkbox), "Build.ToolboxIcons.Checkbox.bmp")]
     [Description("Single checkbox field. Can be used as a direct replacement for traditional Checkbox controls.")]
     public partial class Checkbox : CheckboxBase, IPostBackEventHandler, ICheckBoxControl
@@ -80,7 +73,7 @@ namespace Ext.Net
         {
             get
             {
-                return "checkboxfield";
+                return "checkbox";
             }
         }
 
@@ -93,7 +86,20 @@ namespace Ext.Net
         {
             get
             {
-                return "Ext.form.field.Checkbox";
+                return "Ext.form.Checkbox";
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        [Description("")]
+        protected override void OnBeforeClientInit(Observable sender)
+        {
+            if (this.AutoPostBack)
+            {
+                this.On("check", new JFunction(this.PostBackFunction));
             }
         }
 
@@ -108,6 +114,7 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public CheckboxListeners Listeners
         {
@@ -133,6 +140,7 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side Ajax Event Handlers")]
         public CheckboxDirectEvents DirectEvents
         {
@@ -140,7 +148,7 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new CheckboxDirectEvents(this);
+                    this.directEvents = new CheckboxDirectEvents();
                 }
 
                 return this.directEvents;
@@ -203,9 +211,8 @@ namespace Ext.Net
 
             try
             {
-                bool newValue = this.UncheckedValue == val ? false : val.IsNotEmpty();
-                bool result = this.Checked != newValue;
-                this.Checked = newValue;
+                bool result = this.Checked != val.IsNotEmpty();
+                this.Checked = val.IsNotEmpty();
                 return result;
             }
             catch
@@ -213,20 +220,16 @@ namespace Ext.Net
             }
             finally
             {
-                this.ResumeScripting();
+                this.ResumeScripting();    
             }
 
             return true; 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         protected override void RaisePostDataChangedEvent()
         {
             this.OnCheckedChanged(EventArgs.Empty);
         }
-
 
         /*  DirectEvent Handler
             -----------------------------------------------------------------------------------------------*/
@@ -246,11 +249,11 @@ namespace Ext.Net
         {
             add
             {
-                this.DirectEvents.Change.Event += value;
+                this.DirectEvents.Check.Event += value;
             }
             remove
             {
-                this.DirectEvents.Change.Event -= value;
+                this.DirectEvents.Check.Event -= value;
             }
         }
     }

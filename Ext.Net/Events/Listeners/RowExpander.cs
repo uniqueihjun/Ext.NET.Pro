@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,7 +15,7 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class RowExpanderListeners : ComponentListeners
+    public partial class RowExpanderListeners : ComponentBaseListeners
     {
         private ComponentListener beforeExpand;
 
@@ -25,8 +25,7 @@ namespace Ext.Net
         [ListenerArgument(0, "item", typeof(RowExpander), "this")]
         [ListenerArgument(1, "record", typeof(object))]
         [ListenerArgument(2, "body", typeof(object))]
-        [ListenerArgument(3, "row", typeof(object))]
-        [ListenerArgument(4, "rowIndex", typeof(object))]
+        [ListenerArgument(3, "rowIndex", typeof(object))]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("beforeexpand", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -36,7 +35,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.beforeExpand ?? (this.beforeExpand = new ComponentListener());
+                if (this.beforeExpand == null)
+                {
+                    this.beforeExpand = new ComponentListener();
+                }
+
+                return this.beforeExpand;
             }
         }
 
@@ -48,8 +52,7 @@ namespace Ext.Net
         [ListenerArgument(0, "item", typeof(RowExpander), "this")]
         [ListenerArgument(1, "record", typeof(object))]
         [ListenerArgument(2, "body", typeof(object))]
-        [ListenerArgument(3, "row", typeof(object))]
-        [ListenerArgument(4, "rowIndex", typeof(object))]
+        [ListenerArgument(3, "rowIndex", typeof(object))]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("expand", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -59,7 +62,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.expand ?? (this.expand = new ComponentListener());
+                if (this.expand == null)
+                {
+                    this.expand = new ComponentListener();
+                }
+
+                return this.expand;
             }
         }
 
@@ -71,8 +79,7 @@ namespace Ext.Net
         [ListenerArgument(0, "item", typeof(RowExpander), "this")]
         [ListenerArgument(1, "record", typeof(object))]
         [ListenerArgument(2, "body", typeof(object))]
-        [ListenerArgument(3, "row", typeof(object))]
-        [ListenerArgument(4, "rowIndex", typeof(object))]
+        [ListenerArgument(3, "rowIndex", typeof(object))]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("beforecollapse", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -82,7 +89,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.beforeCollapse ?? (this.beforeCollapse = new ComponentListener());
+                if (this.beforeCollapse == null)
+                {
+                    this.beforeCollapse = new ComponentListener();
+                }
+
+                return this.beforeCollapse;
             }
         }
 
@@ -94,8 +106,7 @@ namespace Ext.Net
         [ListenerArgument(0, "item", typeof(RowExpander), "this")]
         [ListenerArgument(1, "record", typeof(object))]
         [ListenerArgument(2, "body", typeof(object))]
-        [ListenerArgument(3, "row", typeof(object))]
-        [ListenerArgument(4, "rowIndex", typeof(object))]
+        [ListenerArgument(3, "rowIndex", typeof(object))]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("collapse", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -105,7 +116,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.collapse ?? (this.collapse = new ComponentListener());
+                if (this.collapse == null)
+                {
+                    this.collapse = new ComponentListener();
+                }
+
+                return this.collapse;
             }
         }
     }

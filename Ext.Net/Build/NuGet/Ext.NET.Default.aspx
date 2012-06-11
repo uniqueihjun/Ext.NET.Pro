@@ -5,51 +5,34 @@
 <script runat="server">
     protected void Button1_Click(object sender, DirectEventArgs e)
     {
-        X.Msg.Notify(new NotificationConfig { 
-            Icon  = Icon.Accept,
-            Title = "Working",
-            Html  = this.TextArea1.Text
-        }).Show();
+        X.Msg.Notify("Message", this.TextField1.Text).Show();
     }
 </script>
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Ext.NET Example</title>
 </head>
 <body>
     <form runat="server">
-        <ext:ResourceManager runat="server" Theme="Gray" />
+        <ext:ResourceManager runat="server" />
         
-        <a href="http://www.ext.net/"><img src="http://speed.ext.net/identity/extnet-logo-small.png" /></a>
-
         <ext:Window 
             runat="server" 
-            Title="Welcome to Ext.NET 2.0"
+            Title="Example"
+            Padding="5"
             Height="215"
             Width="350"
-            BodyPadding="5"
-            DefaultButton="0"
-            Layout="AnchorLayout"
+            Layout="FormLayout"
             DefaultAnchor="100%">
             <Items>
-                <ext:TextArea 
-                    ID="TextArea1" 
-                    runat="server" 
-                    EmptyText=">> Enter a Message Here <<"
-                    FieldLabel="Message" 
-                    Height="85" 
-                    />
+                <ext:TextField ID="TextField1" runat="server" FieldLabel="Message" />
             </Items>
             <Buttons>
-                <ext:Button 
-                    runat="server" 
-                    Text="Submit"
-                    Icon="Accept" 
-                    OnDirectClick="Button1_Click" 
-                    />
+                <ext:Button runat="server" Text="Submit" OnDirectClick="Button1_Click" />
             </Buttons>
         </ext:Window>
     </form>

@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class DragTrackerDirectEvents
     {
         /// <summary>
@@ -37,15 +34,12 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
-                list.Add("beforeStart", new ConfigOption("beforeStart", new SerializationOptions("beforestart", typeof(DirectEventJsonConverter)), null, this.BeforeStart ));
                 list.Add("drag", new ConfigOption("drag", new SerializationOptions("drag", typeof(DirectEventJsonConverter)), null, this.Drag ));
                 list.Add("dragEnd", new ConfigOption("dragEnd", new SerializationOptions("dragend", typeof(DirectEventJsonConverter)), null, this.DragEnd ));
                 list.Add("dragStart", new ConfigOption("dragStart", new SerializationOptions("dragstart", typeof(DirectEventJsonConverter)), null, this.DragStart ));
                 list.Add("mouseDown", new ConfigOption("mouseDown", new SerializationOptions("mousedown", typeof(DirectEventJsonConverter)), null, this.MouseDown ));
                 list.Add("mouseMove", new ConfigOption("mouseMove", new SerializationOptions("mousemove", typeof(DirectEventJsonConverter)), null, this.MouseMove ));
                 list.Add("mouseUp", new ConfigOption("mouseUp", new SerializationOptions("mouseup", typeof(DirectEventJsonConverter)), null, this.MouseUp ));
-                list.Add("mouseOut", new ConfigOption("mouseOut", new SerializationOptions("mouseout", typeof(DirectEventJsonConverter)), null, this.MouseOut ));
-                list.Add("mouseOver", new ConfigOption("mouseOver", new SerializationOptions("mouseover", typeof(DirectEventJsonConverter)), null, this.MouseOver ));
 
                 return list;
             }

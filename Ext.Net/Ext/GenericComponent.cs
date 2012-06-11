@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,10 +15,11 @@ namespace Ext.Net
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Meta]
     [ToolboxItem(false)]
     [ToolboxData("<{0}:GenericComponent runat=\"server\" />")]
-    [Description("A generic AbstractComponent.")]
-    public partial class GenericComponent<T> : ComponentBase where T : ComponentBase, new()
+    [Description("A generic Component.")]
+    public partial class GenericComponent<T> : Component where T : Component, new()
     {
         /// <summary>
         /// 
@@ -34,7 +35,7 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// 
+        ///     
         /// </summary>
         [Category("0. About")]
         [Description("")]
@@ -86,7 +87,7 @@ namespace Ext.Net
                     this.component = new T();
                     this.component.ID = this.ID;
                     this.component.IsProxy = true;
-                    this.component.PreventRenderTo = true;
+                    this.component.AutoRender = false;
                 }
 
                 return this.component;

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,7 +17,6 @@ namespace Ext.Net
     /// <summary>
     /// A simple class that provides the basic implementation needed to make any element draggable.
     /// </summary>
-    [Meta]
     [ToolboxItem(true)]
     [Designer(typeof(EmptyDesigner))]
     [ToolboxData("<{0}:DragSource runat=\"server\"></{0}:DragSource>")]
@@ -26,13 +25,6 @@ namespace Ext.Net
     [Description("A simple class that provides the basic implementation needed to make any element draggable.")]
     public partial class DragSource : DDProxy
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public DragSource()
-        {
-        }
-
         /// <summary>
 		/// 
 		/// </summary>
@@ -52,7 +44,7 @@ namespace Ext.Net
 		[Description("")]
         public override string ToScript(Control owner)
         {
-            return "window.{0}=new Ext.net.ProxyDDCreator({{target:{1},config:{2},type:{3}}});".FormatWith(
+            return "this.{0}=new Ext.net.ProxyDDCreator({{target:{1},config:{2},type:{3}}});".FormatWith(
                       this.ClientID,
                       this.ParsedTarget,
                       new ClientConfig().Serialize(this, true),
@@ -62,7 +54,6 @@ namespace Ext.Net
         /// <summary>
         /// A named drag drop group to which this object belongs. If a group is specified, then this object will only interact with other drag drop objects in the same group (defaults to undefined).
         /// </summary>
-        [Meta]
         [ConfigOption("ddGroup")]
         [Category("6. DragSource")]
         [DefaultValue("")]
@@ -71,11 +62,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Group", "");
+                return (string)this.ViewState["Group"] ?? "";
             }
             set
             {
-                this.State.Set("Group", value);
+                this.ViewState["Group"] = value;
             }
         }
 
@@ -84,7 +75,6 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        [Meta]
         [Category("6. DragSource")]
         [DefaultValue(null)]
         [Description("")]
@@ -120,29 +110,8 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// If true, animates the proxy element back to the position of the handle element used to trigger the drag. Defaults to: true
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("6. DragSource")]
-        [DefaultValue(true)]
-        [Description("If true, animates the proxy element back to the position of the handle element used to trigger the drag. Defaults to: true")]
-        public virtual bool AnimRepair
-        {
-            get
-            {
-                return this.State.Get<bool>("AnimRepair", true);
-            }
-            set
-            {
-                this.State.Set("AnimRepair", value);
-            }
-        }
-
-        /// <summary>
         /// The CSS class returned to the drag source when drop is allowed (defaults to "x-dd-drop-ok").
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("6. DragSource")]
         [DefaultValue("x-dd-drop-ok")]
@@ -151,18 +120,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("DropAllowed", "x-dd-drop-ok");
+                return (string)this.ViewState["DropAllowed"] ?? "x-dd-drop-ok";
             }
             set
             {
-                this.State.Set("DropAllowed", value);
+                this.ViewState["DropAllowed"] = value;
             }
         }
 
         /// <summary>
         /// The CSS class returned to the drag source when drop is not allowed (defaults to "x-dd-drop-nodrop").
         /// </summary>
-        [Meta]
         [ConfigOption]
         [Category("6. DragSource")]
         [DefaultValue("x-dd-drop-nodrop")]
@@ -171,31 +139,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("DropNotAllowed", "x-dd-drop-nodrop");
+                return (string)this.ViewState["DropNotAllowed"] ?? "x-dd-drop-nodrop";
             }
             set
             {
-                this.State.Set("DropNotAllowed", value);
-            }
-        }
-
-        /// <summary>
-        /// The color to use when visually highlighting the drag source in the afterRepair method after a failed drop (defaults to light blue). The color must be a 6 digit hex value, without a preceding '#'. Defaults to: "c3daf9"
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("6. DragSource")]
-        [DefaultValue("c3daf9")]
-        [Description("The color to use when visually highlighting the drag source in the afterRepair method after a failed drop (defaults to light blue). The color must be a 6 digit hex value, without a preceding '#'. Defaults to: \"c3daf9\"")]
-        public virtual string RepairHighlightColor
-        {
-            get
-            {
-                return this.State.Get<string>("RepairHighlightColor", "c3daf9");
-            }
-            set
-            {
-                this.State.Set("RepairHighlightColor", value);
+                this.ViewState["DropNotAllowed"] = value;
             }
         }
 
@@ -210,7 +158,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action after a valid drag drop has occurred by providing an implementation.")]
@@ -243,7 +191,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action when the dragged item enters the drop target by providing an implementation.")]
@@ -276,7 +224,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action after the dragged item is dragged out of the target without dropping.")]
@@ -309,7 +257,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action while the dragged item is over the drop target by providing an implementation.")]
@@ -341,7 +289,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action after an invalid drop has occurred by providing an implementation.")]
@@ -363,43 +311,6 @@ namespace Ext.Net
             }
         }
 
-        private JFunction afterValidDrop;
-
-        /// <summary>
-        /// An empty function by default, but provided so that you can perform a custom action after a valid drop has occurred by providing an implementation.
-        /// 
-        /// Parameters
-        /// target : Object
-        ///     The target DD
-        /// e : Event
-        ///     The event object
-        /// id : String
-        ///     The id of the dropped element
-        /// </summary>
-        [ConfigOption(JsonMode.Raw)]
-        [Category("6. DragSource")]
-        [Meta]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [Description("An empty function by default, but provided so that you can perform a custom action after an invalid drop has occurred by providing an implementation.")]
-        public virtual JFunction AfterValidDrop
-        {
-            get
-            {
-                if (this.afterValidDrop == null)
-                {
-                    this.afterValidDrop = new JFunction();
-
-                    if (!this.DesignMode)
-                    {
-                        this.afterValidDrop.Args = new string[] { "target", "e", "id" };
-                    }
-                }
-
-                return this.afterValidDrop;
-            }
-        }
-
         private JFunction beforeDragDrop;
 
         /// <summary>
@@ -411,7 +322,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action before the dragged item is dropped onto the target and optionally cancel the onDragDrop.")]
@@ -444,7 +355,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action before the dragged item enters the drop target and optionally cancel the onDragEnter.")]
@@ -477,7 +388,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action before the dragged item is dragged out of the target without dropping, and optionally cancel the onDragOut.")]
@@ -510,7 +421,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action while the dragged item is over the drop target and optionally cancel the onDragOver.")]
@@ -543,7 +454,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action after an invalid drop has occurred.")]
@@ -575,7 +486,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action before the initial drag event begins and optionally cancel it.")]
@@ -607,7 +518,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("An empty function by default, but provided so that you can perform a custom action once the initial drag event has begun. The drag cannot be canceled from this function.")]
@@ -636,7 +547,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DragSource")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Returns the data object associated with this drag source.")]
@@ -647,10 +558,6 @@ namespace Ext.Net
                 if (this.getDragData == null)
                 {
                     this.getDragData = new JFunction();
-                    if (!this.DesignMode)
-                    {
-                        this.getDragData.Args = new string[] { "e" };
-                    }
                 }
 
                 return this.getDragData;

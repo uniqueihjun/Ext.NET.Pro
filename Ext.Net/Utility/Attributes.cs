@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -370,7 +370,7 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public string GetScript(BaseControl c, PropertyInfo property)
+        public string GetScript(XControl c, PropertyInfo property)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -416,7 +416,7 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public void RegisterScript(BaseControl c, PropertyInfo property)
+        public void RegisterScript(XControl c, PropertyInfo property)
         {
             c.AddScript(this.GetScript(c, property));
         }
@@ -445,6 +445,13 @@ namespace Ext.Net
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [Description("")]
     public sealed class DeferredRenderAttribute : System.Attribute { }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [Description("")]
+    public sealed class ViewStateMemberAttribute : System.Attribute { }
 
     /// <summary>
     /// 
@@ -494,11 +501,6 @@ namespace Ext.Net
     /// </summary>
     public enum DirectMethodProxyIDMode
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        Default, 
-
         /// <summary>
         /// 
         /// </summary>

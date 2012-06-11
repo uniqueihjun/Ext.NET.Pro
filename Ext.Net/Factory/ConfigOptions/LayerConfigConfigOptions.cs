@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class LayerConfig
     {
         /// <summary>
@@ -41,12 +38,10 @@ namespace Ext.Net
                 list.Add("iD", new ConfigOption("iD", new SerializationOptions("id"), "", this.ID ));
                 list.Add("constrain", new ConfigOption("constrain", null, true, this.Constrain ));
                 list.Add("dH", new ConfigOption("dH", new SerializationOptions("dh", JsonMode.Object), null, this.DH ));
-                list.Add("hideMode", new ConfigOption("hideMode", new SerializationOptions(JsonMode.ToLower), null, this.HideMode ));
                 list.Add("shadow", new ConfigOption("shadow", new SerializationOptions(typeof(ShadowJsonConverter)), ShadowMode.None, this.Shadow ));
                 list.Add("shadowOffset", new ConfigOption("shadowOffset", null, 4, this.ShadowOffset ));
                 list.Add("shim", new ConfigOption("shim", null, true, this.Shim ));
                 list.Add("useDisplay", new ConfigOption("useDisplay", null, false, this.UseDisplay ));
-                list.Add("visibilityCls", new ConfigOption("visibilityCls", null, "", this.VisibilityCls ));
                 list.Add("zIndex", new ConfigOption("zIndex", new SerializationOptions("zindex"), 11000, this.ZIndex ));
                 list.Add("parentElementProxy", new ConfigOption("parentElementProxy", new SerializationOptions("parentEl", JsonMode.Raw), "", this.ParentElementProxy ));
 

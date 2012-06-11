@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class SliderBase
     {
         /// <summary>
@@ -37,19 +34,18 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
+                list.Add("values", new ConfigOption("values", new SerializationOptions("values", typeof(IntArrayJsonConverter)), null, this.Values ));
+                list.Add("valueProxy", new ConfigOption("valueProxy", new SerializationOptions("value", JsonMode.Raw), int.MinValue, this.ValueProxy ));
                 list.Add("animate", new ConfigOption("animate", null, true, this.Animate ));
                 list.Add("clickToChange", new ConfigOption("clickToChange", null, true, this.ClickToChange ));
                 list.Add("constrainThumbs", new ConfigOption("constrainThumbs", null, true, this.ConstrainThumbs ));
                 list.Add("decimalPrecision", new ConfigOption("decimalPrecision", null, 0, this.DecimalPrecision ));
                 list.Add("increment", new ConfigOption("increment", null, 0, this.Increment ));
                 list.Add("keyIncrement", new ConfigOption("keyIncrement", null, 1, this.KeyIncrement ));
-                list.Add("maxValue", new ConfigOption("maxValue", null, 100d, this.MaxValue ));
-                list.Add("minValue", new ConfigOption("minValue", null, 0d, this.MinValue ));
+                list.Add("maxValue", new ConfigOption("maxValue", null, 100, this.MaxValue ));
+                list.Add("minValue", new ConfigOption("minValue", null, 0, this.MinValue ));
                 list.Add("vertical", new ConfigOption("vertical", null, false, this.Vertical ));
-                list.Add("zeroBasedSnapping", new ConfigOption("zeroBasedSnapping", null, false, this.ZeroBasedSnapping ));
-                list.Add("useTips", new ConfigOption("useTips", null, true, this.UseTips ));
-                list.Add("tipText", new ConfigOption("tipText", new SerializationOptions(JsonMode.Raw), null, this.TipText ));
-                list.Add("valueProxy", new ConfigOption("valueProxy", new SerializationOptions("values", JsonMode.Serialize), null, this.ValueProxy ));
+                list.Add("topThumbZIndex", new ConfigOption("topThumbZIndex", null, 10000, this.TopThumbZIndex ));
 
                 return list;
             }

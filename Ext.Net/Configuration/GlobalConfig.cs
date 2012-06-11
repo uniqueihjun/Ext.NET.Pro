@@ -1,13 +1,13 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
-using System.ComponentModel;
 using System.Configuration;
+using System.ComponentModel;
 
 namespace Ext.Net
 {
@@ -65,7 +65,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        [ConfigurationProperty("idMode", DefaultValue = IDMode.Explicit, IsRequired = false)]
+        [ConfigurationProperty("idMode", DefaultValue = IDMode.Inherit, IsRequired = false)]
         [Description("")]
         public IDMode IDMode
         {
@@ -124,6 +124,19 @@ namespace Ext.Net
             get
             {
                 return (bool)this["clientInitDirectMethods"];
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [ConfigurationProperty("scriptAdapter", DefaultValue = ScriptAdapter.Ext, IsRequired = false)]
+        [Description("")]
+        public ScriptAdapter ScriptAdapter
+        {
+            get
+            {
+                return (ScriptAdapter)this["scriptAdapter"];
             }
         }
 
@@ -261,7 +274,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        [ConfigurationProperty("directMethodNamespace", DefaultValue = ".direct", IsRequired = false)]
+        [ConfigurationProperty("directMethodNamespace", DefaultValue = "Ext.net.DirectMethods", IsRequired = false)]
         [Description("")]
         public string DirectMethodNamespace
         {
@@ -274,7 +287,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        [ConfigurationProperty("disableViewState", DefaultValue = true, IsRequired = false)]
+        [ConfigurationProperty("disableViewState", DefaultValue = false, IsRequired = false)]
         [Description("")]
         public bool DisableViewState
         {
@@ -307,6 +320,32 @@ namespace Ext.Net
             get
             {
                 return (bool)this["showWarningOnAjaxFailure"];
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [ConfigurationProperty("manageEventsViewState", DefaultValue = false, IsRequired = false)]
+        [Description("")]
+        public bool ManageEventsViewState
+        {
+            get
+            {
+                return (bool)this["manageEventsViewState"];
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [ConfigurationProperty("debugConsole", DefaultValue = DebugConsole.None, IsRequired = false)]
+        [Description("")]
+        public DebugConsole DebugConsole
+        {
+            get
+            {
+                return (DebugConsole)this["debugConsole"];
             }
         }
 
@@ -352,7 +391,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        [ConfigurationProperty("namespace", DefaultValue = "App", IsRequired = false)]
+        [ConfigurationProperty("namespace", DefaultValue = "", IsRequired = false)]
         [Description("")]
         public string Namespace
         {

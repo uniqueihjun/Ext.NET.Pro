@@ -1,13 +1,12 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
-using System.Web.UI;
 
 namespace Ext.Net
 {
@@ -15,35 +14,5 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class ToolbarDirectEvents : ContainerDirectEvents 
-    {
-        public ToolbarDirectEvents() { }
-
-        public ToolbarDirectEvents(Observable parent) { this.Parent = parent; }
-
-        private ComponentDirectEvent overFlowChange;
-
-        /// <summary>
-        /// Fires after the overflow state has changed.
-        /// Parameters
-        /// item : Object
-        ///     The Container
-        /// lastOverflow : Boolean
-        ///     overflow state
-        /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractContainer), "this")]
-        [ListenerArgument(1, "lastOverflow")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("overflowchange", typeof(DirectEventJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("Fires after the overflow state has changed.")]
-        public virtual ComponentDirectEvent OverFlowChange
-        {
-            get
-            {
-                return this.overFlowChange ?? (this.overFlowChange = new ComponentDirectEvent(this));
-            }
-        }
-    }
+    public partial class ToolbarDirectEvents : ContainerDirectEvents { }
 }

@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class XmlReader
     {
 		/*  Ctor
@@ -46,7 +43,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        new public partial class Config : AbstractReader.Config 
+        new public partial class Config : DataReader.Config 
         { 
 			/*  Implicit XmlReader.Config Conversion to XmlReader.Builder
 				-----------------------------------------------------------------------------------------------*/
@@ -63,6 +60,24 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
+			private string iDPath = "";
+
+			/// <summary>
+			/// The DomQuery path relative from the record element to the element that contains a record identifier value.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string IDPath 
+			{ 
+				get
+				{
+					return this.iDPath;
+				}
+				set
+				{
+					this.iDPath = value;
+				}
+			}
+
 			private string record = "";
 
 			/// <summary>
@@ -78,6 +93,42 @@ namespace Ext.Net
 				set
 				{
 					this.record = value;
+				}
+			}
+
+			private string success = "";
+
+			/// <summary>
+			/// The DomQuery path to the success attribute used by forms.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string Success 
+			{ 
+				get
+				{
+					return this.success;
+				}
+				set
+				{
+					this.success = value;
+				}
+			}
+
+			private string totalProperty = "";
+
+			/// <summary>
+			/// The DomQuery path from which to retrieve the total number of records in the dataset. This is only needed if the whole dataset is not passed in one go, but is being paged from the remote server.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string TotalProperty 
+			{ 
+				get
+				{
+					return this.totalProperty;
+				}
+				set
+				{
+					this.totalProperty = value;
 				}
 			}
 

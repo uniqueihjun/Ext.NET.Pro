@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ImageCommandColumn
     {
 		/*  Ctor
@@ -46,7 +43,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        new public partial class Config : CellCommandColumn.Config 
+        new public partial class Config : Column.Config 
         { 
 			/*  Implicit ImageCommandColumn.Config Conversion to ImageCommandColumn.Builder
 				-----------------------------------------------------------------------------------------------*/
@@ -63,21 +60,39 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
-			private bool menuDisabled = true;
+			private bool hideable = true;
 
 			/// <summary>
-			/// True to disabled the column header menu containing sort/hide options. Defaults to false.
+			/// (optional) Specify as false to prevent the user from hiding this column. Defaults to true.
 			/// </summary>
 			[DefaultValue(true)]
-			public override bool MenuDisabled 
+			public override bool Hideable 
 			{ 
 				get
 				{
-					return this.menuDisabled;
+					return this.hideable;
 				}
 				set
 				{
-					this.menuDisabled = value;
+					this.hideable = value;
+				}
+			}
+
+			private bool rightCommandAlign = false;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(false)]
+			public override bool RightCommandAlign 
+			{ 
+				get
+				{
+					return this.rightCommandAlign;
+				}
+				set
+				{
+					this.rightCommandAlign = value;
 				}
 			}
         
@@ -135,39 +150,39 @@ namespace Ext.Net
 				}
 			}
 			        
-			private ImageCommandColumnListeners listeners = null;
+			private JFunction prepareCommand = null;
 
 			/// <summary>
-			/// Client-side JavaScript Event Handlers
+			/// 
 			/// </summary>
-			public ImageCommandColumnListeners Listeners
+			public JFunction PrepareCommand
 			{
 				get
 				{
-					if (this.listeners == null)
+					if (this.prepareCommand == null)
 					{
-						this.listeners = new ImageCommandColumnListeners();
+						this.prepareCommand = new JFunction();
 					}
 			
-					return this.listeners;
+					return this.prepareCommand;
 				}
 			}
 			        
-			private ImageCommandColumnDirectEvents directEvents = null;
+			private JFunction prepareCommands = null;
 
 			/// <summary>
-			/// Server-side Ajax Event Handlers
+			/// 
 			/// </summary>
-			public ImageCommandColumnDirectEvents DirectEvents
+			public JFunction PrepareCommands
 			{
 				get
 				{
-					if (this.directEvents == null)
+					if (this.prepareCommands == null)
 					{
-						this.directEvents = new ImageCommandColumnDirectEvents();
+						this.prepareCommands = new JFunction();
 					}
 			
-					return this.directEvents;
+					return this.prepareCommands;
 				}
 			}
 			

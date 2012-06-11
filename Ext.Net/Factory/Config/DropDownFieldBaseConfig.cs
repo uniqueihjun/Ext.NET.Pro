@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,34 +15,31 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-	/// <summary>
-	/// 
-	/// </summary>
     public abstract partial class DropDownFieldBase
     {
         /// <summary>
         /// 
         /// </summary>
-        new public abstract partial class Config : PickerField.Config 
+        new public abstract partial class Config : BaseTriggerField.Config 
         { 
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
-			private string valueHiddenName = "";
+			private string text = "";
 
 			/// <summary>
-			/// 
+			/// The Text value to initialize this field with.
 			/// </summary>
 			[DefaultValue("")]
-			public virtual string ValueHiddenName 
+			public override string Text 
 			{ 
 				get
 				{
-					return this.valueHiddenName;
+					return this.text;
 				}
 				set
 				{
-					this.valueHiddenName = value;
+					this.text = value;
 				}
 			}
 
@@ -99,19 +96,55 @@ namespace Ext.Net
 					this.allowBlur = value;
 				}
 			}
+
+			private bool lazyInit = true;
+
+			/// <summary>
+			/// True to not initialize the list for this combo until the field is focused. (defaults to true).
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool LazyInit 
+			{ 
+				get
+				{
+					return this.lazyInit;
+				}
+				set
+				{
+					this.lazyInit = value;
+				}
+			}
+
+			private string componentAlign = "";
+
+			/// <summary>
+			/// A valid anchor position value. See Ext.Element.alignTo for details on supported anchor positions (defaults to 'tl-bl').
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string ComponentAlign 
+			{ 
+				get
+				{
+					return this.componentAlign;
+				}
+				set
+				{
+					this.componentAlign = value;
+				}
+			}
         
-			private ItemsCollection<AbstractPanel> component = null;
+			private ItemsCollection<PanelBase> component = null;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public ItemsCollection<AbstractPanel> Component
+			public ItemsCollection<PanelBase> Component
 			{
 				get
 				{
 					if (this.component == null)
 					{
-						this.component = new ItemsCollection<AbstractPanel>();
+						this.component = new ItemsCollection<PanelBase>();
 					}
 			
 					return this.component;
@@ -135,25 +168,7 @@ namespace Ext.Net
 					this.componentRenderTo = value;
 				}
 			}
-        
-			private JFunction syncValue = null;
 
-			/// <summary>
-			/// Function to syncronize value of the field and dropdown control
-			/// </summary>
-			public JFunction SyncValue
-			{
-				get
-				{
-					if (this.syncValue == null)
-					{
-						this.syncValue = new JFunction();
-					}
-			
-					return this.syncValue;
-				}
-			}
-			
         }
     }
 }

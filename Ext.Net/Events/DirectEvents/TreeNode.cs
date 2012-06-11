@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,10 +17,6 @@ namespace Ext.Net
 	[Description("")]
     public partial class TreeNodeDirectEvents : ComponentDirectEvents
     {
-        public TreeNodeDirectEvents() { }
-
-        public TreeNodeDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent beforeChildrenRendered;
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace Ext.Net
             {
                 if (this.beforeChildrenRendered == null)
                 {
-                    this.beforeChildrenRendered = new ComponentDirectEvent(this);
+                    this.beforeChildrenRendered = new ComponentDirectEvent();
                 }
 
                 return this.beforeChildrenRendered;
@@ -63,7 +59,7 @@ namespace Ext.Net
             {
                 if (this.beforeClick == null)
                 {
-                    this.beforeClick = new ComponentDirectEvent(this);
+                    this.beforeClick = new ComponentDirectEvent();
                 }
 
                 return this.beforeClick;
@@ -89,7 +85,7 @@ namespace Ext.Net
             {
                 if (this.beforeCollapse == null)
                 {
-                    this.beforeCollapse = new ComponentDirectEvent(this);
+                    this.beforeCollapse = new ComponentDirectEvent();
                 }
 
                 return this.beforeCollapse;
@@ -115,7 +111,7 @@ namespace Ext.Net
             {
                 if (this.beforeExpand == null)
                 {
-                    this.beforeExpand = new ComponentDirectEvent(this);
+                    this.beforeExpand = new ComponentDirectEvent();
                 }
 
                 return this.beforeExpand;
@@ -140,7 +136,7 @@ namespace Ext.Net
             {
                 if (this.checkChange == null)
                 {
-                    this.checkChange = new ComponentDirectEvent(this);
+                    this.checkChange = new ComponentDirectEvent();
                 }
 
                 return this.checkChange;
@@ -165,7 +161,7 @@ namespace Ext.Net
             {
                 if (this.click == null)
                 {
-                    this.click = new ComponentDirectEvent(this);
+                    this.click = new ComponentDirectEvent();
                 }
 
                 return this.click;
@@ -189,7 +185,7 @@ namespace Ext.Net
             {
                 if (this.collapse == null)
                 {
-                    this.collapse = new ComponentDirectEvent(this);
+                    this.collapse = new ComponentDirectEvent();
                 }
 
                 return this.collapse;
@@ -214,7 +210,7 @@ namespace Ext.Net
             {
                 if (this.contextMenu == null)
                 {
-                    this.contextMenu = new ComponentDirectEvent(this);
+                    this.contextMenu = new ComponentDirectEvent();
                 }
 
                 return this.contextMenu;
@@ -239,7 +235,7 @@ namespace Ext.Net
             {
                 if (this.dblClick == null)
                 {
-                    this.dblClick = new ComponentDirectEvent(this);
+                    this.dblClick = new ComponentDirectEvent();
                 }
 
                 return this.dblClick;
@@ -264,7 +260,7 @@ namespace Ext.Net
             {
                 if (this.disabledChange == null)
                 {
-                    this.disabledChange = new ComponentDirectEvent(this);
+                    this.disabledChange = new ComponentDirectEvent();
                 }
 
                 return this.disabledChange;
@@ -288,7 +284,7 @@ namespace Ext.Net
             {
                 if (this.expand == null)
                 {
-                    this.expand = new ComponentDirectEvent(this);
+                    this.expand = new ComponentDirectEvent();
                 }
 
                 return this.expand;
@@ -314,7 +310,7 @@ namespace Ext.Net
             {
                 if (this.textChange == null)
                 {
-                    this.textChange = new ComponentDirectEvent(this);
+                    this.textChange = new ComponentDirectEvent();
                 }
 
                 return this.textChange;

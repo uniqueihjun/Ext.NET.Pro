@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TemplateColumn
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : CellCommandColumn.Builder<TemplateColumn, TemplateColumn.Builder>
+        public partial class Builder : Column.Builder<TemplateColumn, TemplateColumn.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -58,16 +55,7 @@ namespace Ext.Net
             
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// An XTemplate, or an XTemplate definition string to use to process a Model's data to produce a column's rendered value.
-			/// </summary>
-            public virtual TemplateColumn.Builder TemplateString(string templateString)
-            {
-                this.ToComponent().TemplateString = templateString;
-                return this as TemplateColumn.Builder;
-            }
-            
+			
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

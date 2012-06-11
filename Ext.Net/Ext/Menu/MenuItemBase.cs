@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -22,7 +22,7 @@ namespace Ext.Net
     /// </summary>
     [Meta]
     [Description("")]
-    public abstract partial class MenuItemBase : ComponentBase, IIcon, IAutoPostBack, IPostBackEventHandler, IButtonControl
+    public abstract partial class MenuItemBase : BaseMenuItem, IIcon, IAutoPostBack, IPostBackEventHandler, IButtonControl
     {
         /// <summary>
         /// 
@@ -34,30 +34,19 @@ namespace Ext.Net
 
             if (this.OnClientClick.IsNotEmpty())
             {
-                this.Handler = new JFunction(TokenUtils.ParseTokens(this.OnClientClick, this), "el", "e").ToScript();
+                this.On("click", new JFunction(TokenUtils.ParseTokens(this.OnClientClick, this), "el", "e"));
+            }
+
+            string fn = this.PostBackFunction;
+
+            if (this.ParentForm != null && fn.IsNotEmpty())
+            {
+                this.On("click", new JFunction(fn));
             }
         }
 
         /*  PostBack
             -----------------------------------------------------------------------------------------------*/
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Meta]
-        [DefaultValue("click")]
-        [Description("")]
-        public virtual string PostBackEvent
-        {
-            get
-            {
-                return this.State.Get<string>("PostBackEvent", "click");
-            }
-            set
-            {
-                this.State.Set("PostBackEvent", value);
-            }
-        }
 
         /// <summary>
         /// 
@@ -71,11 +60,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("PostBackUrl", "");
+                return (string)this.ViewState["PostBackUrl"] ?? "";
             }
             set
             {
-                this.State.Set("PostBackUrl", value);
+                this.ViewState["PostBackUrl"] = value;
             }
         }
 
@@ -181,15 +170,22 @@ namespace Ext.Net
         /// </summary>
         [DefaultValue("")]
         [Description("")]
-        public virtual string CommandName
+        public string CommandName
         {
             get
             {
-                return this.State.Get<string>("CommandName", "");
+                string str = (string)this.ViewState["CommandName"];
+
+                if (str != null)
+                {
+                    return str;
+                }
+
+                return "";
             }
             set
             {
-                this.State.Set("CommandName", value);
+                this.ViewState["CommandName"] = value;
             }
         }
 
@@ -198,15 +194,22 @@ namespace Ext.Net
         /// </summary>
         [DefaultValue("")]
         [Description("")]
-        public virtual string CommandArgument
+        public string CommandArgument
         {
             get
             {
-                return this.State.Get<string>("CommandArgument", "");
+                string str = (string)this.ViewState["CommandArgument"];
+
+                if (str != null)
+                {
+                    return str;
+                }
+
+                return "";
             }
             set
             {
-                this.State.Set("CommandArgument", value);
+                this.ViewState["CommandArgument"] = value;
             }
         }
 
@@ -221,11 +224,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("OnClientClick", "");
+                return (string)this.ViewState["OnClientClick"] ?? "";
             }
             set
             {
-                this.State.Set("OnClientClick", value);
+                this.ViewState["OnClientClick"] = value;
             }
         }
 
@@ -240,11 +243,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("AutoPostBack", false);
+                object obj = this.ViewState["AutoPostBack"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("AutoPostBack", value);
+                this.ViewState["AutoPostBack"] = value;
             }
         }
 
@@ -259,11 +263,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("CausesValidation", true);
+                object obj = this.ViewState["CausesValidation"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("CausesValidation", value);
+                this.ViewState["CausesValidation"] = value;
             }
         }
 
@@ -278,11 +283,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("ValidationGroup", "");
+                return (string)this.ViewState["ValidationGroup"] ?? "";
             }
             set
             {
-                this.State.Set("ValidationGroup", value);
+                this.ViewState["ValidationGroup"] = value;
             }
         }
         
@@ -295,6 +300,14 @@ namespace Ext.Net
             get
             {
                 return (MenuBase)ReflectionUtils.GetTypeOfParent(this, typeof(MenuBase));
+            }
+        }
+
+        internal Desktop ParentDesktop
+        {
+            get
+            {
+                return (Desktop)ReflectionUtils.GetTypeOfParent(this, typeof(Desktop));
             }
         }
 
@@ -312,374 +325,170 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// The CSS class added to the menu item when the item is activated (focused/mouseover). Defaults to Ext.baseCSSPrefix + 'menu-item-active'.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("4. MenuItem")]
-        [DefaultValue("")]
-        [NotifyParentProperty(true)]
-        [Description("The CSS class added to the menu item when the item is activated (focused/mouseover). Defaults to Ext.baseCSSPrefix + 'menu-item-active'.")]
-        public virtual string ActiveCls
-        {
-            get
-            {
-                return this.State.Get<string>("ActiveCls", "");
-            }
-            set
-            {
-                this.State.Set("ActiveCls", value);
-            }
-        }
-
-        /// <summary>
-        /// Whether or not this menu item can be activated when focused/mouseovered. Defaults to true.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("4. MenuItem")]
-        [DefaultValue(true)]
-        [NotifyParentProperty(true)]
-        [Description("Whether or not this menu item can be activated when focused/mouseovered. Defaults to true.")]
-        public virtual bool CanActivate
-        {
-            get
-            {
-                return this.State.Get<bool>("CanActivate", true);
-            }
-            set
-            {
-                this.State.Set("CanActivate", value);
-            }
-        }
-
-        /// <summary>
-        /// The delay in milliseconds to wait before hiding the menu after clicking the menu item. This only has an effect when hideOnClick: true. Defaults to 1.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("4. MenuItem")]
-        [DefaultValue(1)]
-        [NotifyParentProperty(true)]
-        [Description("The delay in milliseconds to wait before hiding the menu after clicking the menu item. This only has an effect when hideOnClick: true. Defaults to 1.")]
-        public virtual int ClickHideDelay
-        {
-            get
-            {
-                return this.State.Get<int>("ClickHideDelay", 1);
-            }
-            set
-            {
-                this.State.Set("ClickHideDelay", value);
-            }
-        }
-
-        /// <summary>
-        /// A function that will handle the click event of this menu item (defaults to undefined).
-        /// Parameters
-        /// item : Ext.menu.Item
-        /// The item that was clicked
-        /// e : Ext.EventObject
-        /// The underyling Ext.EventObject.
-        /// </summary>
-        [Meta]
-        [ConfigOption(JsonMode.Raw)]
-        [Category("4. MenuItem")]
-        [DefaultValue("")]
-        [DirectEventUpdate(MethodName="SetHandler")]
-        [NotifyParentProperty(true)]
-        [Description("A function that will handle the click event of this menu item (defaults to undefined).")]
-        public virtual string Handler
-        {
-            get
-            {
-                return this.State.Get<string>("Handler", "");
-            }
-            set
-            {
-                this.State.Set("Handler", value);
-            }
-        }
-
-        /// <summary>
-        /// The scope (this reference) in which the handler function will be called.
-        /// </summary>
-        [Meta]
-        [ConfigOption(JsonMode.Raw)]
-        [Category("4. MenuItem")]
-        [DefaultValue("")]
-        [NotifyParentProperty(true)]
-        [Description("The scope (this reference) in which the handler function will be called.")]
-        public virtual string Scope
-        {
-            get
-            {
-                return this.State.Get<string>("Scope", "");
-            }
-            set
-            {
-                this.State.Set("Scope", value);
-            }
-        }
-
-        /// <summary>
-        /// Whether or not to destroy any associated sub-menu when this item is destroyed. Defaults to true.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("4. MenuItem")]
-        [DefaultValue(true)]
-        [NotifyParentProperty(true)]
-        [Description("Whether or not to destroy any associated sub-menu when this item is destroyed. Defaults to true.")]
-        public virtual bool DestroyMenu
-        {
-            get
-            {
-                return this.State.Get<bool>("DestroyMenu", true);
-            }
-            set
-            {
-                this.State.Set("DestroyMenu", value);
-            }
-        }
-
-        /// <summary>
-        /// Whether to not to hide the owning menu when this item is clicked. Defaults to true.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("4. MenuItem")]
-        [DefaultValue(true)]
-        [NotifyParentProperty(true)]
-        [Description("Whether to not to hide the owning menu when this item is clicked. Defaults to true.")]
-        public virtual bool HideOnClick
-        {
-            get
-            {
-                return this.State.Get<bool>("HideOnClick", true);
-            }
-            set
-            {
-                this.State.Set("HideOnClick", value);
-            }
-        }
-
-        /// <summary>
-        /// The href attribute to use for the underlying anchor link. Defaults to #.
+        /// True if this item can be visually activated (defaults to true).
         /// </summary>
         [Meta]
         [ConfigOption]
         [Category("5. Item")]
-        [DefaultValue("#")]
+        [DefaultValue(true)]
         [NotifyParentProperty(true)]
-        [Description("The href attribute to use for the underlying anchor link. Defaults to #.")]
+        [Description("True if this item can be visually activated (defaults to true).")]
+        public override bool CanActivate
+        {
+            get
+            {
+                object obj = this.ViewState["CanActivate"];
+                return (obj == null) ? true : (bool)obj;
+            }
+            set
+            {
+                this.ViewState["CanActivate"] = value;
+            }
+        }
+
+        /// <summary>
+        /// The href attribute to use for the underlying anchor link (defaults to '#').
+        /// </summary>
+        [Meta]
+        [ConfigOption]
+        [Category("5. Item")]
+        [DefaultValue("")]
+        [NotifyParentProperty(true)]
+        [Description("The href attribute to use for the underlying anchor link (defaults to '#').")]
         public virtual string Href
         {
             get
             {
-                return this.State.Get<string>("Href", "#");
+                return (string)this.ViewState["Href"] ?? "";
             }
             set
             {
-                this.State.Set("Href", value);
+                this.ViewState["Href"] = value;
             }
         }
 
         /// <summary>
-        /// The target attribute to use for the underlying anchor link. Defaults to undefined.
+        /// The target attribute to use for the underlying anchor link (defaults to '').
         /// </summary>
         [Meta]
         [ConfigOption]
         [Category("5. Item")]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
-        [Description("The target attribute to use for the underlying anchor link. Defaults to undefined.")]
+        [Description("The target attribute to use for the underlying anchor link (defaults to '').")]
         public virtual string HrefTarget
         {
             get
             {
-                return this.State.Get<string>("HrefTarget", "");
+                return (string)this.ViewState["HrefTarget"] ?? "";
             }
             set
             {
-                this.State.Set("HrefTarget", value);
+                this.ViewState["HrefTarget"] = value;
             }
         }
 
         /// <summary>
-        /// The path to an icon to display in this item. Defaults to Ext.BLANK_IMAGE_URL.
+        /// The path to an icon to display in this item (defaults to Ext.BLANK_IMAGE_URL). If icon is specified iconCls should not be.
         /// </summary>
         [Meta]
-        [ConfigOption("icon", JsonMode.Url)]
-        [DirectEventUpdate(MethodName="SetIconUrl")]
         [Category("5. Item")]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
-        [Description("The path to an icon to display in this item. Defaults to Ext.BLANK_IMAGE_URL.")]
+        [Description("The path to an icon to display in this item (defaults to Ext.BLANK_IMAGE_URL). If icon is specified iconCls should not be.")]
         public virtual string IconUrl
         {
             get
             {
-                return this.State.Get<string>("IconUrl", "");
+                return (string)this.ViewState["IconUrl"] ?? "";
             }
             set
             {
-                this.State.Set("IconUrl", value);
-            }
-        }
-
-        /// <summary>
-        /// A CSS class that specifies a background-image to use as the icon for this item. Defaults to undefined.
-        /// </summary>
-        [Meta]
-        [Category("5. Item")]
-        [DefaultValue("")]
-        [NotifyParentProperty(true)]
-        [DirectEventUpdate(MethodName = "SetIconCls")]
-        [Description("A CSS class that specifies a background-image to use as the icon for this item. Defaults to undefined.")]
-        public virtual string IconCls
-        {
-            get
-            {
-                return this.State.Get<string>("IconCls", "");
-            }
-            set
-            {
-                this.State.Set("IconCls", value);
-            }
-        }
-
-        /// <summary>
-        /// The icon to use in the Title bar. See also, IconCls to set an icon with a custom Css class.
-        /// </summary>
-        [Meta]
-        [Category("5. Item")]
-        [DefaultValue(Icon.None)]
-        [DirectEventUpdate(MethodName = "SetIconCls")]
-        [Description("The icon to use in the Title bar. See also, IconCls to set an icon with a custom Css class.")]
-        public virtual Icon Icon
-        {
-            get
-            {
-                return this.State.Get<Icon>("Icon", Icon.None);
-            }
-            set
-            {
-                this.State.Set("Icon", value);
-            }
-        }
-
-        List<Icon> IIcon.Icons
-        {
-            get
-            {
-                List<Icon> icons = new List<Icon>(1);
-                icons.Add(this.Icon);
-                return icons;
+                this.ViewState["IconUrl"] = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        [ConfigOption("iconCls")]
+        [ConfigOption("icon")]
         [DefaultValue("")]
         [Description("")]
-        protected virtual string IconClsProxy
+        protected virtual string IconUrlProxy
+        {
+            get
+            {
+                return this.ResolveUrlLink(this.IconUrl);
+            }
+        }
+
+        /// <summary>
+        /// A CSS class that specifies a background image that will be used as the icon for this item (defaults to ''). If iconCls is specified icon should not be.
+        /// </summary>
+        [Meta]
+        [ConfigOption]
+        [Category("5. Item")]
+        [DefaultValue("")]
+        [NotifyParentProperty(true)]
+        [DirectEventUpdate(Script = "{0}.setIconClass({1});")]
+        [Description("A CSS class that specifies a background image that will be used as the icon for this item (defaults to ''). If iconCls is specified icon should not be.")]
+        public virtual string IconCls
         {
             get
             {
                 if (this.Icon != Icon.None)
                 {
-                    return "#" + this.Icon.ToString();
+                    return "icon-{0}".FormatWith(this.Icon.ToString().ToLower());
                 }
 
-                return this.IconCls;
+                return (string)this.ViewState["IconCls"] ?? "";
+            }
+            set
+            {
+                this.ViewState["IconCls"] = value;
             }
         }
 
         /// <summary>
-        /// The default Ext.Element.getAlignToXY anchor position value for this item's sub-menu relative to this item's position. Defaults to 'tl-tr?'.
+        /// The default CSS class to use for menu items (defaults to 'x-menu-item')
         /// </summary>
         [Meta]
         [ConfigOption]
         [Category("5. Item")]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
-        [Description("The default Ext.Element.getAlignToXY anchor position value for this item's sub-menu relative to this item's position. Defaults to 'tl-tr?'.")]
-        public virtual string MenuAlign
+        [Description("The default CSS class to use for menu items (defaults to 'x-menu-item')")]
+        public override string ItemCls
         {
             get
             {
-                return this.State.Get<string>("MenuAlign", "");
+                return (string)this.ViewState["ItemCls"] ?? "";
             }
             set
             {
-                this.State.Set("MenuAlign", value);
+                this.ViewState["ItemCls"] = value;
             }
         }
 
-
         /// <summary>
-        /// The delay in milliseconds before this item's sub-menu expands after this item is moused over. Defaults to 200.
+        /// Length of time in milliseconds to wait before showing this item (defaults to 200)
         /// </summary>
         [Meta]
-        [ConfigOption]
+        [ConfigOption(JsonMode.Raw)]
         [Category("5. Item")]
         [DefaultValue(200)]
         [NotifyParentProperty(true)]
-        [Description("The delay in milliseconds before this item's sub-menu expands after this item is moused over. Defaults to 200.")]
-        public virtual int MenuExpandDelay 
+        [Description("Length of time in milliseconds to wait before showing this item (defaults to 200)")]
+        public virtual int ShowDelay
         {
             get
             {
-                return this.State.Get<int>("MenuExpandDelay", 200);
+                object obj = this.ViewState["ShowDelay"];
+                return (obj == null) ? 200 : (int)obj;
             }
             set
             {
-                this.State.Set("MenuExpandDelay", value);
-            }
-        }
-
-        /// <summary>
-        /// The delay in milliseconds before this item's sub-menu hides after this item is moused out. Defaults to 200.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("5. Item")]
-        [DefaultValue(200)]
-        [NotifyParentProperty(true)]
-        [Description("The delay in milliseconds before this item's sub-menu hides after this item is moused out. Defaults to 200.")]
-        public virtual int MenuHideDelay
-        {
-            get
-            {
-                return this.State.Get<int>("MenuHideDelay", 200);
-            }
-            set
-            {
-                this.State.Set("MenuHideDelay", value);
-            }
-        }
-
-        /// <summary>
-        /// Whether or not this item is plain text/html with no icon or visual activation. Defaults to false.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("5. Item")]
-        [DefaultValue(false)]
-        [NotifyParentProperty(true)]
-        [Description("Whether or not this item is plain text/html with no icon or visual activation. Defaults to false.")]
-        public virtual bool Plain
-        {
-            get
-            {
-                return this.State.Get<bool>("Plain", false);
-            }
-            set
-            {
-                this.State.Set("Plain", value);
+                this.ViewState["ShowDelay"] = value;
             }
         }
 
@@ -697,11 +506,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Text", "");
+                return (string)this.ViewState["Text"] ?? "";
             }
             set
             {
-                this.State.Set("Text", value);
+                this.ViewState["Text"] = value;
             }
         }
 
@@ -711,7 +520,7 @@ namespace Ext.Net
         /// Standard menu attribute consisting of a reference to a menu object, a menu id or a menu config blob
         /// </summary>
         [Meta]
-        [ConfigOption("menu", typeof(SingleItemCollectionJsonConverter))]
+        [ConfigOption("menu", typeof(ItemCollectionJsonConverter))]
         [Category("5. Item")]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -732,145 +541,33 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// The tooltip for the button - can be a string to be used as innerHTML (html tags are accepted) or QuickTips config object.
+        /// The icon to use in the Title bar. See also, IconCls to set an icon with a custom Css class.
         /// </summary>
         [Meta]
-        [ConfigOption("tooltip")]
-        [DirectEventUpdate(MethodName = "SetTooltip")]
-        [Localizable(true)]
         [Category("5. Item")]
-        [DefaultValue("")]
-        [ReadOnly(false)]
-        [Browsable(true)]
-        [EditorBrowsable(EditorBrowsableState.Always)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Description("The tooltip for the button - can be a string to be used as innerHTML (html tags are accepted) or QuickTips config object.")]
-        public override string ToolTip
+        [DefaultValue(Icon.None)]
+        [Description("The icon to use in the Title bar. See also, IconCls to set an icon with a custom Css class.")]
+        public virtual Icon Icon
         {
             get
             {
-                return this.State.Get<string>("ToolTip", "");
+                object obj = this.ViewState["Icon"];
+                return (obj == null) ? Icon.None : (Icon)obj;
             }
             set
             {
-                this.State.Set("ToolTip", value);
+                this.ViewState["Icon"] = value;
             }
         }
 
-        private QTipCfg qTipCfg;
-
-        /// <summary>
-        /// A tip string.
-        /// </summary>
-        [Meta]
-        [ConfigOption("tooltip", JsonMode.Object)]
-        [NotifyParentProperty(true)]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("A tip string.")]
-        public virtual QTipCfg QTipCfg
+        List<Icon> IIcon.Icons
         {
             get
             {
-                if (this.qTipCfg == null)
-                {
-                    this.qTipCfg = new QTipCfg();
-                }
-
-                return this.qTipCfg;
+                List<Icon> icons = new List<Icon>(1);
+                icons.Add(this.Icon);
+                return icons;
             }
-        }
-
-        /// <summary>
-        /// The type of tooltip to use. Either 'qtip' for QuickTips or 'title' for title attribute. Defaults to: "qtip"
-        /// </summary>
-        [Meta]
-        [ConfigOption("tooltipType")]
-        [Localizable(true)]
-        [Category("5. Item")]
-        [DefaultValue(ToolTipType.Qtip)]
-        [Description("The type of tooltip to use. Either 'qtip' for QuickTips or 'title' for title attribute. Defaults to: \"qtip\"")]
-        public virtual ToolTipType ToolTipType
-        {
-            get
-            {
-                return this.State.Get<ToolTipType>("ToolTipType", ToolTipType.Qtip);
-            }
-            set
-            {
-                this.State.Set("ToolTipType", value);
-            }
-        }
-
-        /// <summary>
-        /// Sets the click handler of this item
-        /// </summary>
-        /// <param name="handler">The handler function</param>
-        protected virtual void SetHandler(string handler)
-        {
-            this.Call("setHandler", JRawValue.From(handler));
-        }
-
-        /// <summary>
-        /// Sets the iconCls of this item
-        /// </summary>
-        [Description("Sets the CSS class that provides a background image to use as the button's icon. This method also changes the value of the iconCls config internally.")]
-        protected virtual void SetIconCls(string cls)
-        {
-            this.Call("setIconCls", cls);
-        }
-
-        /// <summary>
-        /// Sets the iconCls of this item
-        /// </summary>
-        protected virtual void SetIconCls(Icon icon)
-        {
-            this.SetIconCls(this.Icon != Icon.None ? "#" + icon.ToString() : "");
-        }
-
-        /// <summary>
-        /// Sets the icon on this item.
-        /// </summary>
-        /// <param name="url">The new icon</param>
-        protected virtual void SetIconUrl(string url)
-        {
-            this.Call("setIcon", this.ResolveUrlLink(url));
-        }
-
-        /// <summary>
-        /// Set a child menu for this item. See the menu configuration.
-        /// </summary>
-        /// <param name="menu">A menu, or menu configuration. null may be passed to remove the menu.</param>
-        /// <param name="destroyMenu">True to destroy any existing menu. False to prevent destruction. If not specified, the destroyMenu configuration will be used.</param>
-        public virtual void SetMenu(MenuBase menu, bool destroyMenu)
-        {
-            this.Call("setMenu", menu != null ? menu.ToConfig() : null, destroyMenu);
-        }
-
-        /// <summary>
-        /// Set a child menu for this item. See the menu configuration.
-        /// </summary>
-        /// <param name="menu">A menu, or menu configuration. null may be passed to remove the menu.</param>
-        public virtual void SetMenu(MenuBase menu)
-        {
-            this.Call("setMenu", menu != null ? menu.ToConfig() : null);
-        }
-
-        /// <summary>
-        /// Sets the tooltip for this menu item.
-        /// </summary>
-        /// <param name="tooltip">A string to be used as innerHTML (html tags are accepted) to show in a tooltip</param>
-        protected virtual void SetTooltip(string tooltip)
-        {
-            this.Call("setTooltip", tooltip);
-        }
-
-        /// <summary>
-        /// Sets the tooltip for this menu item.
-        /// </summary>
-        /// <param name="config">A configuration object for Ext.tip.QuickTipManager.register.</param>
-        public virtual void SetTooltip(QTipCfg config)
-        {
-            this.Call("setTooltip", new JRawValue(new ClientConfig().Serialize(config, true)));
         }
     }
 }

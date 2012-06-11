@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ButtonGroup
     {
         /// <summary>
@@ -60,11 +57,38 @@ namespace Ext.Net
 				-----------------------------------------------------------------------------------------------*/
 			 
  			/// <summary>
+			/// The default type of content Container represented by this object as registered in Ext.ComponentMgr. Defaults to 'button' in ButtonGroup
+			/// </summary>
+            public virtual ButtonGroup.Builder DefaultType(string defaultType)
+            {
+                this.ToComponent().DefaultType = defaultType;
+                return this as ButtonGroup.Builder;
+            }
+             
+ 			/// <summary>
+			/// True to render the panel with custom rounded borders, false to render with plain 1px square borders (defaults to true).
+			/// </summary>
+            public virtual ButtonGroup.Builder Frame(bool frame)
+            {
+                this.ToComponent().Frame = frame;
+                return this as ButtonGroup.Builder;
+            }
+             
+ 			/// <summary>
 			/// The columns configuration property passed to the configured layout manager. See Ext.layout.TableLayout.columns.
 			/// </summary>
             public virtual ButtonGroup.Builder Columns(int columns)
             {
                 this.ToComponent().Columns = columns;
+                return this as ButtonGroup.Builder;
+            }
+             
+ 			/// <summary>
+			/// The layout type to be used in this container.
+			/// </summary>
+            public virtual ButtonGroup.Builder Layout(string layout)
+            {
+                this.ToComponent().Layout = layout;
                 return this as ButtonGroup.Builder;
             }
             

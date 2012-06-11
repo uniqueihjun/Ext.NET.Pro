@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class CheckboxGroupBase
     {
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TCheckboxGroupBase, TBuilder> : FieldContainerBase.Builder<TCheckboxGroupBase, TBuilder>
+        new public abstract partial class Builder<TCheckboxGroupBase, TBuilder> : Field.Builder<TCheckboxGroupBase, TBuilder>
             where TCheckboxGroupBase : CheckboxGroupBase
             where TBuilder : Builder<TCheckboxGroupBase, TBuilder>
         {
@@ -58,7 +55,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// Specifies a number of columns will be created and the contained controls will be automatically distributed based on the value of vertical.
+			/// Specifies the number of columns to use when displaying grouped checkbox/radio controls using automatic layout.
 			/// </summary>
             public virtual TBuilder ColumnsNumber(int columnsNumber)
             {
@@ -69,7 +66,7 @@ namespace Ext.Net
  			/// <summary>
 			/// You can also specify an array of column widths, mixing integer (fixed width) and float (percentage width) values as needed (e.g., [100, .25, .75]). Any integer values will be rendered first, then any float values will be calculated as a percentage of the remaining space. Float values do not have to add up to 1 (100%) although if you want the controls to take up the entire field container you should do so.
 			/// </summary>
-            public virtual TBuilder ColumnsWidths(double[] columnsWidths)
+            public virtual TBuilder ColumnsWidths(string[] columnsWidths)
             {
                 this.ToComponent().ColumnsWidths = columnsWidths;
                 return this as TBuilder;
@@ -100,7 +97,34 @@ namespace Ext.Net
  			/// <summary>
 			/// 
 			/// </summary>
-            public virtual TBuilder SetValue(Dictionary<string, object> values)
+            public virtual TBuilder SetValue(string id, bool value)
+            {
+                this.ToComponent().SetValue(id, value);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder SetValue(bool[] values)
+            {
+                this.ToComponent().SetValue(values);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder SetValue(Dictionary<string, bool> values)
+            {
+                this.ToComponent().SetValue(values);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder SetValue(string values)
             {
                 this.ToComponent().SetValue(values);
                 return this as TBuilder;

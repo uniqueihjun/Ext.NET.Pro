@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class HtmlEditor
     {
         /// <summary>
@@ -68,63 +65,23 @@ namespace Ext.Net
                 return this as HtmlEditor.Builder;
             }
              
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of HtmlEditor.Builder</returns>
-            public virtual HtmlEditor.Builder Listeners(Action<HtmlEditorListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as HtmlEditor.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of HtmlEditor.Builder</returns>
-            public virtual HtmlEditor.Builder DirectEvents(Action<HtmlEditorDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as HtmlEditor.Builder;
-            }
-			 
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual HtmlEditor.Builder AfterIFrameTpl(XTemplate afterIFrameTpl)
-            {
-                this.ToComponent().AfterIFrameTpl = afterIFrameTpl;
-                return this as HtmlEditor.Builder;
-            }
+ 			// /// <summary>
+			// /// Client-side JavaScript Event Handlers
+			// /// </summary>
+            // public virtual TBuilder Listeners(EditorListeners listeners)
+            // {
+            //    this.ToComponent().Listeners = listeners;
+            //    return this as TBuilder;
+            // }
              
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual HtmlEditor.Builder AfterTextAreaTpl(XTemplate afterTextAreaTpl)
-            {
-                this.ToComponent().AfterTextAreaTpl = afterTextAreaTpl;
-                return this as HtmlEditor.Builder;
-            }
-             
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual HtmlEditor.Builder BeforeIFrameTpl(XTemplate beforeIFrameTpl)
-            {
-                this.ToComponent().BeforeIFrameTpl = beforeIFrameTpl;
-                return this as HtmlEditor.Builder;
-            }
-             
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual HtmlEditor.Builder BeforeTextAreaTpl(XTemplate beforeTextAreaTpl)
-            {
-                this.ToComponent().BeforeTextAreaTpl = beforeTextAreaTpl;
-                return this as HtmlEditor.Builder;
-            }
+ 			// /// <summary>
+			// /// Server-side Ajax Event Handlers
+			// /// </summary>
+            // public virtual TBuilder DirectEvents(EditorDirectEvents directEvents)
+            // {
+            //    this.ToComponent().DirectEvents = directEvents;
+            //    return this as TBuilder;
+            // }
              
  			/// <summary>
 			/// The default text for the create link prompt.
@@ -136,29 +93,11 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The default font family (defaults to 'tahoma').
-			/// </summary>
-            public virtual HtmlEditor.Builder DefaultFont(string defaultFont)
-            {
-                this.ToComponent().DefaultFont = defaultFont;
-                return this as HtmlEditor.Builder;
-            }
-             
- 			/// <summary>
 			/// The default value for the create link prompt (defaults to http://).
 			/// </summary>
             public virtual HtmlEditor.Builder DefaultLinkValue(string defaultLinkValue)
             {
                 this.ToComponent().DefaultLinkValue = defaultLinkValue;
-                return this as HtmlEditor.Builder;
-            }
-             
- 			/// <summary>
-			/// A default value to be put into the editor to resolve focus issues (defaults to   (Non-breaking space) in Opera and IE6, ​ (Zero-width space) in all other browsers).
-			/// </summary>
-            public virtual HtmlEditor.Builder DefaultValue(string defaultValue)
-            {
-                this.ToComponent().DefaultValue = defaultValue;
                 return this as HtmlEditor.Builder;
             }
              
@@ -251,33 +190,22 @@ namespace Ext.Net
                 this.ToComponent().FontFamilies = fontFamilies;
                 return this as HtmlEditor.Builder;
             }
-             
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of HtmlEditor.Builder</returns>
-            public virtual HtmlEditor.Builder ButtonTips(Action<HtmlEditorButtonTips> action)
-            {
-                action(this.ToComponent().ButtonTips);
-                return this as HtmlEditor.Builder;
-            }
-			 
- 			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup inside the iframe element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-            public virtual HtmlEditor.Builder IframeAttrTpl(XTemplate iframeAttrTpl)
-            {
-                this.ToComponent().IframeAttrTpl = iframeAttrTpl;
-                return this as HtmlEditor.Builder;
-            }
             
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/
 			
  			/// <summary>
-			/// 
+			/// Protected method that will not generally be called directly. If you need/want custom HTML cleanup, this is the method you should override.
+			/// </summary>
+            public virtual HtmlEditor.Builder CleanHtml(string html)
+            {
+                this.ToComponent().CleanHtml(html);
+                return this;
+            }
+            
+ 			/// <summary>
+			/// Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.
 			/// </summary>
             public virtual HtmlEditor.Builder ExecCmd(string cmd, string value)
             {
@@ -286,7 +214,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.
 			/// </summary>
             public virtual HtmlEditor.Builder ExecCmd(string cmd, bool value)
             {
@@ -295,7 +223,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.
 			/// </summary>
             public virtual HtmlEditor.Builder InsertAtCursor(string text)
             {
@@ -313,7 +241,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Executes a Midas editor command on the editor document and performs necessary focus and toolbar updates. This should only be called after the editor is initialized.
 			/// </summary>
             public virtual HtmlEditor.Builder RelayCmd(string cmd, string value)
             {
@@ -322,7 +250,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Executes a Midas editor command on the editor document and performs necessary focus and toolbar updates. This should only be called after the editor is initialized.
 			/// </summary>
             public virtual HtmlEditor.Builder RelayCmd(string cmd, bool value)
             {
@@ -349,7 +277,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Toggles the editor between standard and source edit mode.
 			/// </summary>
             public virtual HtmlEditor.Builder ToggleSourceEdit(bool sourceEdit)
             {

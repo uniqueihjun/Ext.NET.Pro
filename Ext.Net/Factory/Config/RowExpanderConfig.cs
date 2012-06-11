@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class RowExpander
     {
 		/*  Ctor
@@ -81,18 +78,18 @@ namespace Ext.Net
 				}
 			}
 			        
-			private ItemsCollection<AbstractComponent> component = null;
+			private ItemsCollection<Component> component = null;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public ItemsCollection<AbstractComponent> Component
+			public ItemsCollection<Component> Component
 			{
 				get
 				{
 					if (this.component == null)
 					{
-						this.component = new ItemsCollection<AbstractComponent>();
+						this.component = new ItemsCollection<Component>();
 					}
 			
 					return this.component;
@@ -117,24 +114,6 @@ namespace Ext.Net
 				}
 			}
 
-			private bool doLayoutOnExpand = true;
-
-			/// <summary>
-			/// Call doLayout after a row expanding/collapsing
-			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool DoLayoutOnExpand 
-			{ 
-				get
-				{
-					return this.doLayoutOnExpand;
-				}
-				set
-				{
-					this.doLayoutOnExpand = value;
-				}
-			}
-
 			private bool swallowBodyEvents = false;
 
 			/// <summary>
@@ -153,21 +132,39 @@ namespace Ext.Net
 				}
 			}
 
-			private bool selectRowOnExpand = false;
+			private int columnPosition = 0;
 
 			/// <summary>
-			/// True to select a row when clicking on the expander icon (defaults to false).
+			/// 
 			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool SelectRowOnExpand 
+			[DefaultValue(0)]
+			public virtual int ColumnPosition 
 			{ 
 				get
 				{
-					return this.selectRowOnExpand;
+					return this.columnPosition;
 				}
 				set
 				{
-					this.selectRowOnExpand = value;
+					this.columnPosition = value;
+				}
+			}
+
+			private bool enableCaching = true;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool EnableCaching 
+			{ 
+				get
+				{
+					return this.enableCaching;
+				}
+				set
+				{
+					this.enableCaching = value;
 				}
 			}
 
@@ -204,6 +201,24 @@ namespace Ext.Net
 				set
 				{
 					this.expandOnDblClick = value;
+				}
+			}
+
+			private bool lazyRender = true;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool LazyRender 
+			{ 
+				get
+				{
+					return this.lazyRender;
+				}
+				set
+				{
+					this.lazyRender = value;
 				}
 			}
 

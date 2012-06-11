@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class Editor
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractContainer.Builder<Editor, Editor.Builder>
+        public partial class Builder : Component.Builder<Editor, Editor.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -69,43 +66,25 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The position to align to (see Ext.Element.alignTo for more details, defaults to \"c-c?\").
+			/// Size for the editor to automatically adopt the size of the underlying field, Width to adopt the width only, or Height to adopt the height only (defaults to Disable)
 			/// </summary>
-            public virtual Editor.Builder Alignment(string alignment)
-            {
-                this.ToComponent().Alignment = alignment;
-                return this as Editor.Builder;
-            }
-             
- 			/// <summary>
-			/// The position to align to (see Ext.Element.alignTo for more details, defaults to \"c-c?\").
-			/// </summary>
-            public virtual Editor.Builder AlignmentConfig(EditorAlignmentConfig alignmentConfig)
-            {
-                this.ToComponent().AlignmentConfig = alignmentConfig;
-                return this as Editor.Builder;
-            }
-             
- 			/// <summary>
-			/// True for the editor to automatically adopt the size of the underlying field. Otherwise, an object can be passed to indicate where to get each dimension. The available properties are 'boundEl' and 'field'. If a dimension is not specified, it will use the underlying height/width specified on the editor object. 
-			/// </summary>
-            public virtual Editor.Builder AutoSize(bool autoSize)
+            public virtual Editor.Builder AutoSize(EditorAutoSize autoSize)
             {
                 this.ToComponent().AutoSize = autoSize;
                 return this as Editor.Builder;
             }
              
  			/// <summary>
-			/// True for the editor to automatically adopt the size of the underlying field. Otherwise, an object can be passed to indicate where to get each dimension. The available properties are 'boundEl' and 'field'. If a dimension is not specified, it will use the underlying height/width specified on the editor object.
+			/// Editor z-index
 			/// </summary>
-            public virtual Editor.Builder AutoSizeConfig(EditorAutoSize autoSizeConfig)
+            public virtual Editor.Builder ZIndex(int zIndex)
             {
-                this.ToComponent().AutoSizeConfig = autoSizeConfig;
+                this.ToComponent().ZIndex = zIndex;
                 return this as Editor.Builder;
             }
              
  			/// <summary>
-			/// True to complete the editing process if in edit mode when the field is blurred. Defaults to true.
+			/// True to complete edit complete the editing process if in edit mode when the field is blurred. Defaults to true.
 			/// </summary>
             public virtual Editor.Builder AllowBlur(bool allowBlur)
             {
@@ -123,7 +102,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// True to cancel the edit when the escape key is pressed. Defaults to: true
+			/// True to cancel the edit when the escape key is pressed (defaults to false)
 			/// </summary>
             public virtual Editor.Builder CancelOnEsc(bool cancelOnEsc)
             {
@@ -141,16 +120,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// True to constrain the editor to the viewport. Defaults to: false
-			/// </summary>
-            public virtual Editor.Builder Constrain(bool constrain)
-            {
-                this.ToComponent().Constrain = constrain;
-                return this as Editor.Builder;
-            }
-             
- 			/// <summary>
-			/// False to keep the bound element visible while the editor is displayed. Defaults to: true
+			/// False to keep the bound element visible while the editor is displayed (defaults to true)
 			/// </summary>
             public virtual Editor.Builder HideEl(bool hideEl)
             {
@@ -159,31 +129,11 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The Field object (or descendant)
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Editor.Builder</returns>
-            public virtual Editor.Builder Field(Action<ItemsCollection<Field>> action)
-            {
-                action(this.ToComponent().Field);
-                return this as Editor.Builder;
-            }
-			 
- 			/// <summary>
-			/// True to skip the edit completion process (no save, no events fired) if the user completes an edit and the value has not changed. Applies only to string values - edits for other data types will never be ignored. Defaults to: false
+			/// True to skip the edit completion process (no save, no events fired) if the user completes an edit and the value has not changed (defaults to false). Applies only to string values - edits for other data types will never be ignored.
 			/// </summary>
             public virtual Editor.Builder IgnoreNoChange(bool ignoreNoChange)
             {
                 this.ToComponent().IgnoreNoChange = ignoreNoChange;
-                return this as Editor.Builder;
-            }
-             
- 			/// <summary>
-			/// An element to render to. Defaults to the document.body.
-			/// </summary>
-            public virtual Editor.Builder ParentElement(string parentElement)
-            {
-                this.ToComponent().ParentElement = parentElement;
                 return this as Editor.Builder;
             }
              
@@ -193,6 +143,15 @@ namespace Ext.Net
             public virtual Editor.Builder RevertInvalid(bool revertInvalid)
             {
                 this.ToComponent().RevertInvalid = revertInvalid;
+                return this as Editor.Builder;
+            }
+             
+ 			/// <summary>
+			/// \"sides\" for sides/bottom only, \"frame\" for 4-way shadow, and \"drop\" for bottom-right shadow (defaults to \"frame\")
+			/// </summary>
+            public virtual Editor.Builder Shadow(ShadowMode shadow)
+            {
+                this.ToComponent().Shadow = shadow;
                 return this as Editor.Builder;
             }
              
@@ -223,17 +182,24 @@ namespace Ext.Net
                 return this as Editor.Builder;
             }
              
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Editor.Builder</returns>
-            public virtual Editor.Builder TargetControl(Action<Control> action)
-            {
-                action(this.ToComponent().TargetControl);
-                return this as Editor.Builder;
-            }
-			 
+ 			// /// <summary>
+			// /// The Field object (or descendant)
+			// /// </summary>
+            // public virtual TBuilder Field(ItemsCollection<Field> field)
+            // {
+            //    this.ToComponent().Field = field;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// 
+			// /// </summary>
+            // public virtual TBuilder TargetControl(Control targetControl)
+            // {
+            //    this.ToComponent().TargetControl = targetControl;
+            //    return this as TBuilder;
+            // }
+             
  			/// <summary>
 			/// The target id to associate with this tooltip.
 			/// </summary>
@@ -243,61 +209,30 @@ namespace Ext.Net
                 return this as Editor.Builder;
             }
              
- 			/// <summary>
-			/// true to use innerHTML of bound element, otherwise innerText will be used
-			/// </summary>
-            public virtual Editor.Builder UseHtml(bool useHtml)
-            {
-                this.ToComponent().UseHtml = useHtml;
-                return this as Editor.Builder;
-            }
+ 			// /// <summary>
+			// /// Client-side JavaScript Event Handlers
+			// /// </summary>
+            // public virtual TBuilder Listeners(InlineEditorListeners listeners)
+            // {
+            //    this.ToComponent().Listeners = listeners;
+            //    return this as TBuilder;
+            // }
              
- 			/// <summary>
-			/// True to encode value before start editing
-			/// </summary>
-            public virtual Editor.Builder HtmlEncode(bool htmlEncode)
-            {
-                this.ToComponent().HtmlEncode = htmlEncode;
-                return this as Editor.Builder;
-            }
-             
- 			/// <summary>
-			/// True to decode value after editing
-			/// </summary>
-            public virtual Editor.Builder HtmlDecode(bool htmlDecode)
-            {
-                this.ToComponent().HtmlDecode = htmlDecode;
-                return this as Editor.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Editor.Builder</returns>
-            public virtual Editor.Builder Listeners(Action<InlineEditorListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as Editor.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side DirectEventHandlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Editor.Builder</returns>
-            public virtual Editor.Builder DirectEvents(Action<InlineEditorDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as Editor.Builder;
-            }
-			
+ 			// /// <summary>
+			// /// Server-side DirectEventHandlers
+			// /// </summary>
+            // public virtual TBuilder DirectEvents(InlineEditorDirectEvents directEvents)
+            // {
+            //    this.ToComponent().DirectEvents = directEvents;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/
 			
  			/// <summary>
-			/// 
+			/// Cancels the editing process and hides the editor without persisting any changes. The field value will be reverted to the original starting value.
 			/// </summary>
             public virtual Editor.Builder CancelEdit(bool remainVisible)
             {
@@ -306,7 +241,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Cancels the editing process and hides the editor without persisting any changes. The field value will be reverted to the original starting value.
 			/// </summary>
             public virtual Editor.Builder CancelEdit()
             {
@@ -315,7 +250,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Cancels the editing process and hides the editor without persisting any changes. The field value will be reverted to the original starting value.
 			/// </summary>
             public virtual Editor.Builder CompleteEdit(bool remainVisible)
             {
@@ -324,7 +259,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Cancels the editing process and hides the editor without persisting any changes. The field value will be reverted to the original starting value.
 			/// </summary>
             public virtual Editor.Builder CompleteEdit()
             {
@@ -333,7 +268,7 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Realigns the editor to the bound field based on the current alignment config value.
 			/// </summary>
             public virtual Editor.Builder Realign()
             {
@@ -342,11 +277,11 @@ namespace Ext.Net
             }
             
  			/// <summary>
-			/// 
+			/// Sets the height and width of this editor.
 			/// </summary>
-            public virtual Editor.Builder Realign(bool autoSize)
+            public virtual Editor.Builder SetSize(int width, int height)
             {
-                this.ToComponent().Realign(autoSize);
+                this.ToComponent().SetSize(width, height);
                 return this;
             }
             

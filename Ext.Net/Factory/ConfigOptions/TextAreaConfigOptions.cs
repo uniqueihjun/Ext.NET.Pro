@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TextArea
     {
         /// <summary>
@@ -37,13 +34,9 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
-                list.Add("cols", new ConfigOption("cols", null, 20, this.Cols ));
-                list.Add("enterIsSpecial", new ConfigOption("enterIsSpecial", null, false, this.EnterIsSpecial ));
-                list.Add("growAppend", new ConfigOption("growAppend", null, "", this.GrowAppend ));
                 list.Add("growMax", new ConfigOption("growMax", null, Unit.Pixel(1000), this.GrowMax ));
                 list.Add("growMin", new ConfigOption("growMin", null, Unit.Pixel(60), this.GrowMin ));
                 list.Add("preventScrollbars", new ConfigOption("preventScrollbars", null, false, this.PreventScrollbars ));
-                list.Add("rows", new ConfigOption("rows", null, 4, this.Rows ));
                 list.Add("listeners", new ConfigOption("listeners", new SerializationOptions("listeners", JsonMode.Object), null, this.Listeners ));
                 list.Add("directEvents", new ConfigOption("directEvents", new SerializationOptions("directEvents", JsonMode.Object), null, this.DirectEvents ));
 

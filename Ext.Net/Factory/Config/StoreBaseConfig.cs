@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,19 +15,106 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-	/// <summary>
-	/// 
-	/// </summary>
     public abstract partial class StoreBase
     {
         /// <summary>
         /// 
         /// </summary>
-        new public abstract partial class Config : AbstractStore.Config 
+        new public abstract partial class Config : LazyObservable.Config 
         { 
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
+			private bool autoDestroy = false;
+
+			/// <summary>
+			/// true to destroy the store when the component the store is bound to is destroyed (defaults to false). Note: this should be set to true when using stores that are bound to only 1 component.
+			/// </summary>
+			[DefaultValue(false)]
+			public virtual bool AutoDestroy 
+			{ 
+				get
+				{
+					return this.autoDestroy;
+				}
+				set
+				{
+					this.autoDestroy = value;
+				}
+			}
+
+			private bool autoLoad = true;
+
+			/// <summary>
+			/// If passed, this store's load method is automatically called after creation with the autoLoad object.
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool AutoLoad 
+			{ 
+				get
+				{
+					return this.autoLoad;
+				}
+				set
+				{
+					this.autoLoad = value;
+				}
+			}
+
+			private bool restful = false;
+
+			/// <summary>
+			/// Defaults to false. Set to true to have the Store and the set Proxy operate in a RESTful manner.
+			/// </summary>
+			[DefaultValue(false)]
+			public virtual bool Restful 
+			{ 
+				get
+				{
+					return this.restful;
+				}
+				set
+				{
+					this.restful = value;
+				}
+			}
+
+			private bool saveAllFields = true;
+
+			/// <summary>
+			/// Save ALL fields of a modified record -- not just those that changed.
+			/// </summary>
+			[DefaultValue(true)]
+			public virtual bool SaveAllFields 
+			{ 
+				get
+				{
+					return this.saveAllFields;
+				}
+				set
+				{
+					this.saveAllFields = value;
+				}
+			}
+
+			private bool autoSave = false;
+
+			/// <summary>
+			/// Defaults to true causing the store to automatically save records to the server when a record is modified (ie: becomes 'dirty'). Specify false to manually call save to send all modifiedRecords to the server.
+			/// </summary>
+			[DefaultValue(false)]
+			public virtual bool AutoSave 
+			{ 
+				get
+				{
+					return this.autoSave;
+				}
+				set
+				{
+					this.autoSave = value;
+				}
+			}
+
 			private bool autoDecode = false;
 
 			/// <summary>
@@ -45,209 +132,137 @@ namespace Ext.Net
 					this.autoDecode = value;
 				}
 			}
-
-			private bool buffered = false;
-
-			/// <summary>
-			/// Allow the store to buffer and pre-fetch pages of records. This is to be used in conjunction with a view will tell the store to pre-fetch records ahead of a time.
-			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool Buffered 
-			{ 
-				get
-				{
-					return this.buffered;
-				}
-				set
-				{
-					this.buffered = value;
-				}
-			}
-
-			private bool clearOnPageLoad = true;
-
-			/// <summary>
-			/// True to empty the store when loading another page via loadPage, nextPage or previousPage (defaults to true). Setting to false keeps existing records, allowing large data sets to be loaded one page at a time but rendered all together.
-			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool ClearOnPageLoad 
-			{ 
-				get
-				{
-					return this.clearOnPageLoad;
-				}
-				set
-				{
-					this.clearOnPageLoad = value;
-				}
-			}
-
-			private bool clearRemovedOnLoad = true;
-
-			/// <summary>
-			/// True to clear anything in the removed record collection when the store loads.
-			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool ClearRemovedOnLoad 
-			{ 
-				get
-				{
-					return this.clearRemovedOnLoad;
-				}
-				set
-				{
-					this.clearRemovedOnLoad = value;
-				}
-			}
-
-			private SortDirection groupDir = SortDirection.Default;
-
-			/// <summary>
-			/// The direction in which sorting should be applied when grouping. Defaults to \"ASC\" - the other supported value is \"DESC\"
-			/// </summary>
-			[DefaultValue(SortDirection.Default)]
-			public virtual SortDirection GroupDir 
-			{ 
-				get
-				{
-					return this.groupDir;
-				}
-				set
-				{
-					this.groupDir = value;
-				}
-			}
-
-			private string groupField = "";
-
-			/// <summary>
-			/// The (optional) field by which to group data in the store. Internally, grouping is very similar to sorting - the groupField and groupDir are injected as the first sorter (see sort). Stores support a single level of grouping, and groups can be fetched via the getGroups method.
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string GroupField 
-			{ 
-				get
-				{
-					return this.groupField;
-				}
-				set
-				{
-					this.groupField = value;
-				}
-			}
         
-			private DataSorterCollection groupers = null;
+			private ParameterCollection baseParams = null;
 
 			/// <summary>
-			/// The collection of groupers currently applied to this Store
+			/// An object containing properties which are to be sent as parameters on any HTTP request.
 			/// </summary>
-			public DataSorterCollection Groupers
+			public ParameterCollection BaseParams
 			{
 				get
 				{
-					if (this.groupers == null)
+					if (this.baseParams == null)
 					{
-						this.groupers = new DataSorterCollection();
+						this.baseParams = new ParameterCollection();
 					}
 			
-					return this.groupers;
+					return this.baseParams;
+				}
+			}
+			        
+			private ParameterCollection autoLoadParams = null;
+
+			/// <summary>
+			/// An object containing properties which are to be sent as parameters on auto load HTTP request.
+			/// </summary>
+			public ParameterCollection AutoLoadParams
+			{
+				get
+				{
+					if (this.autoLoadParams == null)
+					{
+						this.autoLoadParams = new ParameterCollection();
+					}
+			
+					return this.autoLoadParams;
+				}
+			}
+			        
+			private ParameterCollection writeBaseParams = null;
+
+			/// <summary>
+			/// An object containing properties which are to be sent as parameters on any HTTP request.
+			/// </summary>
+			public ParameterCollection WriteBaseParams
+			{
+				get
+				{
+					if (this.writeBaseParams == null)
+					{
+						this.writeBaseParams = new ParameterCollection();
+					}
+			
+					return this.writeBaseParams;
+				}
+			}
+			        
+			private ProxyCollection proxy = null;
+
+			/// <summary>
+			/// The Proxy object which provides access to a data object.
+			/// </summary>
+			public ProxyCollection Proxy
+			{
+				get
+				{
+					if (this.proxy == null)
+					{
+						this.proxy = new ProxyCollection();
+					}
+			
+					return this.proxy;
+				}
+			}
+			        
+			private UpdateProxyCollection updateProxy = null;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public UpdateProxyCollection UpdateProxy
+			{
+				get
+				{
+					if (this.updateProxy == null)
+					{
+						this.updateProxy = new UpdateProxyCollection();
+					}
+			
+					return this.updateProxy;
+				}
+			}
+			        
+			private ReaderCollection reader = null;
+
+			/// <summary>
+			/// The DataReader object which processes the data object and returns an Array of Ext.data.Record objects which are cached keyed by their id property.
+			/// </summary>
+			public ReaderCollection Reader
+			{
+				get
+				{
+					if (this.reader == null)
+					{
+						this.reader = new ReaderCollection();
+					}
+			
+					return this.reader;
 				}
 			}
 			
-			private int leadingBufferZone = 200;
+			private bool pruneModifiedRecords = false;
 
 			/// <summary>
-			/// When buffered, the number of extra rows to keep cached on the leading side of scrolling buffer as scrolling proceeds. A larger number means fewer replenishments from the server. Defaults to: 200
-			/// </summary>
-			[DefaultValue(200)]
-			public virtual int LeadingBufferZone 
-			{ 
-				get
-				{
-					return this.leadingBufferZone;
-				}
-				set
-				{
-					this.leadingBufferZone = value;
-				}
-			}
-
-			private int pageSize = 25;
-
-			/// <summary>
-			/// The number of records considered to form a 'page'. This is used to power the built-in paging using the nextPage and previousPage functions. Defaults to 25.
-			/// </summary>
-			[DefaultValue(25)]
-			public virtual int PageSize 
-			{ 
-				get
-				{
-					return this.pageSize;
-				}
-				set
-				{
-					this.pageSize = value;
-				}
-			}
-
-			private int purgePageCount = 5;
-
-			/// <summary>
-			/// The number of pages to keep in the cache before purging additional records. A value of 0 indicates to never purge the prefetched data. This option is only relevant when the buffered option is set to true.
-			/// </summary>
-			[DefaultValue(5)]
-			public virtual int PurgePageCount 
-			{ 
-				get
-				{
-					return this.purgePageCount;
-				}
-				set
-				{
-					this.purgePageCount = value;
-				}
-			}
-
-			private bool remoteFilter = false;
-
-			/// <summary>
-			/// True to defer any filtering operation to the server. If false, filtering is done locally on the client. Defaults to false.
+			/// True to clear all modified record information each time the store is loaded or when a record is removed. (defaults to false).
 			/// </summary>
 			[DefaultValue(false)]
-			public virtual bool RemoteFilter 
+			public virtual bool PruneModifiedRecords 
 			{ 
 				get
 				{
-					return this.remoteFilter;
+					return this.pruneModifiedRecords;
 				}
 				set
 				{
-					this.remoteFilter = value;
-				}
-			}
-
-			private bool remoteGroup = false;
-
-			/// <summary>
-			/// True if the grouping should apply on the server side, false if it is local only (defaults to false). If the grouping is local, it can be applied immediately to the data. If it is remote, then it will simply act as a helper, automatically sending the grouping information to the server.
-			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool RemoteGroup 
-			{ 
-				get
-				{
-					return this.remoteGroup;
-				}
-				set
-				{
-					this.remoteGroup = value;
+					this.pruneModifiedRecords = value;
 				}
 			}
 
 			private bool remoteSort = false;
 
 			/// <summary>
-			/// True to defer any sorting operation to the server. If false, sorting is done locally on the client. Defaults to false.
+			/// True if sorting is to be handled by requesting the Proxy to provide a refreshed version of the data object in sorted order, as opposed to sorting the Record cache in place (defaults to false). If remote sorting is specified, then clicking on a column header causes the current page to be requested from the server with the addition of the following two parameters: sort: String - The name (as specified in the Record's Field definition) of the field to sort on. dir : String - The direction of the sort, 'ASC' or 'DESC' (case-sensitive).
 			/// </summary>
 			[DefaultValue(false)]
 			public virtual bool RemoteSort 
@@ -279,67 +294,31 @@ namespace Ext.Net
 					this.remotePaging = value;
 				}
 			}
-
-			private bool isPagingStore = false;
-
-			/// <summary>
-			/// True to use PagingStore instance
-			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool IsPagingStore 
-			{ 
-				get
-				{
-					return this.isPagingStore;
-				}
-				set
-				{
-					this.isPagingStore = value;
-				}
-			}
-
-			private bool sortOnFilter = true;
+        
+			private SortInfo sortInfo = null;
 
 			/// <summary>
-			/// For local filtering only, causes sort to be called whenever filter is called, causing the sorters to be reapplied after filtering. Defaults to true
+			/// An object which determines the Store sorting information.
 			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool SortOnFilter 
-			{ 
+			public SortInfo SortInfo
+			{
 				get
 				{
-					return this.sortOnFilter;
-				}
-				set
-				{
-					this.sortOnFilter = value;
-				}
-			}
-
-			private int trailingBufferZone = 25;
-
-			/// <summary>
-			/// When buffered, the number of extra records to keep cached on the trailing side of scrolling buffer as scrolling proceeds. A larger number means fewer replenishments from the server. Defaults to: 25
-			/// </summary>
-			[DefaultValue(25)]
-			public virtual int TrailingBufferZone 
-			{ 
-				get
-				{
-					return this.trailingBufferZone;
-				}
-				set
-				{
-					this.trailingBufferZone = value;
+					if (this.sortInfo == null)
+					{
+						this.sortInfo = new SortInfo();
+					}
+			
+					return this.sortInfo;
 				}
 			}
-
-			private bool warningOnDirty = false;
+			
+			private bool warningOnDirty = true;
 
 			/// <summary>
 			/// If true show a warning before load/reload if store has dirty data
 			/// </summary>
-			[DefaultValue(false)]
+			[DefaultValue(true)]
 			public virtual bool WarningOnDirty 
 			{ 
 				get
@@ -388,6 +367,96 @@ namespace Ext.Net
 				}
 			}
 
+			private RefreshAfterSavingMode refreshAfterSaving = RefreshAfterSavingMode.Auto;
+
+			/// <summary>
+			/// The refresh mode
+			/// </summary>
+			[DefaultValue(RefreshAfterSavingMode.Auto)]
+			public virtual RefreshAfterSavingMode RefreshAfterSaving 
+			{ 
+				get
+				{
+					return this.refreshAfterSaving;
+				}
+				set
+				{
+					this.refreshAfterSaving = value;
+				}
+			}
+
+			private string groupField = "";
+
+			/// <summary>
+			/// The field name by which to sort the store's data (defaults to '').
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string GroupField 
+			{ 
+				get
+				{
+					return this.groupField;
+				}
+				set
+				{
+					this.groupField = value;
+				}
+			}
+
+			private SortDirection groupDir = SortDirection.Default;
+
+			/// <summary>
+			/// Group field sorting direction
+			/// </summary>
+			[DefaultValue(SortDirection.Default)]
+			public virtual SortDirection GroupDir 
+			{ 
+				get
+				{
+					return this.groupDir;
+				}
+				set
+				{
+					this.groupDir = value;
+				}
+			}
+
+			private bool groupOnSort = false;
+
+			/// <summary>
+			/// True to sort the data on the grouping field when a grouping operation occurs, false to sort based on the existing sort info (defaults to false).
+			/// </summary>
+			[DefaultValue(false)]
+			public virtual bool GroupOnSort 
+			{ 
+				get
+				{
+					return this.groupOnSort;
+				}
+				set
+				{
+					this.groupOnSort = value;
+				}
+			}
+
+			private bool remoteGroup = false;
+
+			/// <summary>
+			/// True if the grouping should apply on the server side, false if it is local only (defaults to false). If the grouping is local, it can be applied immediately to the data. If it is remote, then it will simply act as a helper, automatically sending the grouping field name as the 'groupBy' param with each XHR call.
+			/// </summary>
+			[DefaultValue(false)]
+			public virtual bool RemoteGroup 
+			{ 
+				get
+				{
+					return this.remoteGroup;
+				}
+				set
+				{
+					this.remoteGroup = value;
+				}
+			}
+
 			private bool ignoreExtraFields = true;
 
 			/// <summary>
@@ -405,94 +474,40 @@ namespace Ext.Net
 					this.ignoreExtraFields = value;
 				}
 			}
-        
-			private ReaderCollection reader = null;
+
+			private bool showWarningOnFailure = true;
 
 			/// <summary>
-			/// The Ext.data.reader.Reader to use to decode the server's response. This can either be a Reader instance, a config object or just a valid Reader type name (e.g. 'json', 'xml').
+			/// Show a Window with error message is DirectEvent request fails.
 			/// </summary>
-			public ReaderCollection Reader
-			{
-				get
-				{
-					if (this.reader == null)
-					{
-						this.reader = new ReaderCollection();
-					}
-			
-					return this.reader;
-				}
-			}
-			        
-			private WriterCollection writer = null;
-
-			/// <summary>
-			/// The Ext.data.writer.Writer to use to encode any request sent to the server. This can either be a Writer instance, a config object or just a valid Writer type name (e.g. 'json', 'xml').
-			/// </summary>
-			public WriterCollection Writer
-			{
-				get
-				{
-					if (this.writer == null)
-					{
-						this.writer = new WriterCollection();
-					}
-			
-					return this.writer;
-				}
-			}
-			
-			private object dataSource = null;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual object DataSource 
+			[DefaultValue(true)]
+			public virtual bool ShowWarningOnFailure 
 			{ 
 				get
 				{
-					return this.dataSource;
+					return this.showWarningOnFailure;
 				}
 				set
 				{
-					this.dataSource = value;
+					this.showWarningOnFailure = value;
 				}
 			}
 
-			private string dataSourceID = "";
+			private bool skipIdForNewRecords = true;
 
 			/// <summary>
-			/// 
+			/// Skip Id field from save data for new records.
 			/// </summary>
-			[DefaultValue("")]
-			public virtual string DataSourceID 
+			[DefaultValue(true)]
+			public virtual bool SkipIdForNewRecords 
 			{ 
 				get
 				{
-					return this.dataSourceID;
+					return this.skipIdForNewRecords;
 				}
 				set
 				{
-					this.dataSourceID = value;
-				}
-			}
-
-			private string dataMember = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string DataMember 
-			{ 
-				get
-				{
-					return this.dataMember;
-				}
-				set
-				{
-					this.dataMember = value;
+					this.skipIdForNewRecords = value;
 				}
 			}
 

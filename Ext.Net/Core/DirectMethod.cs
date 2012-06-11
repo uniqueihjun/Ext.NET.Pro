@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -32,17 +32,6 @@ namespace Ext.Net
         {
             this.method = method;
             this.attribute = attribute;
-        }
-
-        public virtual DirectMethod Clone()
-        {
-            DirectMethod dm = new DirectMethod(this.method, this.attribute);
-
-            dm.methodParams = this.Params;
-            dm.name = this.Name;
-            dm.controlID = this.ControlID;
-
-            return dm;
         }
 
 		/// <summary>
@@ -176,10 +165,7 @@ namespace Ext.Net
                 }
             }
 
-            context.Items["Ext.Net.InsideDirectMethod"] = true;
-            var result = method.Invoke(target, parameters);
-            context.Items.Remove("Ext.Net.InsideDirectMethod");
-            return result;
+            return method.Invoke(target, parameters);
         }
 
         internal static bool IsStaticMethodRequest(HttpRequest request)
@@ -190,7 +176,7 @@ namespace Ext.Net
             {
                 foreach (string value in values)
                 {
-                    if (value.ToLowerInvariant().Contains("staticmethod=true"))
+                    if (value.ToLower().Contains("staticmethod=true"))
                     {
                         return true;
                     }
@@ -287,7 +273,7 @@ namespace Ext.Net
 
                 if (this.Attribute.Target != MaskTarget.Page)
                 {
-                    sb.Append(",target:").Append(JSON.Serialize(this.Attribute.Target.ToString().ToLowerInvariant()));
+                    sb.Append(",target:").Append(JSON.Serialize(this.Attribute.Target.ToString().ToLower()));
                 }
 
                 if (this.Attribute.Target == MaskTarget.CustomTarget && this.Attribute.CustomTarget.IsNotEmpty())
@@ -339,10 +325,10 @@ namespace Ext.Net
                 needComma = true;
             }
 
-            if (!this.Attribute.DisableCaching)
+            if (this.Attribute.DisableCaching.HasValue)
             {
                 sb.Append(needComma ? "," : "");
-                sb.AppendFormat("disableCaching:{0}", this.Attribute.DisableCaching.ToString().ToLowerInvariant());
+                sb.AppendFormat("disableCaching:{0}", this.Attribute.DisableCaching.Value.ToString().ToLowerInvariant());
                 needComma = true;
             }
 
@@ -400,42 +386,8 @@ namespace Ext.Net
         private int timeout = 30000;
         private bool rethrowException = false;
         private string alias;
-        private string idAlias;
-        private bool disableCaching = true;
+        private bool? disableCaching;
         private string disableCachingParam = "_dc";
-        private DirectMethodProxyIDMode idMode = DirectMethodProxyIDMode.Default;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual DirectMethodProxyIDMode IDMode
-        {
-            get
-            {
-                return this.idMode;
-            }
-            set
-            {
-                this.idMode = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        public virtual string IDAlias
-        {
-            get { return this.idAlias; }
-            set 
-            { 
-                this.idAlias = value;
-                if (value.IsNotEmpty() && this.IDMode == DirectMethodProxyIDMode.Default)
-                {
-                    this.IDMode = DirectMethodProxyIDMode.Alias;
-                }
-            }
-        }
 
         /// <summary>
         /// 
@@ -672,11 +624,9 @@ namespace Ext.Net
         {
             get
             {
-                string ns = this.directMethodNamespace;               
-
-                if (ns.IsEmpty())
+                if (this.directMethodNamespace.IsEmpty())
                 {
-                    string defaultDirectMethodNamespace = ResourceManager.GlobalNormalizedDirectMethodNamespace;
+                    string defaultDirectMethodNamespace = "Ext.net.DirectMethods";
 
                     if (HttpContext.Current != null)
                     {
@@ -686,37 +636,15 @@ namespace Ext.Net
                         {
                             return defaultDirectMethodNamespace;
                         }
-
-                        string smValue = sm.NormalizedDirectMethodNamespace;
+                        
+                        string smValue = sm.DirectMethodNamespace;
 
                         return smValue.IsEmpty() ? defaultDirectMethodNamespace : smValue;
                     }
                     return defaultDirectMethodNamespace;
                 }
-
-                if (ns.StartsWith("."))
-                {
-                    string globalNs = ResourceManager.GlobalNormalizedNamespace;
-                    if (HttpContext.Current != null)
-                    {
-                        ResourceManager sm = ResourceManager.GetInstance(HttpContext.Current);
-
-                        if (sm == null)
-                        {
-                            return globalNs + ns;
-                        }
-
-                        // sm.DirectMethodNamespace == ".direct" - means that there is no explicit value for DirectMethodNamespace
-                        // TODO: need to refactor it (find new approach that developer doesn't define direct namespace in resource manager or web.config)
-                        return (sm.DirectMethodNamespace == ".direct" ? sm.NormalizedNamespace : sm.NormalizedDirectMethodNamespace) + ns;
-                    }                    
-                    else
-                    {
-                        return globalNs + ns;
-                    }
-                }
-
-                return ns;                
+                
+                return this.directMethodNamespace;
             }
             set
             {
@@ -728,7 +656,7 @@ namespace Ext.Net
         /// True to add a unique cache-buster param to GET requests.
         /// </summary>
         [Description("True to add a unique cache-buster param to GET requests.")]
-        public bool DisableCaching
+        public bool? DisableCaching
         {
             get
             {

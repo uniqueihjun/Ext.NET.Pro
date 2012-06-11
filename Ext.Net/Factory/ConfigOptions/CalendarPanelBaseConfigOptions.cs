@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class CalendarPanelBase
     {
         /// <summary>
@@ -47,14 +44,15 @@ namespace Ext.Net
                 list.Add("showWeekView", new ConfigOption("showWeekView", null, true, this.ShowWeekView ));
                 list.Add("todayText", new ConfigOption("todayText", null, "Today", this.TodayText ));
                 list.Add("weekText", new ConfigOption("weekText", null, "Week", this.WeekText ));
-                list.Add("calendarStoreID", new ConfigOption("calendarStoreID", new SerializationOptions("calendarStore", JsonMode.ToClientID), "", this.CalendarStoreID ));
-                list.Add("calendarStore", new ConfigOption("calendarStore", new SerializationOptions("calendarStore", typeof(LazyControlJsonConverter)), null, this.CalendarStore ));
+                list.Add("groupStoreID", new ConfigOption("groupStoreID", new SerializationOptions("calendarStore", JsonMode.ToClientID), "", this.GroupStoreID ));
+                list.Add("groupStore", new ConfigOption("groupStore", new SerializationOptions("calendarStore", typeof(LazyControlJsonConverter)), null, this.GroupStore ));
                 list.Add("eventStoreID", new ConfigOption("eventStoreID", new SerializationOptions("eventStore", JsonMode.ToClientID), "", this.EventStoreID ));
                 list.Add("eventStore", new ConfigOption("eventStore", new SerializationOptions("eventStore", typeof(LazyControlJsonConverter)), null, this.EventStore ));
                 list.Add("dayView", new ConfigOption("dayView", new SerializationOptions("dayViewCfg", typeof(LazyControlJsonConverter)), null, this.DayView ));
                 list.Add("weekView", new ConfigOption("weekView", new SerializationOptions("weekViewCfg", typeof(LazyControlJsonConverter)), null, this.WeekView ));
                 list.Add("monthView", new ConfigOption("monthView", new SerializationOptions("monthViewCfg", typeof(LazyControlJsonConverter)), null, this.MonthView ));
-                list.Add("eventDetails", new ConfigOption("eventDetails", new SerializationOptions("editViewCfg", typeof(LazyControlJsonConverter)), null, this.EventDetails ));
+                list.Add("eventEditForm", new ConfigOption("eventEditForm", new SerializationOptions("editViewCfg", typeof(LazyControlJsonConverter)), null, this.EventEditForm ));
+                list.Add("eventEditFormProxy", new ConfigOption("eventEditFormProxy", new SerializationOptions("editViewCfg", JsonMode.Raw), "", this.EventEditFormProxy ));
 
                 return list;
             }

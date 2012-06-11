@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class Task
     {
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<Task, Task.Builder>
+        public partial class Builder : StateManagedItem.Builder<Task, Task.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -74,15 +71,6 @@ namespace Ext.Net
             public virtual Task.Builder AutoRun(bool autoRun)
             {
                 this.ToComponent().AutoRun = autoRun;
-                return this as Task.Builder;
-            }
-             
- 			/// <summary>
-			/// True to wait previous request.
-			/// </summary>
-            public virtual Task.Builder WaitPreviousRequest(bool waitPreviousRequest)
-            {
-                this.ToComponent().WaitPreviousRequest = waitPreviousRequest;
                 return this as Task.Builder;
             }
              
@@ -149,28 +137,24 @@ namespace Ext.Net
                 return this as Task.Builder;
             }
              
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Task.Builder</returns>
-            public virtual Task.Builder Listeners(Action<TaskListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as Task.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side DirectEventHandlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Task.Builder</returns>
-            public virtual Task.Builder DirectEvents(Action<TaskDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as Task.Builder;
-            }
-			
+ 			// /// <summary>
+			// /// Client-side JavaScript Event Handlers
+			// /// </summary>
+            // public virtual TBuilder Listeners(TaskListeners listeners)
+            // {
+            //    this.ToComponent().Listeners = listeners;
+            //    return this as TBuilder;
+            // }
+             
+ 			// /// <summary>
+			// /// Server-side DirectEventHandlers
+			// /// </summary>
+            // public virtual TBuilder DirectEvents(TaskDirectEvents directEvents)
+            // {
+            //    this.ToComponent().DirectEvents = directEvents;
+            //    return this as TBuilder;
+            // }
+            
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

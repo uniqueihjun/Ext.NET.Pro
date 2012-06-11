@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ButtonGroup
     {
 		/*  Ctor
@@ -63,6 +60,42 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
+			private string defaultType = "Button";
+
+			/// <summary>
+			/// The default type of content Container represented by this object as registered in Ext.ComponentMgr. Defaults to 'button' in ButtonGroup
+			/// </summary>
+			[DefaultValue("Button")]
+			public override string DefaultType 
+			{ 
+				get
+				{
+					return this.defaultType;
+				}
+				set
+				{
+					this.defaultType = value;
+				}
+			}
+
+			private bool frame = true;
+
+			/// <summary>
+			/// True to render the panel with custom rounded borders, false to render with plain 1px square borders (defaults to true).
+			/// </summary>
+			[DefaultValue(true)]
+			public override bool Frame 
+			{ 
+				get
+				{
+					return this.frame;
+				}
+				set
+				{
+					this.frame = value;
+				}
+			}
+
 			private int columns = -1;
 
 			/// <summary>
@@ -78,6 +111,24 @@ namespace Ext.Net
 				set
 				{
 					this.columns = value;
+				}
+			}
+
+			private string layout = "table";
+
+			/// <summary>
+			/// The layout type to be used in this container.
+			/// </summary>
+			[DefaultValue("table")]
+			public override string Layout 
+			{ 
+				get
+				{
+					return this.layout;
+				}
+				set
+				{
+					this.layout = value;
 				}
 			}
 

@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ColumnLayoutConfig
     {
         /// <summary>
@@ -37,7 +34,11 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
-                list.Add("layoutType", new ConfigOption("layoutType", new SerializationOptions("type"), "", this.LayoutType ));
+                list.Add("fitHeight", new ConfigOption("fitHeight", null, true, this.FitHeight ));
+                list.Add("background", new ConfigOption("background", null, false, this.Background ));
+                list.Add("split", new ConfigOption("split", null, false, this.Split ));
+                list.Add("margin", new ConfigOption("margin", null, 0, this.Margin ));
+                list.Add("scrollOffset", new ConfigOption("scrollOffset", null, 0, this.ScrollOffset ));
 
                 return list;
             }

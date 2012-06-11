@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class RowSelectionModel
     {
         /// <summary>
@@ -37,12 +34,12 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
-                list.Add("selType", new ConfigOption("selType", null, "", this.SelType ));
-                list.Add("enableKeyNav", new ConfigOption("enableKeyNav", null, true, this.EnableKeyNav ));
-                list.Add("ignoreRightMouseSelection", new ConfigOption("ignoreRightMouseSelection", null, true, this.IgnoreRightMouseSelection ));
+                list.Add("singleSelect", new ConfigOption("singleSelect", null, false, this.SingleSelect ));
+                list.Add("moveEditorOnEnter", new ConfigOption("moveEditorOnEnter", null, true, this.MoveEditorOnEnter ));
                 list.Add("listeners", new ConfigOption("listeners", new SerializationOptions("listeners", JsonMode.Object), null, this.Listeners ));
                 list.Add("directEvents", new ConfigOption("directEvents", new SerializationOptions("directEvents", JsonMode.Object), null, this.DirectEvents ));
-                list.Add("selectedRows", new ConfigOption("selectedRows", new SerializationOptions("selectedData", JsonMode.AlwaysArray), null, this.SelectedRows ));
+                list.Add("selectedRows", new ConfigOption("selectedRows", new SerializationOptions("selectedData",JsonMode.AlwaysArray), null, this.SelectedRows ));
+                list.Add("ignoreTargets", new ConfigOption("ignoreTargets", new SerializationOptions(typeof(StringArrayJsonConverter)), null, this.IgnoreTargets ));
 
                 return list;
             }

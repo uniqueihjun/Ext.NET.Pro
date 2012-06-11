@@ -1,157 +1,178 @@
-﻿
-/**
+/*!
+ * Ext JS Library 3.3.0
+ * Copyright(c) 2006-2010 Ext JS, Inc.
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+﻿/*
  * Serbian Cyrillic Translation
  * by Čolovic Vladan (cyrillic, utf8 encoding)
  * sr_RS (ex: sr_CS, sr_YU)
  * 12 May 2007
  */
-Ext.onReady(function() {
-    var cm = Ext.ClassManager,
-        exists = Ext.Function.bind(cm.get, cm);
 
-    if (Ext.Updater) {
-        Ext.Updater.defaults.indicatorText = '<div class="loading-indicator">Учитавам...</div>';
-    }
+Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Учитавам...</div>';
 
-    Ext.define("Ext.locale.sr_RS.view.View", {
-        override: "Ext.view.View",
-        emptyText: ""
-    });
+if (Ext.View) {
+   Ext.View.prototype.emptyText = "";
+}
 
-    Ext.define("Ext.locale.sr_RS.grid.Panel", {
-        override: "Ext.grid.Panel",
-        ddText: "{0} изабраних редова"
-    });
+if (Ext.grid.GridPanel) {
+   Ext.grid.GridPanel.prototype.ddText = "{0} изабраних редова";
+}
 
-    Ext.define("Ext.locale.sr_RS.TabPanelItem", {
-        override: "Ext.TabPanelItem",
-        closeText: "Затвори ову »картицу«"
-    });
+if (Ext.TabPanelItem) {
+   Ext.TabPanelItem.prototype.closeText = "Затвори ову »картицу«";
+}
 
-    Ext.define("Ext.locale.sr_RS.form.field.Base", {
-        override: "Ext.form.field.Base",
-        invalidText: "Унешена вредност није правилна"
-    });
+if (Ext.form.Field) {
+   Ext.form.Field.prototype.invalidText = "Унешена вредност није правилна";
+}
 
-    // changing the msg text below will affect the LoadMask
-    Ext.define("Ext.locale.sr_RS.view.AbstractView", {
-        override: "Ext.view.AbstractView",
-        msg: "Учитавам..."
-    });
+if (Ext.LoadMask) {
+    Ext.LoadMask.prototype.msg = "Учитавам...";
+}
 
-    if (Ext.Date) {
-        Ext.Date.monthNames = ["Јануар", "Фебруар", "Март", "Април", "Мај", "Јун", "Јул", "Август", "Септембар", "Октобар", "Новембар", "Децембар"];
+Date.monthNames = [
+   "Јануар",
+   "Фебруар",
+   "Март",
+   "Април",
+   "Мај",
+   "Јун",
+   "Јул",
+   "Август",
+   "Септембар",
+   "Октобар",
+   "Новембар",
+   "Децембар"
+];
 
-        Ext.Date.dayNames = ["Недеља", "Понедељак", "Уторак", "Среда", "Четвртак", "Петак", "Субота"];
-    }
+Date.dayNames = [
+   "Недеља",
+   "Понедељак",
+   "Уторак",
+   "Среда",
+   "Четвртак",
+   "Петак",
+   "Субота"
+];
 
-    if (Ext.MessageBox) {
-        Ext.MessageBox.buttonText = {
-            ok: "У реду",
-            cancel: "Одустани",
-            yes: "Да",
-            no: "Не"
-        };
-    }
+if (Ext.MessageBox) {
+   Ext.MessageBox.buttonText = {
+      ok     : "У реду",
+      cancel : "Одустани",
+      yes    : "Да",
+      no     : "Не"
+   };
+}
 
-    if (exists('Ext.util.Format')) {
-        Ext.apply(Ext.util.Format, {
-            thousandSeparator: '.',
-            decimalSeparator: ',',
-            currencySign: '\u0414\u0438\u043d\u002e',
-            // Serbian Dinar
-            dateFormat: 'd.m.Y'
-        });
-    }
+if (Ext.util.Format) {
+   Ext.util.Format.date = function (v, format) {
+      if (!v) return "";
+      if (!(v instanceof Date)) v = new Date(Date.parse(v));
+      return v.dateFormat(format || "d.m.Y");
+   };
+}
 
-    Ext.define("Ext.locale.sr_RS.picker.Date", {
-        override: "Ext.picker.Date",
-        todayText: "Данас",
-        minText: "Датум је испред најмањег дозвољеног датума",
-        maxText: "Датум је након највећег дозвољеног датума",
-        disabledDaysText: "",
-        disabledDatesText: "",
-        monthNames: Ext.Date.monthNames,
-        dayNames: Ext.Date.dayNames,
-        nextText: 'Следећи месец (Control+Десно)',
-        prevText: 'Претходни месец (Control+Лево)',
-        monthYearText: 'Изаберите месец (Control+Горе/Доле за избор године)',
-        todayTip: "{0} (Размакница)",
-        format: "d.m.y",
-        startDay: 1
-    });
+if (Ext.DatePicker) {
+   Ext.apply(Ext.DatePicker.prototype, {
+      todayText         : "Данас",
+      minText           : "Датум је испред најмањег дозвољеног датума",
+      maxText           : "Датум је након највећег дозвољеног датума",
+      disabledDaysText  : "",
+      disabledDatesText : "",
+      monthNames	: Date.monthNames,
+      dayNames		: Date.dayNames,
+      nextText          : 'Следећи месец (Control+Десно)',
+      prevText          : 'Претходни месец (Control+Лево)',
+      monthYearText     : 'Изаберите месец (Control+Горе/Доле за избор године)',
+      todayTip          : "{0} (Размакница)",
+      format            : "d.m.y",
+      startDay 		 : 1
+   });
+}
 
-    Ext.define("Ext.locale.sr_RS.toolbar.Paging", {
-        override: "Ext.PagingToolbar",
-        beforePageText: "Страна",
-        afterPageText: "од {0}",
-        firstText: "Прва страна",
-        prevText: "Претходна страна",
-        nextText: "Следећа страна",
-        lastText: "Последња страна",
-        refreshText: "Освежи",
-        displayMsg: "Приказана {0} - {1} од {2}",
-        emptyMsg: 'Немам шта приказати'
-    });
+if (Ext.PagingToolbar) {
+   Ext.apply(Ext.PagingToolbar.prototype, {
+      beforePageText : "Страна",
+      afterPageText  : "од {0}",
+      firstText      : "Прва страна",
+      prevText       : "Претходна страна",
+      nextText       : "Следећа страна",
+      lastText       : "Последња страна",
+      refreshText    : "Освежи",
+      displayMsg     : "Приказана {0} - {1} од {2}",
+      emptyMsg       : 'Немам шта приказати'
+   });
+}
 
-    Ext.define("Ext.locale.sr_RS.form.field.Text", {
-        override: "Ext.form.field.Text",
-        minLengthText: "Минимална дужина овог поља је {0}",
-        maxLengthText: "Максимална дужина овог поља је {0}",
-        blankText: "Поље је обавезно",
-        regexText: "",
-        emptyText: null
-    });
+if (Ext.form.TextField) {
+   Ext.apply(Ext.form.TextField.prototype, {
+      minLengthText : "Минимална дужина овог поља је {0}",
+      maxLengthText : "Максимална дужина овог поља је {0}",
+      blankText     : "Поље је обавезно",
+      regexText     : "",
+      emptyText     : null
+   });
+}
 
-    Ext.define("Ext.locale.sr_RS.form.field.Number", {
-        override: "Ext.form.field.Number",
-        minText: "Минимална вредност у пољу је {0}",
-        maxText: "Максимална вредност у пољу је {0}",
-        nanText: "{0} није правилан број"
-    });
+if (Ext.form.NumberField) {
+   Ext.apply(Ext.form.NumberField.prototype, {
+      minText : "Минимална вредност у пољу је {0}",
+      maxText : "Максимална вредност у пољу је {0}",
+      nanText : "{0} није правилан број"
+   });
+}
 
-    Ext.define("Ext.locale.sr_RS.form.field.Date", {
-        override: "Ext.form.field.Date",
-        disabledDaysText: "Пасивно",
-        disabledDatesText: "Пасивно",
-        minText: "Датум у овом пољу мора бити након {0}",
-        maxText: "Датум у овом пољу мора бити пре {0}",
-        invalidText: "{0} није правилан датум - захтевани облик је {1}",
-        format: "d.m.y"
-    });
+if (Ext.form.DateField) {
+   Ext.apply(Ext.form.DateField.prototype, {
+      disabledDaysText  : "Пасивно",
+      disabledDatesText : "Пасивно",
+      minText           : "Датум у овом пољу мора бити након {0}",
+      maxText           : "Датум у овом пољу мора бити пре {0}",
+      invalidText       : "{0} није правилан датум - захтевани облик је {1}",
+      format            : "d.m.y"
+   });
+}
 
-    Ext.define("Ext.locale.sr_RS.form.field.ComboBox", {
-        override: "Ext.form.field.ComboBox",
-        valueNotFoundText: undefined
-    }, function() {
-        Ext.apply(Ext.form.field.ComboBox.prototype.defaultListConfig, {
-            loadingText: "Учитавам..."
-        });
-    });
+if (Ext.form.ComboBox) {
+   Ext.apply(Ext.form.ComboBox.prototype, {
+      loadingText       : "Учитавам...",
+      valueNotFoundText : undefined
+   });
+}
 
-    if (exists('Ext.form.field.VTypes')) {
-        Ext.apply(Ext.form.field.VTypes, {
-            emailText: 'Ово поље прихвата e-mail адресу искључиво у облику "korisnik@domen.com"',
-            urlText: 'Ово поље прихвата URL адресу искључиво у облику "http:/' + '/www.domen.com"',
-            alphaText: 'Ово поље може садржати искључиво слова и знак _',
-            alphanumText: 'Ово поље може садржати само слова, бројеве и знак _'
-        });
-    }
+if (Ext.form.VTypes) {
+   Ext.apply(Ext.form.VTypes, {
+      emailText    : 'Ово поље прихвата e-mail адресу искључиво у облику "korisnik@domen.com"',
+      urlText      : 'Ово поље прихвата URL адресу искључиво у облику "http:/'+'/www.domen.com"',
+      alphaText    : 'Ово поље може садржати искључиво слова и знак _',
+      alphanumText : 'Ово поље може садржати само слова, бројеве и знак _'
+   });
+}
 
-    Ext.define("Ext.locale.sr_RS.grid.header.Container", {
-        override: "Ext.grid.header.Container",
-        sortAscText: "Растући редослед",
-        sortDescText: "Опадајући редослед",
-        lockText: "Закључај колону",
-        unlockText: "Откључај колону",
-        columnsText: "Колоне"
-    });
+if (Ext.grid.GridView) {
+   Ext.apply(Ext.grid.GridView.prototype, {
+      sortAscText  : "Растући редослед",
+      sortDescText : "Опадајући редослед",
+      lockText     : "Закључај колону",
+      unlockText   : "Откључај колону",
+      columnsText  : "Колоне"
+   });
+}
 
-    Ext.define("Ext.locale.sr_RS.grid.PropertyColumnModel", {
-        override: "Ext.grid.PropertyColumnModel",
-        nameText: "Назив",
-        valueText: "Вредност",
-        dateFormat: "d.m.Y"
-    });
+if (Ext.grid.PropertyColumnModel) {
+   Ext.apply(Ext.grid.PropertyColumnModel.prototype, {
+      nameText   : "Назив",
+      valueText  : "Вредност",
+      dateFormat : "d.m.Y"
+   });
+}
 
-});
+if (Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion) {
+   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
+      splitTip            : "Повући за измену величине.",
+      collapsibleSplitTip : "Повући за измену величине. Двоструки клик за сакривање."
+   });
+}

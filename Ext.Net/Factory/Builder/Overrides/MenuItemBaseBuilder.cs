@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -24,7 +24,7 @@ namespace Ext.Net
         /// </summary>
         /// <typeparam name="TMenuItemBase"></typeparam>
         /// <typeparam name="TBuilder"></typeparam>
-        new public abstract partial class Builder<TMenuItemBase, TBuilder> : ComponentBase.Builder<TMenuItemBase, TBuilder>
+        new public abstract partial class Builder<TMenuItemBase, TBuilder> : BaseMenuItem.Builder<TMenuItemBase, TBuilder>
             where TMenuItemBase : MenuItemBase
             where TBuilder : Builder<TMenuItemBase, TBuilder>
         {
@@ -33,7 +33,7 @@ namespace Ext.Net
             /// </summary>
             /// <param name="action"></param>
             /// <returns></returns>
-            public virtual TBuilder MenuBuilder(Action<MenuItemBaseMenuCollectionBuilder<TMenuItemBase, TBuilder>> action)
+            public virtual TBuilder Menu(Action<MenuItemBaseMenuCollectionBuilder<TMenuItemBase, TBuilder>> action)
             {
                 action(new MenuItemBaseMenuCollectionBuilder<TMenuItemBase, TBuilder>(this.ToComponent(), this as TBuilder));
                 return this as TBuilder;

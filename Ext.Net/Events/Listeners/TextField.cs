@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -20,12 +20,7 @@ namespace Ext.Net
         private ComponentListener autoSize;
 
         /// <summary>
-        /// Fires when the autoSize function is triggered and the field is resized according to the grow/growMin/growMax configs as a result. This event provides a hook for the developer to apply additional logic at runtime to resize the field if needed.
-        /// Parameters
-        /// item : Ext.form.field.Text
-        ///     This text field
-        /// width : Number
-        ///     The new field width
+        /// Fires when the autosize function is triggered. The field may or may not have actually changed size according to the default logic, but this event provides a hook for the developer to apply additional logic at runtime to resize the field if needed.
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This text field")]
         [ListenerArgument(1, "width", typeof(int), "The new field width")]
@@ -38,7 +33,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.autoSize ?? (this.autoSize = new ComponentListener());
+                if (this.autoSize == null)
+                {
+                    this.autoSize = new ComponentListener();
+                }
+
+                return this.autoSize;
             }
         }
 
@@ -46,10 +46,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Keydown input field event. This event only fires if enableKeyEvents is set to true.
-        /// Parameters
-        /// item : Ext.form.field.Text
-        ///    This text field
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This text field")]
         [ListenerArgument(1, "e", typeof(object), "EventObject")]
@@ -62,7 +58,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.keyDown ?? (this.keyDown = new ComponentListener());
+                if (this.keyDown == null)
+                {
+                    this.keyDown = new ComponentListener();
+                }
+
+                return this.keyDown;
             }
         }
 
@@ -70,10 +71,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Keypress input field event. This event only fires if enableKeyEvents is set to true.
-        /// Parameters
-        /// item : Ext.form.field.Text
-        ///     This text field
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This text field")]
         [ListenerArgument(1, "e", typeof(object), "EventObject")]
@@ -86,7 +83,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.keyPress ?? (this.keyPress = new ComponentListener());
+                if (this.keyPress == null)
+                {
+                    this.keyPress = new ComponentListener();
+                }
+
+                return this.keyPress;
             }
         }
 
@@ -94,10 +96,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Keyup input field event. This event only fires if enableKeyEvents is set to true.
-        /// Parameters
-        /// item : Ext.form.field.Text
-        ///     This text field
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This text field")]
         [ListenerArgument(1, "e", typeof(object), "EventObject")]
@@ -110,7 +108,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.keyUp ?? (this.keyUp = new ComponentListener());
+                if (this.keyUp == null)
+                {
+                    this.keyUp = new ComponentListener();
+                }
+
+                return this.keyUp;
             }
         }
 
@@ -131,7 +134,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.iconClick ?? (this.iconClick = new ComponentListener());
+                if (this.iconClick == null)
+                {
+                    this.iconClick = new ComponentListener();
+                }
+
+                return this.iconClick;
             }
         }
     }

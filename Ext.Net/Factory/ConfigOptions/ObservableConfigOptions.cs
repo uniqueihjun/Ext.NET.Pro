@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class Observable
     {
         /// <summary>
@@ -38,9 +35,7 @@ namespace Ext.Net
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
                 list.Add("customConfig", new ConfigOption("customConfig", new SerializationOptions("-", typeof(CustomConfigJsonConverter)), null, this.CustomConfig ));
-                list.Add("configs", new ConfigOption("configs", new SerializationOptions("-", typeof(ConfigBagJsonConverter)), null, this.Configs ));
-                list.Add("messageBusListenersProxy", new ConfigOption("messageBusListenersProxy", new SerializationOptions("messageBusListeners", JsonMode.Raw), "", this.MessageBusListenersProxy ));
-                list.Add("messageBusDirectEventsProxy", new ConfigOption("messageBusDirectEventsProxy", new SerializationOptions("messageBusDirectEvents", JsonMode.Raw), "", this.MessageBusDirectEventsProxy ));
+                list.Add("xTypeProxy", new ConfigOption("xTypeProxy", new SerializationOptions("xtype"), "", this.XTypeProxy ));
 
                 return list;
             }

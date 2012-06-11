@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class Task
     {
         /// <summary>
@@ -39,7 +36,6 @@ namespace Ext.Net
                 
                 list.Add("taskID", new ConfigOption("taskID", new SerializationOptions("id"), "", this.TaskID ));
                 list.Add("autoRun", new ConfigOption("autoRun", null, true, this.AutoRun ));
-                list.Add("waitPreviousRequest", new ConfigOption("waitPreviousRequest", null, false, this.WaitPreviousRequest ));
                 list.Add("interval", new ConfigOption("interval", null, 1000, this.Interval ));
                 list.Add("args", new ConfigOption("args", new SerializationOptions(typeof(StringArrayJsonConverter)), null, this.Args ));
                 list.Add("scope", new ConfigOption("scope", new SerializationOptions(JsonMode.Raw), "this", this.Scope ));

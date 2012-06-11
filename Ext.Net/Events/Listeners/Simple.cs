@@ -1,13 +1,14 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 
 using Ext.Net.Utilities;
 
@@ -17,7 +18,7 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class SimpleListener : BaseItem
+    public partial class SimpleListener : StateManagedItem
     {
 		/// <summary>
 		/// 
@@ -71,11 +72,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Fn", "");
+                return (string)this.ViewState["Fn"] ?? "";
             }
             set
             {
-                this.State.Set("Fn", value);
+                this.ViewState["Fn"] = value;
             }
         }
 
@@ -89,11 +90,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Handler", "");
+                return (string)this.ViewState["Handler"] ?? "";
             }
             set
             {
-                this.State.Set("Handler", value);
+                this.ViewState["Handler"] = value;
             }
         }
 

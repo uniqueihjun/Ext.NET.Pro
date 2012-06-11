@@ -1,14 +1,14 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
-using System.Drawing;
 using System.Web.UI;
+using System.Drawing;
 
 namespace Ext.Net
 {
@@ -47,7 +47,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DropZone")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Returns a custom data object associated with the DOM node that is the target of the event. By default this looks up the event target in the Ext.dd.Registry, although you can override this method to provide your own custom lookup.")]
@@ -79,7 +79,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DropZone")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called when the DropZone determines that a Ext.dd.DragSource has been dropped on it, but not on any of its registered drop nodes. The default implementation returns false, so it should be overridden to provide the appropriate processing of the drop event if you need the drop zone itself to be able to accept drops. It should return true when valid so that the drag source's repair action does not run.")]
@@ -111,7 +111,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DropZone")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called while the DropZone determines that a Ext.dd.DragSource is being dragged over it, but not over any of its registered drop nodes. The default implementation returns this.dropNotAllowed, so it should be overridden to provide the proper feedback if necessary.")]
@@ -144,7 +144,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DropZone")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called when the DropZone determines that a Ext.dd.DragSource has been dropped onto the drop node. The default implementation returns false, so it should be overridden to provide the appropriate processing of the drop event and return true so that the drag source's repair action does not run.")]
@@ -177,7 +177,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DropZone")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called when the DropZone determines that a Ext.dd.DragSource has entered a drop node that has either been registered or detected by a configured implementation of getTargetFromEvent. This method has no default implementation and should be overridden to provide node-specific processing if necessary.")]
@@ -210,7 +210,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DropZone")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called when the DropZone determines that a Ext.dd.DragSource has been dragged out of the drop node without dropping. This method has no default implementation and should be overridden to provide node-specific processing if necessary.")]
@@ -243,7 +243,7 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("6. DropZone")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Called while the DropZone determines that a Ext.dd.DragSource is over a drop node that has either been registered or detected by a configured implementation of getTargetFromEvent. The default implementation returns this.dropNotAllowed, so it should be overridden to provide the proper feedback.")]

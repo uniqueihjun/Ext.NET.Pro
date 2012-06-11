@@ -1,13 +1,12 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Ext.Net
@@ -18,45 +17,21 @@ namespace Ext.Net
 	[Description("")]
     public partial class AfterStoreChangedEventArgs : EventArgs
     {
-        private readonly StoreAction action;
         private bool success;
         private Exception exception;
+        private ConfirmationList confirmationList;
         private bool exceptionHandled;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[Description("")]
-        public AfterStoreChangedEventArgs(string action, bool success, Exception exception, List<object> responseRecords)
+        public AfterStoreChangedEventArgs(bool success, Exception exception, ConfirmationList confirmationList)
         {
-            this.action = Store.Action(action);
             this.exception = exception;
+            this.confirmationList = confirmationList;
             this.success = success;
-            this.responseRecords = responseRecords;
         }
-
-        List<object> responseRecords;
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<object> ResponseRecords
-        {
-            get
-            {
-                return this.responseRecords;
-            }
-        }
-
-        /// <summary>
-	    /// 
-	    /// </summary>
-        public StoreAction Action
-	    {
-	        get
-	        {
-	            return action;
-	        }
-	    }
 
 		/// <summary>
 		/// 
@@ -84,6 +59,22 @@ namespace Ext.Net
         {
             get { return exceptionHandled; }
             set { exceptionHandled = value; }
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ConfirmationList ConfirmationList
+        {
+            get
+            {
+                return confirmationList;
+            }
+            internal set
+            {
+                confirmationList = value;
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class DayView
     {
         /// <summary>
@@ -40,6 +37,7 @@ namespace Ext.Net
                 list.Add("dayCount", new ConfigOption("dayCount", null, 1, this.DayCount ));
                 list.Add("dDCreateEventText", new ConfigOption("dDCreateEventText", new SerializationOptions("ddCreateEventText"), "Create event for {0}", this.DDCreateEventText ));
                 list.Add("dDMoveEventText", new ConfigOption("dDMoveEventText", new SerializationOptions("ddMoveEventText"), "Move event to {0}", this.DDMoveEventText ));
+                list.Add("dDResizeEventText", new ConfigOption("dDResizeEventText", new SerializationOptions("ddResizeEventText"), "Update event to {0}", this.DDResizeEventText ));
                 list.Add("showTime", new ConfigOption("showTime", null, true, this.ShowTime ));
                 list.Add("showTodayText", new ConfigOption("showTodayText", null, true, this.ShowTodayText ));
                 list.Add("todayText", new ConfigOption("todayText", null, "Today", this.TodayText ));

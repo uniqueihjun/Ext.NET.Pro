@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -16,16 +16,7 @@ using System.Web.UI.WebControls;
 namespace Ext.Net
 {
     /// <summary>
-    /// Provides a lightweight HTML Editor component. Some toolbar features are not supported by Safari and will be automatically hidden when needed. These are noted in the config options where appropriate.
-    ///
-    /// The editor's toolbar buttons have tooltips defined in the buttonTips property, but they are not enabled by default unless the global Ext.tip.QuickTipManager singleton is initialized.
-    ///
-    /// An Editor is a sensitive component that can't be used in all spots standard fields can be used. Putting an Editor within any element that has display set to 'none' can cause problems in Safari and Firefox due to their default iframe reloading bugs.
-    ///
-    /// NOTE: HtmlEditor can not be hidden on initial page load. If placing within a TabPanel, please ensure the correct .ActiveTabIndex is set. If placing within a Window, please ensure Hidden is 'false'.
-    /// 
-    /// Reflow issues
-    /// In some browsers, a layout reflow will cause the underlying editor iframe to be reset. This is most commonly seen when using the editor in collapsed panels with animation. In these cases it is best to avoid animation. More information can be found here: https://bugzilla.mozilla.org/show_bug.cgi?id=90268
+    /// Provides a lightweight HTML Editor component. NOTE: HtmlEditor can not be hidden on initial page load. If placing within a TabPanel, please ensure the correct .ActiveTabIndex is set. If placing within a Window, please ensure InitHidden is 'false'.
     /// </summary>
     [Meta]
     [ToolboxData("<{0}:HtmlEditor runat=\"server\" />")]
@@ -36,6 +27,7 @@ namespace Ext.Net
     [ParseChildren(true)]
     [PersistChildren(false)]
     [SupportsEventValidation]
+    [Designer(typeof(HtmlEditorDesigner))]
     [ToolboxBitmap(typeof(HtmlEditor), "Build.ToolboxIcons.HtmlEditor.bmp")]
     [Description("Provides a lightweight HTML Editor component. NOTE: HtmlEditor can not be hidden on initial page load. If placing within a TabPanel, please ensure the correct .ActiveTabIndex is set. If placing within a Window, please ensure InitHidden is 'false'.")]
     public partial class HtmlEditor : Field, IEditableTextControl, ITextControl, IPostBackEventHandler
@@ -68,7 +60,7 @@ namespace Ext.Net
         {
             get
             {
-                return "Ext.form.field.HtmlEditor";
+                return "Ext.form.HtmlEditor";
             }
         }
         
@@ -85,11 +77,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Text", "");
+                return (string)this.ViewState["Text"] ?? "";
             }
             set
             {
-                this.State.Set("Text", value ?? "");
+                this.ViewState["Text"] = value??"";
             }
         }
 
@@ -112,7 +104,7 @@ namespace Ext.Net
             }
         }
 
-        private HtmlEditorListeners listeners;
+        private EditorListeners listeners;
 
         /// <summary>
         /// Client-side JavaScript Event Handlers
@@ -123,21 +115,22 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
-        public HtmlEditorListeners Listeners
+        public EditorListeners Listeners
         {
             get
             {
                 if (this.listeners == null)
                 {
-                    this.listeners = new HtmlEditorListeners();
+                    this.listeners = new EditorListeners();
                 }
 
                 return this.listeners;
             }
         }
 
-        private HtmlEditorDirectEvents directEvents;
+        private EditorDirectEvents directEvents;
 
         /// <summary>
         /// Server-side Ajax Event Handlers
@@ -148,16 +141,17 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side Ajax Event Handlers")]
-        public HtmlEditorDirectEvents DirectEvents
+        public EditorDirectEvents DirectEvents
         {
             get
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new HtmlEditorDirectEvents(this);
+                    this.directEvents = new EditorDirectEvents();
                 }
-                
+
                 return this.directEvents;
             }
         }
@@ -248,6 +242,7 @@ namespace Ext.Net
             {
                 if (this.EscapeValue)
                 {
+                    //val = this.Page.Server.UrlDecode(val);    
                     val = Utilities.EscapeUtils.Unescape(val);
                 }
 
@@ -281,152 +276,8 @@ namespace Ext.Net
         /*  Public Properties
             -----------------------------------------------------------------------------------------------*/
 
-        private XTemplate afterIFrameTpl;
-
         /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup after the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. HtmlEditor")]
-        [ConfigOption("afterIFrameTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup after the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate AfterIFrameTpl
-        {
-            get
-            {
-                return this.afterIFrameTpl;
-            }
-            set
-            {
-                if (this.afterIFrameTpl != null)
-                {
-                    this.Controls.Remove(this.afterIFrameTpl);
-                    this.LazyItems.Remove(this.afterIFrameTpl);
-                }
-
-                this.afterIFrameTpl = value;
-
-                if (this.afterIFrameTpl != null)
-                {
-                    this.afterIFrameTpl.EnableViewState = false;
-                    this.Controls.Add(this.afterIFrameTpl);
-                    this.LazyItems.Add(this.afterIFrameTpl);
-                }
-            }
-        }
-
-        private XTemplate afterTextAreaTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup after the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. HtmlEditor")]
-        [ConfigOption("afterTextAreaTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup after the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate AfterTextAreaTpl
-        {
-            get
-            {
-                return this.afterTextAreaTpl;
-            }
-            set
-            {
-                if (this.afterTextAreaTpl != null)
-                {
-                    this.Controls.Remove(this.afterTextAreaTpl);
-                    this.LazyItems.Remove(this.afterTextAreaTpl);
-                }
-
-                this.afterTextAreaTpl = value;
-
-                if (this.afterTextAreaTpl != null)
-                {
-                    this.afterTextAreaTpl.EnableViewState = false;
-                    this.Controls.Add(this.afterTextAreaTpl);
-                    this.LazyItems.Add(this.afterTextAreaTpl);
-                }
-            }
-        }
-
-        private XTemplate beforeIFrameTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup before the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. HtmlEditor")]
-        [ConfigOption("beforeIFrameTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup before the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate BeforeIFrameTpl
-        {
-            get
-            {
-                return this.beforeIFrameTpl;
-            }
-            set
-            {
-                if (this.beforeIFrameTpl != null)
-                {
-                    this.Controls.Remove(this.beforeIFrameTpl);
-                    this.LazyItems.Remove(this.beforeIFrameTpl);
-                }
-
-                this.beforeIFrameTpl = value;
-
-                if (this.beforeIFrameTpl != null)
-                {
-                    this.beforeIFrameTpl.EnableViewState = false;
-                    this.Controls.Add(this.beforeIFrameTpl);
-                    this.LazyItems.Add(this.beforeIFrameTpl);
-                }
-            }
-        }
-
-        private XTemplate beforeTextAreaTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup before the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. HtmlEditor")]
-        [ConfigOption("beforeTextAreaTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup before the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate BeforeTextAreaTpl
-        {
-            get
-            {
-                return this.beforeTextAreaTpl;
-            }
-            set
-            {
-                if (this.beforeTextAreaTpl != null)
-                {
-                    this.Controls.Remove(this.beforeTextAreaTpl);
-                    this.LazyItems.Remove(this.beforeTextAreaTpl);
-                }
-
-                this.beforeTextAreaTpl = value;
-
-                if (this.beforeTextAreaTpl != null)
-                {
-                    this.beforeTextAreaTpl.EnableViewState = false;
-                    this.Controls.Add(this.beforeTextAreaTpl);
-                    this.LazyItems.Add(this.beforeTextAreaTpl);
-                }
-            }
-        }
-
-        /// <summary>
-        /// The default text for the create link prompt. Defaults to: "Please enter the URL for the link:"
+        /// The default text for the create link prompt.
         /// </summary>
         [Meta]
         [ConfigOption]
@@ -438,31 +289,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("CreateLinkText", "");
+                return (string)this.ViewState["CreateLinkText"] ?? "";
             }
             set
             {
-                this.State.Set("CreateLinkText", value);
-            }
-        }
-
-        /// <summary>
-        /// The default font family (defaults to 'tahoma').
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("6. HtmlEditor")]
-        [DefaultValue("")]
-        [Description("The default font family (defaults to 'tahoma').")]
-        public virtual string DefaultFont
-        {
-            get
-            {
-                return (string)this.ViewState["DefaultFont"] ?? "";
-            }
-            set
-            {
-                this.ViewState["DefaultFont"] = value;
+                this.ViewState["CreateLinkText"] = value;
             }
         }
 
@@ -478,31 +309,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("DefaultLinkValue", "http://");
+                return (string)this.ViewState["DefaultLinkValue"] ?? "http://";
             }
             set
             {
-                this.State.Set("DefaultLinkValue", value);
-            }
-        }
-
-        /// <summary>
-        /// A default value to be put into the editor to resolve focus issues (defaults to   (Non-breaking space) in Opera and IE6, ​ (Zero-width space) in all other browsers).
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("6. HtmlEditor")]
-        [DefaultValue("")]
-        [Description("A default value to be put into the editor to resolve focus issues (defaults to   (Non-breaking space) in Opera and IE6, ​ (Zero-width space) in all other browsers).")]
-        public virtual string DefaultValue
-        {
-            get
-            {
-                return this.State.Get<string>("DefaultValue", "");
-            }
-            set
-            {
-                this.State.Set("DefaultValue", value);
+                this.ViewState["DefaultLinkValue"] = value;
             }
         }
 
@@ -518,11 +329,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableAlignments", true);
+                object obj = this.ViewState["EnableAlignments"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableAlignments", value);
+                this.ViewState["EnableAlignments"] = value;
             }
         }
 
@@ -538,11 +350,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableColors", true);
+                object obj = this.ViewState["EnableColors"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableColors", value);
+                this.ViewState["EnableColors"] = value;
             }
         }
 
@@ -558,11 +371,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableFont", true);
+                object obj = this.ViewState["EnableFont"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableFont", value);
+                this.ViewState["EnableFont"] = value;
             }
         }
 
@@ -578,11 +392,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableFontSize", true);
+                object obj = this.ViewState["EnableFontSize"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableFontSize", value);
+                this.ViewState["EnableFontSize"] = value;
             }
         }
 
@@ -598,11 +413,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableFormat", true);
+                object obj = this.ViewState["EnableFormat"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableFormat", value);
+                this.ViewState["EnableFormat"] = value;
             }
         }
 
@@ -618,11 +434,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableLinks", true);
+                object obj = this.ViewState["EnableLinks"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableLinks", value);
+                this.ViewState["EnableLinks"] = value;
             }
         }
 
@@ -638,11 +455,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableLists", true);
+                object obj = this.ViewState["EnableLists"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableLists", value);
+                this.ViewState["EnableLists"] = value;
             }
         }
 
@@ -658,11 +476,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EnableSourceEdit", true);
+                object obj = this.ViewState["EnableSourceEdit"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EnableSourceEdit", value);
+                this.ViewState["EnableSourceEdit"] = value;
             }
         }
 
@@ -678,11 +497,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("EscapeValue", true);
+                object obj = this.ViewState["EscapeValue"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("EscapeValue", value);
+                this.ViewState["EscapeValue"] = value;
             }
         }
 
@@ -699,77 +519,34 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string[]>("FontFamilies", null);
+                object obj = this.ViewState["FontFamilies"];
+                return (obj == null) ? null : (string[])obj;
             }
             set
             {
-                this.State.Set("FontFamilies", value);
+                this.ViewState["FontFamilies"] = value;
             }
         }
 
-        private HtmlEditorButtonTips buttonTips;
-
-        /// <summary>
-        /// Object collection of toolbar tooltips for the buttons in the editor. The key is the command id associated with that button and the value is a valid QuickTips object.
-        /// </summary>
-        [Meta]
-        [NotifyParentProperty(true)]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption(JsonMode.Object)]
-        public virtual HtmlEditorButtonTips ButtonTips
-        {
-            get
-            {
-                return this.buttonTips ?? (this.buttonTips = new HtmlEditorButtonTips());
-            }
-        }
-
-        private XTemplate iframeAttrTpl;
-
-        /// <summary>
-        /// An optional string or XTemplate configuration to insert in the field markup inside the iframe element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.
-        /// </summary>
-        [Meta]
-        [DefaultValue(null)]
-        [Category("6. HtmlEditor")]
-        [ConfigOption("iframeAttrTpl", typeof(LazyControlJsonConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Description("An optional string or XTemplate configuration to insert in the field markup inside the iframe element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.")]
-        public virtual XTemplate IframeAttrTpl
-        {
-            get
-            {
-                return this.iframeAttrTpl;
-            }
-            set
-            {
-                if (this.iframeAttrTpl != null)
-                {
-                    this.Controls.Remove(this.iframeAttrTpl);
-                    this.LazyItems.Remove(this.iframeAttrTpl);
-                }
-
-                this.iframeAttrTpl = value;
-
-                if (this.iframeAttrTpl != null)
-                {
-                    this.iframeAttrTpl.EnableViewState = false;
-                    this.Controls.Add(this.iframeAttrTpl);
-                    this.LazyItems.Add(this.iframeAttrTpl);
-                }
-            }
-        }
 
         /*  Public Methods
             -----------------------------------------------------------------------------------------------*/
 
         /// <summary>
+        /// Protected method that will not generally be called directly. If you need/want custom HTML cleanup, this is the method you should override.
+        /// </summary>
+        [Meta]
+        [Description("Protected method that will not generally be called directly. If you need/want custom HTML cleanup, this is the method you should override.")]
+        public virtual void CleanHtml(string html)
+        {
+            this.Call("cleanHtml", html);
+        }
+
+        /// <summary>
         /// Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.
         /// </summary>
-        /// <param name="cmd">The Midas command</param>
-        /// <param name="value">The value to pass to the command</param>
         [Meta]
+        [Description("Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.")]
         public virtual void ExecCmd(string cmd, string value)
         {
             this.Call("execCmd", cmd, value);
@@ -778,9 +555,8 @@ namespace Ext.Net
         /// <summary>
         /// Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.
         /// </summary>
-        /// <param name="cmd">The Midas command</param>
-        /// <param name="value">The value to pass to the command</param>
         [Meta]
+        [Description("Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.")]
         public virtual void ExecCmd(string cmd, bool value)
         {
             this.Call("execCmd", cmd, value);
@@ -789,8 +565,8 @@ namespace Ext.Net
         /// <summary>
         /// Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.
         /// </summary>
-        /// <param name="text"></param>
         [Meta]
+        [Description("Executes a Midas editor command directly on the editor document. For visual commands, you should use relayCmd instead. This should only be called after the editor is initialized.")]
         public virtual void InsertAtCursor(string text)
         {
             this.Call("insertAtCursor", text);
@@ -809,9 +585,8 @@ namespace Ext.Net
         /// <summary>
         /// Executes a Midas editor command on the editor document and performs necessary focus and toolbar updates. This should only be called after the editor is initialized.
         /// </summary>
-        /// <param name="cmd">The Midas command</param>
-        /// <param name="value">The value to pass to the command</param>
         [Meta]
+        [Description("Executes a Midas editor command on the editor document and performs necessary focus and toolbar updates. This should only be called after the editor is initialized.")]
         public virtual void RelayCmd(string cmd, string value)
         {
             this.Call("relayCmd", cmd, value);
@@ -820,9 +595,8 @@ namespace Ext.Net
         /// <summary>
         /// Executes a Midas editor command on the editor document and performs necessary focus and toolbar updates. This should only be called after the editor is initialized.
         /// </summary>
-        /// <param name="cmd">The Midas command</param>
-        /// <param name="value">The value to pass to the command</param>
         [Meta]
+        [Description("Executes a Midas editor command on the editor document and performs necessary focus and toolbar updates. This should only be called after the editor is initialized.")]
         public virtual void RelayCmd(string cmd, bool value)
         {
             this.Call("relayCmd", cmd, value);
@@ -851,8 +625,8 @@ namespace Ext.Net
         /// <summary>
         /// Toggles the editor between standard and source edit mode.
         /// </summary>
-        /// <param name="sourceEdit">True for source edit, false for standard</param>
         [Meta]
+        [Description("Toggles the editor between standard and source edit mode.")]
         public virtual void ToggleSourceEdit(bool sourceEdit)
         {
             this.Call("toggleSourceEdit", sourceEdit);

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -21,9 +21,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires on a specified interval during the time the element is pressed.
-        /// Parameters
-        /// item : Ext.util.ClickRepeater
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "The click event")]
@@ -36,7 +33,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.click ?? (this.click = new ComponentListener());
+                if (this.click == null)
+                {
+                    this.click = new ComponentListener();
+                }
+
+                return this.click;
             }
         }
 
@@ -44,9 +46,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires on a specified interval during the time the element is pressed.
-        /// Parameters
-        /// item : Ext.util.ClickRepeater
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "The click event")]
@@ -59,7 +58,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.leftClick ?? (this.leftClick = new ComponentListener());
+                if (this.leftClick == null)
+                {
+                    this.leftClick = new ComponentListener();
+                }
+
+                return this.leftClick;
             }
         }
 
@@ -67,9 +71,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires on a specified interval during the time the element is pressed.
-        /// Parameters
-        /// item : Ext.util.ClickRepeater
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "The click event")]
@@ -82,7 +83,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.middleClick ?? (this.middleClick = new ComponentListener());
+                if (this.middleClick == null)
+                {
+                    this.middleClick = new ComponentListener();
+                }
+
+                return this.middleClick;
             }
         }
 
@@ -90,9 +96,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires on a specified interval during the time the element is pressed.
-        /// Parameters
-        /// item : Ext.util.ClickRepeater
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "The click event")]
@@ -105,7 +108,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.rightClick ?? (this.rightClick = new ComponentListener());
+                if (this.rightClick == null)
+                {
+                    this.rightClick = new ComponentListener();
+                }
+
+                return this.rightClick;
             }
         }
 
@@ -113,9 +121,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires when the mouse button is depressed.
-        /// Parameters
-        /// item : Ext.util.ClickRepeater
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "The click event")]
@@ -128,7 +133,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.mouseDown ?? (this.mouseDown = new ComponentListener());
+                if (this.mouseDown == null)
+                {
+                    this.mouseDown = new ComponentListener();
+                }
+
+                return this.mouseDown;
             }
         }
 
@@ -136,9 +146,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires when the mouse key is released.
-        /// Parameters
-        /// item : Ext.util.ClickRepeater
-        /// e : Ext.EventObject
         /// </summary>
         [ListenerArgument(0, "item", typeof(Button), "this")]
         [ListenerArgument(1, "e", typeof(object), "The click event")]
@@ -151,7 +158,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.mouseUp ?? (this.mouseUp = new ComponentListener());
+                if (this.mouseUp == null)
+                {
+                    this.mouseUp = new ComponentListener();
+                }
+
+                return this.mouseUp;
             }
         }
     }

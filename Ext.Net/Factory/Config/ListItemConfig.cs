@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class ListItem
     {
 		/*  Ctor
@@ -46,7 +43,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        new public partial class Config : BaseItem.Config 
+        new public partial class Config : StateManagedItem.Config 
         { 
 			/*  Implicit ListItem.Config Conversion to ListItem.Builder
 				-----------------------------------------------------------------------------------------------*/
@@ -63,12 +60,12 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
-			private string text = null;
+			private string text = "";
 
 			/// <summary>
 			/// 
 			/// </summary>
-			[DefaultValue(null)]
+			[DefaultValue("")]
 			public virtual string Text 
 			{ 
 				get
@@ -96,42 +93,6 @@ namespace Ext.Net
 				set
 				{
 					this.value = value;
-				}
-			}
-
-			private int index = -1;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue(-1)]
-			public virtual int Index 
-			{ 
-				get
-				{
-					return this.index;
-				}
-				set
-				{
-					this.index = value;
-				}
-			}
-
-			private ParameterMode mode = ParameterMode.Value;
-
-			/// <summary>
-			/// Wrap in quotes or not
-			/// </summary>
-			[DefaultValue(ParameterMode.Value)]
-			public virtual ParameterMode Mode 
-			{ 
-				get
-				{
-					return this.mode;
-				}
-				set
-				{
-					this.mode = value;
 				}
 			}
 

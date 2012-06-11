@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class HtmlEditor
     {
 		/*  Ctor
@@ -81,114 +78,42 @@ namespace Ext.Net
 				}
 			}
         
-			private HtmlEditorListeners listeners = null;
+			private EditorListeners listeners = null;
 
 			/// <summary>
 			/// Client-side JavaScript Event Handlers
 			/// </summary>
-			public HtmlEditorListeners Listeners
+			public EditorListeners Listeners
 			{
 				get
 				{
 					if (this.listeners == null)
 					{
-						this.listeners = new HtmlEditorListeners();
+						this.listeners = new EditorListeners();
 					}
 			
 					return this.listeners;
 				}
 			}
 			        
-			private HtmlEditorDirectEvents directEvents = null;
+			private EditorDirectEvents directEvents = null;
 
 			/// <summary>
 			/// Server-side Ajax Event Handlers
 			/// </summary>
-			public HtmlEditorDirectEvents DirectEvents
+			public EditorDirectEvents DirectEvents
 			{
 				get
 				{
 					if (this.directEvents == null)
 					{
-						this.directEvents = new HtmlEditorDirectEvents();
+						this.directEvents = new EditorDirectEvents();
 					}
 			
 					return this.directEvents;
 				}
 			}
 			
-			private XTemplate afterIFrameTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate AfterIFrameTpl 
-			{ 
-				get
-				{
-					return this.afterIFrameTpl;
-				}
-				set
-				{
-					this.afterIFrameTpl = value;
-				}
-			}
-
-			private XTemplate afterTextAreaTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup after the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate AfterTextAreaTpl 
-			{ 
-				get
-				{
-					return this.afterTextAreaTpl;
-				}
-				set
-				{
-					this.afterTextAreaTpl = value;
-				}
-			}
-
-			private XTemplate beforeIFrameTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the iframe element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate BeforeIFrameTpl 
-			{ 
-				get
-				{
-					return this.beforeIFrameTpl;
-				}
-				set
-				{
-					this.beforeIFrameTpl = value;
-				}
-			}
-
-			private XTemplate beforeTextAreaTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup before the textarea element. If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate BeforeTextAreaTpl 
-			{ 
-				get
-				{
-					return this.beforeTextAreaTpl;
-				}
-				set
-				{
-					this.beforeTextAreaTpl = value;
-				}
-			}
-
 			private string createLinkText = "";
 
 			/// <summary>
@@ -207,24 +132,6 @@ namespace Ext.Net
 				}
 			}
 
-			private string defaultFont = "";
-
-			/// <summary>
-			/// The default font family (defaults to 'tahoma').
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string DefaultFont 
-			{ 
-				get
-				{
-					return this.defaultFont;
-				}
-				set
-				{
-					this.defaultFont = value;
-				}
-			}
-
 			private string defaultLinkValue = "http://";
 
 			/// <summary>
@@ -240,24 +147,6 @@ namespace Ext.Net
 				set
 				{
 					this.defaultLinkValue = value;
-				}
-			}
-
-			private string defaultValue = "";
-
-			/// <summary>
-			/// A default value to be put into the editor to resolve focus issues (defaults to   (Non-breaking space) in Opera and IE6, ​ (Zero-width space) in all other browsers).
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string DefaultValue 
-			{ 
-				get
-				{
-					return this.defaultValue;
-				}
-				set
-				{
-					this.defaultValue = value;
 				}
 			}
 
@@ -438,42 +327,6 @@ namespace Ext.Net
 				set
 				{
 					this.fontFamilies = value;
-				}
-			}
-        
-			private HtmlEditorButtonTips buttonTips = null;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public HtmlEditorButtonTips ButtonTips
-			{
-				get
-				{
-					if (this.buttonTips == null)
-					{
-						this.buttonTips = new HtmlEditorButtonTips();
-					}
-			
-					return this.buttonTips;
-				}
-			}
-			
-			private XTemplate iframeAttrTpl = null;
-
-			/// <summary>
-			/// An optional string or XTemplate configuration to insert in the field markup inside the iframe element (as attributes). If an XTemplate is used, the component's subTpl data serves as the context.
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual XTemplate IframeAttrTpl 
-			{ 
-				get
-				{
-					return this.iframeAttrTpl;
-				}
-				set
-				{
-					this.iframeAttrTpl = value;
 				}
 			}
 

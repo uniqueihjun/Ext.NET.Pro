@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -22,6 +22,7 @@ namespace Ext.Net
         private Type type = typeof(ResourceManager);
         private string pathEmbedded;
         private string path = "";
+        private string cacheFly;
 
 		/// <summary>
 		/// 
@@ -52,6 +53,22 @@ namespace Ext.Net
             internal set 
             { 
                 this.pathEmbedded = value; 
+            }
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public string CacheFly
+        {
+            get
+            {
+                return this.cacheFly;
+            }
+            internal set
+            {
+                this.cacheFly = value;
             }
         }
 
@@ -114,10 +131,28 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
+        public ClientStyleItem(Type type, string pathEmbedded, string path, string cacheFly) : this(type, pathEmbedded, path)
+        {
+            this.CacheFly = cacheFly;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ClientStyleItem(Type type, string pathEmbedded, string path, string cacheFly, Theme theme) : this(type, pathEmbedded, path, cacheFly)
+        {
+            this.Theme = theme;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
         public ClientStyleItem(Type type, string pathEmbedded, string path, Theme theme) : this(type, pathEmbedded, path)
         {
             this.Theme = theme;
-        }		
+        }
 
 		/// <summary>
 		/// 
@@ -127,6 +162,26 @@ namespace Ext.Net
         {
             this.PathEmbedded = pathEmbedded;
             this.Path = path;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ClientStyleItem(string pathEmbedded, string path, string cacheFly)
+            : this(pathEmbedded, path)
+        {
+            this.CacheFly = cacheFly;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ClientStyleItem(string pathEmbedded, string path, string cacheFly, Theme theme)
+            : this(pathEmbedded, path, cacheFly)
+        {
+            this.Theme = theme;
         }
 
 		/// <summary>
@@ -160,11 +215,31 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
+        public ClientScriptItem(string pathEmbedded, string path, string cacheFly)
+            : this(pathEmbedded, path)
+        {
+            this.CacheFly = cacheFly;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
         public ClientScriptItem(string pathEmbedded, string pathEmbeddedDebug, string path, string pathDebug)
             : this(pathEmbedded, path)
         {
             this.PathEmbeddedDebug = pathEmbeddedDebug;
             this.PathDebug = pathDebug;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ClientScriptItem(string pathEmbedded, string pathEmbeddedDebug, string path, string pathDebug, string cacheFly)
+            : this(pathEmbedded, pathEmbeddedDebug, path, pathDebug)
+        {
+            this.CacheFly = cacheFly;
         }
 
 		/// <summary>
@@ -181,6 +256,16 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
+        public ClientScriptItem(Type type, string pathEmbedded, string path, string cacheFly)
+            : this(type, pathEmbedded, path)
+        {
+            this.CacheFly = cacheFly;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
         public ClientScriptItem(Type type, string pathEmbedded, string pathEmbeddedDebug, string path, string pathDebug)
             : this(type, pathEmbedded, path)
         {
@@ -188,7 +273,17 @@ namespace Ext.Net
             this.PathDebug = pathDebug;
         }
 
-        private string pathEmbeddedDebug = "";
+		/// <summary>
+		/// 
+		/// </summary>
+		[Description("")]
+        public ClientScriptItem(Type type, string pathEmbedded, string pathEmbeddedDebug, string path, string pathDebug, string cacheFly)
+            : this(type, pathEmbedded, pathEmbeddedDebug, path, pathDebug)
+        {
+            this.CacheFly = cacheFly;
+        }
+
+        private string pathEmbeddedDebug;
         
         /// <summary>
         /// 

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,19 +15,12 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class CheckMenuItemDirectEvents : MenuItemDirectEvents
+    public partial class CheckMenuItemDirectEvents : BaseMenuItemDirectEvents
     {
-        public CheckMenuItemDirectEvents() { }
-
-        public CheckMenuItemDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent beforeCheckChange;
 
         /// <summary>
-        /// Fires before a change event. Return false to cancel.
-        /// Parameters
-        /// item : Ext.menu.CheckItem
-        /// checked : Boolean
+        /// Fires before the checked value is set, providing an opportunity to cancel if needed
         /// </summary>
         [ListenerArgument(0, "item", typeof(CheckMenuItem), "this")]
         [ListenerArgument(1, "checked", typeof(bool), "checked")]
@@ -35,22 +28,24 @@ namespace Ext.Net
         [ConfigOption("beforecheckchange", typeof(DirectEventJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fires before a change event. Return false to cancel.")]
+        [Description("Fires before the checked value is set, providing an opportunity to cancel if needed")]
         public virtual ComponentDirectEvent BeforeCheckChange
         {
             get
             {
-                return this.beforeCheckChange ?? (this.beforeCheckChange = new ComponentDirectEvent(this));
+                if (this.beforeCheckChange == null)
+                {
+                    this.beforeCheckChange = new ComponentDirectEvent();
+                }
+
+                return this.beforeCheckChange;
             }
         }
 
         private ComponentDirectEvent checkChange;
 
         /// <summary>
-        /// Fires after a change event.
-        /// Parameters
-        /// item : Ext.menu.CheckItem
-        /// checked : Boolean
+        /// Fires after the checked value has been set
         /// </summary>
         [ListenerArgument(0, "item", typeof(CheckMenuItem), "this")]
         [ListenerArgument(1, "checked", typeof(bool), "checked")]
@@ -58,12 +53,17 @@ namespace Ext.Net
         [ConfigOption("checkchange", typeof(DirectEventJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fires after a change event.")]
+        [Description("Fires after the checked value has been set")]
         public virtual ComponentDirectEvent CheckChange
         {
             get
             {
-                return this.checkChange ?? (this.checkChange = new ComponentDirectEvent(this));
+                if (this.checkChange == null)
+                {
+                    this.checkChange = new ComponentDirectEvent();
+                }
+
+                return this.checkChange;
             }
         }
     }

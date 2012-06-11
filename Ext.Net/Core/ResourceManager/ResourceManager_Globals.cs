@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.Web;
 
 using Ext.Net.Utilities;
-using System.Web.Security;
 
 namespace Ext.Net
 {
@@ -83,7 +82,7 @@ namespace Ext.Net
             {
                 if (this.DirectEventUrl.IsNotEmpty())
                 {
-                    return this.ResolveUrlLink(this.DirectEventUrl);
+                    return this.ResolveUrl(this.DirectEventUrl);
                 }
 
                 return this.DirectEventUrl;
@@ -107,7 +106,7 @@ namespace Ext.Net
                     return (ViewStateMode)this.ajaxViewStateMode;
                 }
 
-                if (HttpContext.Current != null)
+                if (!this.DesignMode && HttpContext.Current != null)
                 {
                     string token = "Ext.Net.AjaxViewStateMode";
 
@@ -120,18 +119,15 @@ namespace Ext.Net
 
                     if (obj != null && obj is ViewStateMode)
                     {
-                        this.ajaxViewStateMode = obj;
                         return (ViewStateMode)obj;
                     }
                 }
                 else
-                {                    
-                    this.ajaxViewStateMode = WebConfigUtils.GetAjaxViewStateFromWebConfig(this.Site);
-                    return (ViewStateMode)this.ajaxViewStateMode;
+                {
+                    return WebConfigUtils.GetAjaxViewStateFromWebConfig(this.Site);
                 }
 
-                this.ajaxViewStateMode = GlobalConfig.Settings.AjaxViewStateMode;
-                return (ViewStateMode)this.ajaxViewStateMode;
+                return GlobalConfig.Settings.AjaxViewStateMode;
             }
             set
             {
@@ -191,7 +187,7 @@ namespace Ext.Net
         /// Gets or Sets the IDMode. Can be set at Page level in ResourceManager, Session[\"Ext.Net.IDMode\"], Application[\"Ext.Net.IDMode\"] and web.config.
         /// </summary>
         [Category("Config Options")]
-        [DefaultValue(IDMode.Explicit)]
+        [DefaultValue(IDMode.Inherit)]
         [Description("Gets or Sets the IDMode. Can be set at Page level in ResourceManager, Session[\"Ext.Net.IDMode\"], Application[\"Ext.Net.IDMode\"] and web.config.")]
         public override IDMode IDMode
         {
@@ -500,17 +496,6 @@ namespace Ext.Net
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal static string CDNPath
-        {
-            get
-            {
-                return "http://speed.ext.net/ext.net/2.0.0.beta";
-            }
-        }
-
         private object scriptMode = null;
 
         /// <summary>
@@ -617,8 +602,9 @@ namespace Ext.Net
                         return this.GetWebResourceUrl(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all-embedded.css");
                     case ResourceLocationType.File:
                         return this.ConvertToFilePath(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all.css");
-                    case ResourceLocationType.CDN:
-                        return ResourceManager.CDNPath.ConcatWith("/extjs/resources/css/ext-all.css");
+                    case ResourceLocationType.CacheFly:
+                    case ResourceLocationType.CacheFlyAndFile:
+                        return this.GetCacheFlyLink("resources/css/ext-all.css");
                 }
             }
             
@@ -632,8 +618,20 @@ namespace Ext.Net
                             return this.GetWebResourceUrl(item.Type, item.PathEmbedded);
                         case ResourceLocationType.File:
                             return this.ResourcePathInternal.ConcatWith(item.Path);
-                        case ResourceLocationType.CDN:
-                            return ResourceManager.CDNPath.ConcatWith(item.Path);
+                        case ResourceLocationType.CacheFly:
+                            if (item.CacheFly.IsEmpty())
+                            {
+                                return this.GetWebResourceUrl(item.Type, item.PathEmbedded);
+                            }
+
+                            return item.CacheFly;
+                        case ResourceLocationType.CacheFlyAndFile:
+                            if (item.CacheFly.IsEmpty())
+                            {
+                                return this.ResourcePathInternal.ConcatWith(item.Path);
+                            }
+
+                            return item.CacheFly;
                     }
                 }
             }
@@ -691,6 +689,52 @@ namespace Ext.Net
             set
             {
                 this.theme = value;
+            }
+        }
+
+        private object scriptAdapter = null;
+
+        /// <summary>
+        /// Gets or Sets the current script Adapter. Can be set at Page level in ResourceManager, Session[\"Ext.Net.ScriptAdapter\"], Application[\"Ext.Net.ScriptAdapter\"] and web.config.
+        /// </summary>
+        [Category("Config Options")]
+        [DefaultValue(ScriptAdapter.Ext)]
+        [Description("Gets or Sets the current script Adapter. Can be set at Page level in ResourceManager, Session[\"Ext.Net.ScriptAdapter\"], Application[\"Ext.Net.ScriptAdapter\"] and web.config.")]
+        public virtual ScriptAdapter ScriptAdapter
+        {
+            get
+            {
+                if (this.scriptAdapter != null)
+                {
+                    return (ScriptAdapter)this.scriptAdapter;
+                }
+
+                if (!this.DesignMode && HttpContext.Current != null)
+                {
+                    string token = "Ext.Net.ScriptAdapter";
+
+                    object obj = HttpContext.Current.Application[token];
+
+                    if (obj == null)
+                    {
+                        obj = Session(token);
+                    }
+
+                    if (obj != null && obj is ScriptAdapter)
+                    {
+                        return (ScriptAdapter)obj;
+                    }
+                }
+                else
+                {
+                    return WebConfigUtils.GetScriptAdapterFromWebConfig(this.Site);
+                }
+
+                return GlobalConfig.Settings.ScriptAdapter;
+            }
+            set
+            {
+                this.scriptAdapter = value;
             }
         }
 
@@ -848,7 +892,7 @@ namespace Ext.Net
         /// Specifies a custom namespace prefix to use for the DirectMethods.
         /// </summary>
         [Category("Config Options")]
-        [DefaultValue(".direct")]
+        [DefaultValue("Ext.net.DirectMethods")]
         [Description("Specifies a custom namespace prefix to use for the DirectMethods.")]
         public virtual string DirectMethodNamespace
         {
@@ -884,44 +928,13 @@ namespace Ext.Net
             }
         }
 
-        public string NormalizedDirectMethodNamespace
-        {
-            get
-            {
-                string ns = this.DirectMethodNamespace;
-                
-                if (ns != null && ns.StartsWith("."))
-                {
-                    string rmNs = this.NormalizedNamespace;
-                    return rmNs.IsNotEmpty() ? rmNs + ns : "Ext.net.DirectMethods";
-                }
-
-                return ns;
-            }
-        }
-
-        public static string GlobalNormalizedDirectMethodNamespace
-        {
-            get
-            {
-                string ns = GlobalConfig.Settings.DirectMethodNamespace;
-                if (ns != null && ns.StartsWith("."))
-                {
-                    string rmNs = ResourceManager.GlobalNormalizedNamespace;
-                    return rmNs.IsNotEmpty() ? rmNs + ns : "Ext.net.DirectMethods";
-                }
-
-                return ns;                
-            }
-        }
-
         private bool? disableViewState;
 
         /// <summary>
         /// Remove ViewState data from page's rendering.
         /// </summary>
         [Category("Config Options")]
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         [Description("Remove ViewState data from page's rendering.")]
         public virtual bool DisableViewState
         {
@@ -949,11 +962,16 @@ namespace Ext.Net
                     }
                 }
 
-                return FormsAuthentication.IsEnabled ? false : GlobalConfig.Settings.DisableViewState;
+                return GlobalConfig.Settings.DisableViewState;
             }
             set
             {
                 this.disableViewState = value;
+
+                if (!this.DesignMode)
+                {
+                    ResourceManager.DisableViewStateStatic = value;
+                }
             }
         }
 
@@ -1036,6 +1054,93 @@ namespace Ext.Net
             set
             {
                 this.showWarningOnAjaxFailure = value;
+            }
+        }
+
+        private bool? manageEventsViewState;
+
+        /// <summary>
+        /// If true then load/save event's viewstate. Can be set within Session[\"Ext.Net.ManageEventsViewState\"], Application[\"Ext.Net.ManageEventsViewState\"] and web.config.
+        /// </summary>
+        [Category("Config Options")]
+        [DefaultValue(false)]
+        [Description("If true then load/save event's viewstate. Can be set within Session[\"Ext.Net.ManageEventsViewState\"], Application[\"Ext.Net.ManageEventsViewState\"] and web.config.")]
+        public virtual bool ManageEventsViewState
+        {
+            get
+            {
+                if (this.manageEventsViewState != null)
+                {
+                    return (bool)this.manageEventsViewState;
+                }
+
+                if (!this.DesignMode && HttpContext.Current != null)
+                {
+                    string token = "Ext.Net.ManageEventsViewState";
+                    object obj = HttpContext.Current.Application[token];
+
+                    if (obj == null)
+                    {
+                        obj = Session(token);
+                    }
+
+                    if (obj != null && obj is bool)
+                    {
+                        return (bool)obj;
+                    }
+                }
+
+                return GlobalConfig.Settings.ManageEventsViewState;
+            }
+            set
+            {
+                this.manageEventsViewState = value;
+            }
+        }
+
+        private DebugConsole? debugConsole;
+
+        /// <summary>
+        /// Gets or Sets the current debug module. Can be set at Page level in ResourceManager, Session[\"Ext.Net.Debug\"], Application[\"Ext.Net.Debug\"] and web.config.
+        /// </summary>
+        [Category("Config Options")]
+        [DefaultValue(DebugConsole.None)]
+        [Description("Gets or Sets the current debug module. Can be set at Page level in ResourceManager, Session[\"Ext.Net.Debug\"], Application[\"Ext.Net.Debug\"] and web.config.")]
+        public virtual DebugConsole DebugConsole
+        {
+            get
+            {
+                if (this.debugConsole != null)
+                {
+                    return this.debugConsole.Value;
+                }
+
+                if (!this.DesignMode && HttpContext.Current != null)
+                {
+                    string token = "Ext.Net.DebugConsole";
+
+                    object obj = HttpContext.Current.Application[token];
+
+                    if (obj == null)
+                    {
+                        obj = Session(token);
+                    }
+
+                    if (obj != null && obj is DebugConsole)
+                    {
+                        return (DebugConsole)obj;
+                    }
+                }
+                else
+                {
+                    return WebConfigUtils.GetDebugFromWebConfig(this.Site);
+                }
+
+                return GlobalConfig.Settings.DebugConsole;
+            }
+            set
+            {
+                this.debugConsole = value;
             }
         }
 
@@ -1126,21 +1231,13 @@ namespace Ext.Net
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void InvalidateNamespace()
-        {
-            this._namespace = null;
-        }
-
         private string _namespace;
 
         /// <summary>
         /// 
         /// </summary>
         [Category("Config Options")]
-        [DefaultValue("App")]
+        [DefaultValue("")]
         [Description("")]
         public override string Namespace
         {
@@ -1164,42 +1261,16 @@ namespace Ext.Net
 
                     if (obj != null && obj is string)
                     {
-                        this._namespace = (string)obj;
-                        return this._namespace;
+
+                        return (string)obj;
                     }
                 }
 
-                var app = App.GetInstance();
-                if (app != null && app.State.Get<string>("Name", "").IsNotEmpty())
-                {
-                    this._namespace = app.Name;
-                    return this._namespace;
-                }
-
-                this._namespace = GlobalConfig.Settings.Namespace;
-                return this._namespace;
+                return GlobalConfig.Settings.Namespace;
             }
             set
             {
                 this._namespace = value;
-            }
-        }
-
-        public string NormalizedNamespace
-        {
-            get
-            {
-                string ns = this.Namespace;
-                return ns != null && ns.StartsWith(".") ? "App" + ns : ns;
-            }
-        }
-
-        public static string GlobalNormalizedNamespace
-        {
-            get
-            {
-                string ns = GlobalConfig.Settings.Namespace;
-                return ns != null && ns.StartsWith(".") ? "App" + ns : ns;
             }
         }
 

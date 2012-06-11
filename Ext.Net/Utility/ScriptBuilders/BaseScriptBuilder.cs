@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -25,20 +25,20 @@ namespace Ext.Net
     [Description("")]
     public abstract partial class BaseScriptBuilder
     {
-        private readonly BaseControl control;
+        private readonly XControl control;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="control"></param>
         [Description("")]
-        protected BaseScriptBuilder(BaseControl control)
+        protected BaseScriptBuilder(XControl control)
         {
             this.control = control;
 
             if (!this.control.HasOwnIDMode || this.control.IDMode == IDMode.Inherit)
             {
-                this.control.IDMode = IDMode.Explicit;    
+                this.control.IDMode = IDMode.Client;    
             }
         }
 
@@ -46,29 +46,11 @@ namespace Ext.Net
         /// 
         /// </summary>
         [Description("")]
-        public BaseControl Control
+        public XControl Control
         {
             get
             {
                 return this.control;
-            }
-        }
-		
-		private ResourceManager manager;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        public ResourceManager ResourceManager
-        {
-            get
-            {
-                return this.manager;
-            }
-            set
-            {
-                this.manager = value;
             }
         }
 
@@ -157,7 +139,7 @@ namespace Ext.Net
             }
         }
 
-        private static Regex TopDynamic_RE = new Regex(string.Concat(BaseControl.TOP_DYNAMIC_CONTROL_TAG_S, "(.*?)", BaseControl.TOP_DYNAMIC_CONTROL_TAG_E), RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex TopDynamic_RE = new Regex(string.Concat(XControl.TOP_DYNAMIC_CONTROL_TAG_S, "(.*?)", XControl.TOP_DYNAMIC_CONTROL_TAG_E), RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// 
@@ -171,14 +153,6 @@ namespace Ext.Net
             if (pageHolder == null)
             {
                 pageHolder = new SelfRenderingPage();
-                
-                ResourceManager newMgr = new ResourceManager(true);
-                newMgr.RenderScripts = ResourceLocationType.None;
-                newMgr.RenderStyles = ResourceLocationType.None;
-                newMgr.IDMode = IDMode.Explicit;
-                newMgr.IsDynamic = true;
-                pageHolder.Controls.Add(newMgr);
-
                 pageHolder.Controls.Add(control);
             }
 
@@ -195,6 +169,49 @@ namespace Ext.Net
             }
 
             return sb.ToString() ?? "";
+        }
+
+        private static Regex ClientInit_RE = new Regex(@"({)([\w\.]+)(_ClientInit})", RegexOptions.Compiled);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        [Description("")]
+        protected string Combine(string key)
+        {
+            string value = this.ScriptClientInitBag[key];
+
+            if (value.IsNotEmpty())
+            {
+                //MatchCollection matches = Regex.Matches(value, @"({)([\w\.]+)(_ClientInit})");
+                MatchCollection matches = ClientInit_RE.Matches(value);
+
+
+                if (this.GetIsExcluded(key))
+                {
+                    return "";
+                }
+                
+                if (matches.Count == 0)
+                {
+                    return value;
+                }
+
+                foreach (Match match in matches)
+                {
+                    string id = match.Value.Chop();
+
+                    if (this.ScriptClientInitBag.ContainsKey(id))
+                    {
+                        value = value.Replace(match.Value, this.Combine(id));
+                        this.LazyList.Add(id);
+                    }
+                }
+            }
+
+            return value;
         }
 
         private bool GetIsExcluded(string key)
@@ -217,12 +234,7 @@ namespace Ext.Net
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="control"></param>
-        /// <param name="icons"></param>
-        protected virtual void CheckIcon(BaseControl control, List<Icon> icons)
+        protected virtual void CheckIcon(XControl control, List<Icon> icons)
         {
             if (control is IIcon)
             {
@@ -237,37 +249,18 @@ namespace Ext.Net
             }
         }
 
-        protected virtual void CheckNS(BaseControl control, List<string> ns)
-        {
-            if (control.HasOwnNamespace)
-            {
-                string _namespace = control.ClientNamespace;
+        private static string cacheBuster = "";
 
-                if (_namespace.IsNotEmpty() && !ns.Contains(_namespace))
-                {
-                    ns.Add(_namespace);
-                }
-            }
-        }
-
-        private static Page cachedPage = null;
-        private static object syncLock = new object();
-        /// <summary>
-        /// 
-        /// </summary>
-        protected static Page CachedPageInstance
+        private static string CacheBuster
         {
             get
             {
-                if (cachedPage == null)
+                if (cacheBuster.IsEmpty())
                 {
-                    lock (syncLock)
-                    {
-                        if (cachedPage == null)
-                            cachedPage = new Page();
-                    }
+                    cacheBuster = new ResourceManager().CacheBuster;
                 }
-                return cachedPage;
+
+                return cacheBuster;
             }
         }
 
@@ -275,17 +268,13 @@ namespace Ext.Net
         {
             if (resourceName.StartsWith(ResourceManager.ASSEMBLYSLUG))
             {
-                var buster = "?v=" + ResourceManager.CacheBuster;
+                var buster = "?v=" + CacheBuster;
                 return VirtualPathUtility.ToAbsolute(("~{0}/ext.axd".FormatWith(resourceName.Replace(ResourceManager.ASSEMBLYSLUG, "").Replace('.', '/').ReplaceLastInstanceOf("/", "-")))) + buster;
             }
-            return HttpUtility.HtmlAttributeEncode(CachedPageInstance.ClientScript.GetWebResourceUrl(type, resourceName));
+            return HttpUtility.HtmlAttributeEncode(new Page().ClientScript.GetWebResourceUrl(type, resourceName));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="control"></param>
-        protected virtual void CheckResources(BaseControl control, ResourceManager manager)
+        protected virtual void CheckResources(XControl control)
         {
             if (HttpContext.Current.CurrentHandler is Page && !(HttpContext.Current.CurrentHandler is ISelfRenderingPage) && !this.ForceResources)
             {
@@ -294,10 +283,9 @@ namespace Ext.Net
 
             foreach (ClientScriptItem item in control.GetScripts())
             {
-                var resourcePath = manager != null && manager.ScriptMode == ScriptMode.Debug && item.PathEmbeddedDebug.IsNotEmpty() ? item.PathEmbeddedDebug : item.PathEmbedded;
-                if (!scriptsResources.ContainsKey(resourcePath))
+                if (!scriptsResources.ContainsKey(item.PathEmbedded))
                 {
-                    scriptsResources.Add(resourcePath, GetWebResourceUrl(item.Type, resourcePath));
+                    scriptsResources.Add(item.PathEmbedded, GetWebResourceUrl(item.Type, item.PathEmbedded));
                 }
             }
 
@@ -310,37 +298,29 @@ namespace Ext.Net
             }
         }
 
-        private InsertOrderedDictionary<string, string> scriptsResources = new InsertOrderedDictionary<string, string>();
-        private InsertOrderedDictionary<string, string> stylesResources = new InsertOrderedDictionary<string, string>();
-        private static Regex autoIDRegEx = new Regex("^ctl\\d+$", RegexOptions.Compiled);
+        protected InsertOrderedDictionary<string, string> scriptsResources = new InsertOrderedDictionary<string, string>();
+        protected InsertOrderedDictionary<string, string> stylesResources = new InsertOrderedDictionary<string, string>();
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="seed"></param>
-        /// <param name="searchOnly"></param>
         /// <param name="sb"></param>
-        /// <param name="icons"></param>
         /// <returns></returns>
         [Description("")]
-        protected List<BaseControl> FindControls(Control seed, bool searchOnly, StringBuilder sb, List<Icon> icons, List<string> ns)
+        protected List<XControl> FindControls(Control seed, bool searchOnly, StringBuilder sb, List<Icon> icons)
         {
             if (seed == null)
             {
                 return null;
             }
 
+            ResourceManager manager = ResourceManager.GetInstance(HttpContext.Current);
+
             if (icons == null)
             {
                 icons = new List<Icon>();
             }
-
-            if (ns == null)
-            {
-                ns = new List<string>();
-            }
-			
-			ResourceManager manager = this.ResourceManager;
 
             if (sb != null && !searchOnly && manager != null)
             {
@@ -365,19 +345,18 @@ namespace Ext.Net
                         sb.Append(proxies);
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                 }
             }            
 
-            if (ReflectionUtils.IsTypeOf(seed, typeof(BaseControl), false))
+            if (ReflectionUtils.IsTypeOf(seed, typeof(XControl), false))
             {
-                BaseControl ctrl = (BaseControl)seed;
+                XControl ctrl = (XControl)seed;
                 if (!searchOnly)
                 {
                     this.CheckIcon(ctrl, icons);
-                    this.CheckNS(ctrl, ns);
-                    this.CheckResources(ctrl, manager);
+                    this.CheckResources(ctrl);
                 }
                 ctrl.IsDynamic = true;
                 ctrl.EnsureChildControlsInternal();
@@ -390,7 +369,7 @@ namespace Ext.Net
                 }
             }
 
-            List<BaseControl> foundControls = new List<BaseControl>();
+            List<XControl> foundControls = new List<XControl>();
 
             foreach (Control control in seed.Controls)
             {
@@ -399,20 +378,13 @@ namespace Ext.Net
                     continue;
                 }
 
-                var isBaseControl = ReflectionUtils.IsTypeOf(control, typeof(BaseControl), false);
-
-                if (!isBaseControl && (control.ID.IsEmpty() || BaseScriptBuilder.autoIDRegEx.IsMatch(control.ID)))
+                if (ReflectionUtils.IsTypeOf(control, typeof(XControl), false))
                 {
-                      control.ID = BaseControl.GenerateId();
-                }
-
-                if (isBaseControl && !(control is UserControlLoader))
-                {
-                    BaseControl ctrl = (BaseControl)control;
+                    XControl ctrl = (XControl)control;
                     if (!searchOnly)
                     {
                         this.CheckIcon(ctrl, icons);
-                        this.CheckResources(ctrl, manager);
+                        this.CheckResources(ctrl);
                     }
                     foundControls.Add(ctrl);
 
@@ -429,49 +401,26 @@ namespace Ext.Net
 
                 if (ControlUtils.HasControls(control))
                 {
-                    foundControls.AddRange(this.FindControls(control, searchOnly, null, icons, ns));
+                    foundControls.AddRange(this.FindControls(control, searchOnly, null, icons));
                 }
             }
 
-            if (sb != null && !searchOnly)
+            if (sb != null && !searchOnly && icons.Count > 0)
             {
-                /*if (icons.Count > 0)
+                string[] arr = new string[icons.Count];
+                for (int i = 0; i < icons.Count; i++)
                 {
-                    string[] arr = new string[icons.Count];
-
-                    for (int i = 0; i < icons.Count; i++)
-                    {
-                        arr[i] = icons[i].ToString();
-                    }
-
-                    sb.Append("Ext.net.ResourceMgr.registerIcon(");
-                    sb.Append(JSON.Serialize(arr));
-                    sb.Append(");");
-                    sb.Append(script);
-                }*/
-
-                if (ns.Count > 0)
-                {
-                    sb.Append("Ext.ns(");
-
-                    foreach (var n in ns)
-                    {
-                        sb.Append("\"").Append(n).Append("\",");
-                    }
-
-                    sb.Remove(sb.Length - 1, 1);
-                    sb.Append(");");
+                    arr[i] = icons[i].ToString();
                 }
+                sb.Append("Ext.net.ResourceMgr.registerIcon(");
+                sb.Append(JSON.Serialize(arr));
+                sb.Append(");");
+                sb.Append(script);
             }
 
             return foundControls;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="script"></param>
-        /// <returns></returns>
         protected virtual string RegisterResources(string script)
         {
             if (HttpContext.Current.CurrentHandler is Page && !(HttpContext.Current.CurrentHandler is ISelfRenderingPage) && !this.ForceResources)
@@ -549,7 +498,6 @@ namespace Ext.Net
         public SelfRenderingPage()
         {
             this.EnableEventValidation = false;
-            this.EnableViewState = false;            
         }
 
         /// <summary>

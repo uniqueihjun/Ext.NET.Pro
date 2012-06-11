@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -78,11 +78,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("AllowContainerDrop", false);
+                object obj = this.ViewState["AllowContainerDrop"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("AllowContainerDrop", value);
+                this.ViewState["AllowContainerDrop"] = value;
             }
         }
 
@@ -98,11 +99,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("AllowParentInsert", false);
+                object obj = this.ViewState["AllowParentInsert"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("AllowParentInsert", value);
+                this.ViewState["AllowParentInsert"] = value;
             }
         }
 
@@ -118,11 +120,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("AppendOnly", false);
+                object obj = this.ViewState["AppendOnly"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("AppendOnly", value);
+                this.ViewState["AppendOnly"] = value;
             }
         }
 
@@ -138,11 +141,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("ExpandDelay", 1000);
+                object obj = this.ViewState["ExpandDelay"];
+                return (obj == null) ? 1000 : (int)obj;
             }
             set
             {
-                this.State.Set("ExpandDelay", value);
+                this.ViewState["ExpandDelay"] = value;
             }
         }
     }

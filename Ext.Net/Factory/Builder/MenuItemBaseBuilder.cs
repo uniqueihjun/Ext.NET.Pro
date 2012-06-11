@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,15 +15,12 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract partial class MenuItemBase
     {
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TMenuItemBase, TBuilder> : ComponentBase.Builder<TMenuItemBase, TBuilder>
+        new public abstract partial class Builder<TMenuItemBase, TBuilder> : BaseMenuItem.Builder<TMenuItemBase, TBuilder>
             where TMenuItemBase : MenuItemBase
             where TBuilder : Builder<TMenuItemBase, TBuilder>
         {
@@ -39,15 +36,6 @@ namespace Ext.Net
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual TBuilder PostBackEvent(string postBackEvent)
-            {
-                this.ToComponent().PostBackEvent = postBackEvent;
-                return this as TBuilder;
-            }
-             
  			/// <summary>
 			/// 
 			/// </summary>
@@ -94,16 +82,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The CSS class added to the menu item when the item is activated (focused/mouseover). Defaults to Ext.baseCSSPrefix + 'menu-item-active'.
-			/// </summary>
-            public virtual TBuilder ActiveCls(string activeCls)
-            {
-                this.ToComponent().ActiveCls = activeCls;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// Whether or not this menu item can be activated when focused/mouseovered. Defaults to true.
+			/// True if this item can be visually activated (defaults to true).
 			/// </summary>
             public virtual TBuilder CanActivate(bool canActivate)
             {
@@ -112,52 +91,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The delay in milliseconds to wait before hiding the menu after clicking the menu item. This only has an effect when hideOnClick: true. Defaults to 1.
-			/// </summary>
-            public virtual TBuilder ClickHideDelay(int clickHideDelay)
-            {
-                this.ToComponent().ClickHideDelay = clickHideDelay;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// A function that will handle the click event of this menu item (defaults to undefined).
-			/// </summary>
-            public virtual TBuilder Handler(string handler)
-            {
-                this.ToComponent().Handler = handler;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// The scope (this reference) in which the handler function will be called.
-			/// </summary>
-            public virtual TBuilder Scope(string scope)
-            {
-                this.ToComponent().Scope = scope;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// Whether or not to destroy any associated sub-menu when this item is destroyed. Defaults to true.
-			/// </summary>
-            public virtual TBuilder DestroyMenu(bool destroyMenu)
-            {
-                this.ToComponent().DestroyMenu = destroyMenu;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// Whether to not to hide the owning menu when this item is clicked. Defaults to true.
-			/// </summary>
-            public virtual TBuilder HideOnClick(bool hideOnClick)
-            {
-                this.ToComponent().HideOnClick = hideOnClick;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// The href attribute to use for the underlying anchor link. Defaults to #.
+			/// The href attribute to use for the underlying anchor link (defaults to '#').
 			/// </summary>
             public virtual TBuilder Href(string href)
             {
@@ -166,7 +100,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The target attribute to use for the underlying anchor link. Defaults to undefined.
+			/// The target attribute to use for the underlying anchor link (defaults to '').
 			/// </summary>
             public virtual TBuilder HrefTarget(string hrefTarget)
             {
@@ -175,7 +109,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The path to an icon to display in this item. Defaults to Ext.BLANK_IMAGE_URL.
+			/// The path to an icon to display in this item (defaults to Ext.BLANK_IMAGE_URL). If icon is specified iconCls should not be.
 			/// </summary>
             public virtual TBuilder IconUrl(string iconUrl)
             {
@@ -184,7 +118,7 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// A CSS class that specifies a background-image to use as the icon for this item. Defaults to undefined.
+			/// A CSS class that specifies a background image that will be used as the icon for this item (defaults to ''). If iconCls is specified icon should not be.
 			/// </summary>
             public virtual TBuilder IconCls(string iconCls)
             {
@@ -193,47 +127,20 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// The icon to use in the Title bar. See also, IconCls to set an icon with a custom Css class.
+			/// The default CSS class to use for menu items (defaults to 'x-menu-item')
 			/// </summary>
-            public virtual TBuilder Icon(Icon icon)
+            public virtual TBuilder ItemCls(string itemCls)
             {
-                this.ToComponent().Icon = icon;
+                this.ToComponent().ItemCls = itemCls;
                 return this as TBuilder;
             }
              
  			/// <summary>
-			/// The default Ext.Element.getAlignToXY anchor position value for this item's sub-menu relative to this item's position. Defaults to 'tl-tr?'.
+			/// Length of time in milliseconds to wait before showing this item (defaults to 200)
 			/// </summary>
-            public virtual TBuilder MenuAlign(string menuAlign)
+            public virtual TBuilder ShowDelay(int showDelay)
             {
-                this.ToComponent().MenuAlign = menuAlign;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// The delay in milliseconds before this item's sub-menu expands after this item is moused over. Defaults to 200.
-			/// </summary>
-            public virtual TBuilder MenuExpandDelay(int menuExpandDelay)
-            {
-                this.ToComponent().MenuExpandDelay = menuExpandDelay;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// The delay in milliseconds before this item's sub-menu hides after this item is moused out. Defaults to 200.
-			/// </summary>
-            public virtual TBuilder MenuHideDelay(int menuHideDelay)
-            {
-                this.ToComponent().MenuHideDelay = menuHideDelay;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// Whether or not this item is plain text/html with no icon or visual activation. Defaults to false.
-			/// </summary>
-            public virtual TBuilder Plain(bool plain)
-            {
-                this.ToComponent().Plain = plain;
+                this.ToComponent().ShowDelay = showDelay;
                 return this as TBuilder;
             }
              
@@ -246,43 +153,21 @@ namespace Ext.Net
                 return this as TBuilder;
             }
              
- 			/// <summary>
-			/// Standard menu attribute consisting of a reference to a menu object, a menu id or a menu config blob
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TBuilder</returns>
-            public virtual TBuilder Menu(Action<MenuCollection> action)
-            {
-                action(this.ToComponent().Menu);
-                return this as TBuilder;
-            }
-			 
- 			/// <summary>
-			/// The tooltip for the button - can be a string to be used as innerHTML (html tags are accepted) or QuickTips config object.
-			/// </summary>
-            public virtual TBuilder ToolTip(string toolTip)
-            {
-                this.ToComponent().ToolTip = toolTip;
-                return this as TBuilder;
-            }
+ 			// /// <summary>
+			// /// Standard menu attribute consisting of a reference to a menu object, a menu id or a menu config blob
+			// /// </summary>
+            // public virtual TBuilder Menu(MenuCollection menu)
+            // {
+            //    this.ToComponent().Menu = menu;
+            //    return this as TBuilder;
+            // }
              
  			/// <summary>
-			/// A tip string.
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TBuilder</returns>
-            public virtual TBuilder QTipCfg(Action<QTipCfg> action)
-            {
-                action(this.ToComponent().QTipCfg);
-                return this as TBuilder;
-            }
-			 
- 			/// <summary>
-			/// The type of tooltip to use. Either 'qtip' for QuickTips or 'title' for title attribute. Defaults to: \"qtip\"
+			/// The icon to use in the Title bar. See also, IconCls to set an icon with a custom Css class.
 			/// </summary>
-            public virtual TBuilder ToolTipType(ToolTipType toolTipType)
+            public virtual TBuilder Icon(Icon icon)
             {
-                this.ToComponent().ToolTipType = toolTipType;
+                this.ToComponent().Icon = icon;
                 return this as TBuilder;
             }
             

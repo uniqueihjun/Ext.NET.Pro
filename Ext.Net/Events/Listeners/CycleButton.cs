@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -21,10 +21,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires after the button's active menu items has changed. Note that if a changeHandler function is set on this CycleButton, it will be called instead on active items change and this change event will not be fired.
-        /// Parameters
-        /// item : Ext.button.Cycle
-        /// checkitem : Ext.menu.CheckItem
-        ///     The menu item that was selected
         /// </summary>
         [ListenerArgument(0, "item", typeof(CycleButton), "this")]
         [ListenerArgument(1, "checkitem")]
@@ -37,7 +33,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.change ?? (this.change = new ComponentListener());
+                if (this.change == null)
+                {
+                    this.change = new ComponentListener();
+                }
+
+                return this.change;
             }
         }
     }

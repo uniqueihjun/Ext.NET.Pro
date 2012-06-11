@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,52 +15,31 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-	/// <summary>
-	/// 
-	/// </summary>
     public abstract partial class SliderBase
     {
         /// <summary>
         /// 
         /// </summary>
-        new public abstract partial class Config : Field.Config 
+        new public abstract partial class Config : BoxComponentBase.Config 
         { 
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
 			
-			private bool single = false;
+			private int value = int.MinValue;
 
 			/// <summary>
-			/// True for single thumb slider
+			/// The Number (int) to initialize this field with.
 			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool Single 
+			[DefaultValue(int.MinValue)]
+			public virtual int Value 
 			{ 
 				get
 				{
-					return this.single;
+					return this.value;
 				}
 				set
 				{
-					this.single = value;
-				}
-			}
-
-			private double? number = null;
-
-			/// <summary>
-			/// Thumbs value
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual double? Number 
-			{ 
-				get
-				{
-					return this.number;
-				}
-				set
-				{
-					this.number = value;
+					this.value = value;
 				}
 			}
 
@@ -172,13 +151,13 @@ namespace Ext.Net
 				}
 			}
 
-			private double maxValue = 100d;
+			private int maxValue = 100;
 
 			/// <summary>
 			/// The maximum value for the Slider. Defaults to 100.
 			/// </summary>
-			[DefaultValue(100d)]
-			public virtual double MaxValue 
+			[DefaultValue(100)]
+			public virtual int MaxValue 
 			{ 
 				get
 				{
@@ -190,13 +169,13 @@ namespace Ext.Net
 				}
 			}
 
-			private double minValue = 0d;
+			private int minValue = 0;
 
 			/// <summary>
 			/// The minimum value for the Slider. Defaults to 0.
 			/// </summary>
-			[DefaultValue(0d)]
-			public virtual double MinValue 
+			[DefaultValue(0)]
+			public virtual int MinValue 
 			{ 
 				get
 				{
@@ -226,75 +205,21 @@ namespace Ext.Net
 				}
 			}
 
-			private bool zeroBasedSnapping = false;
+			private int topThumbZIndex = 10000;
 
 			/// <summary>
-			/// Set to true to calculate snap points based on increments from zero as opposed to from this Slider's minValue.
+			/// The number used to set the z index of the top thumb
 			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool ZeroBasedSnapping 
+			[DefaultValue(10000)]
+			public virtual int TopThumbZIndex 
 			{ 
 				get
 				{
-					return this.zeroBasedSnapping;
+					return this.topThumbZIndex;
 				}
 				set
 				{
-					this.zeroBasedSnapping = value;
-				}
-			}
-
-			private bool useTips = true;
-
-			/// <summary>
-			/// True to use an Ext.slider.Tip to display tips for the value. Defaults to: true
-			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool UseTips 
-			{ 
-				get
-				{
-					return this.useTips;
-				}
-				set
-				{
-					this.useTips = value;
-				}
-			}
-        
-			private JFunction tipText = null;
-
-			/// <summary>
-			/// A function used to display custom text for the slider tip. Defaults to null, which will use the default on the plugin.
-			/// </summary>
-			public JFunction TipText
-			{
-				get
-				{
-					if (this.tipText == null)
-					{
-						this.tipText = new JFunction();
-					}
-			
-					return this.tipText;
-				}
-			}
-			
-			private object value = null;
-
-			/// <summary>
-			/// A value to initialize this field with.
-			/// </summary>
-			[DefaultValue(null)]
-			public override object Value 
-			{ 
-				get
-				{
-					return this.value;
-				}
-				set
-				{
-					this.value = value;
+					this.topThumbZIndex = value;
 				}
 			}
 

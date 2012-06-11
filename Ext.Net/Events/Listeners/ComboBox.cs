@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,23 +15,12 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class ComboBoxListeners : PickerFieldListeners
+    public partial class ComboBoxListeners : TriggerFieldListeners
     {
         private ComponentListener beforeQuery;
 
         /// <summary>
         /// Fires before all queries are processed. Return false to cancel the query or set the queryEvent's cancel property to true.
-        /// Parameters
-        /// queryEvent : Object
-        /// An object that has these properties:
-        ///     combo : Ext.form.field.ComboBox
-        ///         This combo box
-        ///     query : String
-        ///         The query string
-        ///     forceAll : Boolean
-        ///         True to force "all" query
-        ///     cancel : Boolean
-        ///         Set to true to cancel the query
         /// </summary>
         [ListenerArgument(0, "queryEvent", typeof(object), "An object that includes combo (This combo box), query (The query), forceAll (True to force 'all' query) and cancel (Set to true to cancel the query).")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -42,22 +31,20 @@ namespace Ext.Net
         public virtual ComponentListener BeforeQuery 
         {
             get
-            {                
-                return this.beforeQuery ?? (this.beforeQuery = new ComponentListener());
+            {
+                if (this.beforeQuery == null)
+                {
+                    this.beforeQuery = new ComponentListener();
+                }
+
+                return this.beforeQuery;
             }
         }
 
         private ComponentListener beforeSelect;
 
         /// <summary>
-        /// Fires before the selected item is added to the collection
-        /// Parameters
-        /// item : Ext.form.field.ComboBox
-        ///     This combo box
-        /// record : Ext.data.Record
-        ///     The selected record
-        /// index : Number
-        ///     The index of the selected record
+        /// Fires before a list items is selected. Return false to cancel the selection.
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This combo box")]
         [ListenerArgument(1, "record", typeof(object), "The data record returned from the underlying store")]
@@ -66,65 +53,91 @@ namespace Ext.Net
         [ConfigOption("beforeselect", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fires before the selected item is added to the collection")]
+        [Description("Fires before a list items is selected. Return false to cancel the selection.")]
         public virtual ComponentListener BeforeSelect
         {
             get
             {
-                return this.beforeSelect ?? (this.beforeSelect = new ComponentListener());
+                if (this.beforeSelect == null)
+                {
+                    this.beforeSelect = new ComponentListener();
+                }
+
+                return this.beforeSelect;
             }
         }
 
-        private ComponentListener beforeDeselect;
+        private ComponentListener collapse;
 
         /// <summary>
-        /// Fires before the deselected item is removed from the collection
-        /// Parameters
-        /// item : Ext.form.field.ComboBox
-        ///     This combo box
-        /// record : Ext.data.Record
-        ///     The deselected record
-        /// index : Number
-        ///     The index of the deselected record
+        /// Fires when the dropdown list is collapsed.
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This combo box")]
-        [ListenerArgument(1, "record", typeof(object), "The deselected record")]
-        [ListenerArgument(2, "index", typeof(int), "The index of the deselected record")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("beforedeselect", typeof(ListenerJsonConverter))]
+        [ConfigOption("collapse", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fires before the deselected item is removed from the collection")]
-        public virtual ComponentListener BeforeDeselect
+        [Description("Fires when the dropdown list is collapsed.")]
+        public virtual ComponentListener Collapse
         {
             get
             {
-                return this.beforeDeselect ?? (this.beforeDeselect = new ComponentListener());
+                if (this.collapse == null)
+                {
+                    this.collapse = new ComponentListener();
+                }
+
+                return this.collapse;
+            }
+        }
+
+        private ComponentListener expand;
+
+        /// <summary>
+        /// Fires when the dropdown list is expanded.
+        /// </summary>
+        [ListenerArgument(0, "item", typeof(Field), "This combo box")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [ConfigOption("expand", typeof(ListenerJsonConverter))]
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [NotifyParentProperty(true)]
+        [Description("Fires when the dropdown list is expanded.")]
+        public virtual ComponentListener Expand
+        {
+            get
+            {
+                if (this.expand == null)
+                {
+                    this.expand = new ComponentListener();
+                }
+
+                return this.expand;
             }
         }
 
         private ComponentListener select;
 
         /// <summary>
-        /// Fires when at least one list item is selected.
-        /// Parameters
-        /// item : Ext.form.field.ComboBox
-        ///     This combo box
-        /// records : Array
-        ///     The selected records
+        /// Fires when a list items is selected.
         /// </summary>
         [ListenerArgument(0, "item", typeof(Field), "This combo box")]
-        [ListenerArgument(1, "records", typeof(object), "The data record returned from the underlying store")]
+        [ListenerArgument(1, "record", typeof(object), "The data record returned from the underlying store")]
+        [ListenerArgument(2, "index", typeof(int), "The index of the selected item in the dropdown list")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("select", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
-        [Description("Fires when at least one list item is selected.")]
-        public override ComponentListener Select
+        [Description("Fires when a list items is selected.")]
+        public virtual ComponentListener Select
         {
             get
             {
-                return this.select ?? (this.select = new ComponentListener());
+                if (this.select == null)
+                {
+                    this.select = new ComponentListener();
+                }
+
+                return this.select;
             }
         }
     }

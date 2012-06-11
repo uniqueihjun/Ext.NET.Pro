@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -9,30 +9,19 @@
 using System.ComponentModel;
 using System.Web.UI;
 using System.Drawing;
-using System.Collections.Generic;
 
 namespace Ext.Net
 {
     /// <summary>
-    /// A simple Component for displaying an Adobe Flash SWF movie. The movie will be sized and can participate in layout like any other Component.
-    /// 
-    /// Configuration
-    /// 
-    /// This component allows several options for configuring how the target Flash movie is embedded. The most important is the required url which points to the location of the Flash movie to load. Other configurations include:
-    /// 
-    /// backgroundColor
-    /// wmode
-    /// flashVars
-    /// flashParams
-    /// flashAttributes
+    /// A Flash Component
     /// </summary>
     [Meta]
     [ToolboxItem(true)]
     [ToolboxBitmap(typeof(FlashComponent), "Build.ToolboxIcons.FlashComponent.bmp")]
     [ToolboxData("<{0}:FlashComponent runat=\"server\"></{0}:FlashComponent>")]
     [Designer(typeof(EmptyDesigner))]
-    [Description("A Flash AbstractComponent")]
-    public partial class FlashComponent : ComponentBase
+    [Description("A Flash Component")]
+    public partial class FlashComponent : BoxComponentBase
     {
 		/// <summary>
 		/// 
@@ -62,28 +51,12 @@ namespace Ext.Net
         {
             get
             {
-                return "Ext.flash.Component";
+                return "Ext.FlashComponent";
             }
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        protected override List<ResourceItem> Resources
-        {
-            get
-            {
-                List<ResourceItem> baseList = base.Resources;
-
-                baseList.Add(new ClientScriptItem(typeof(FlashComponent), "Ext.Net.Build.Ext.Net.extnet.swfobject.js", "/extnet/swfobject.js"));
-
-                return baseList;
-            }
-        }
-
-        /// <summary>
-        /// The background color of the SWF movie. Defaults to '#ffffff' (white).
+        /// The background color. Defaults to '#ffffff' (white).
         /// </summary>
         [Meta]
         [Category("5. FlashComponent")]
@@ -94,11 +67,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("BackgroundColor", "#ffffff");
+                return (string)this.ViewState["BackgroundColor"] ?? "#ffffff";
             }
             set
             {
-                this.State.Set("BackgroundColor", value);
+                this.ViewState["BackgroundColor"] = value;
             }
         }
 
@@ -115,11 +88,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("ExpressInstall", false);
+                object obj = this.ViewState["ExpressInstall"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("ExpressInstall", value);
+                this.ViewState["ExpressInstall"] = value;
             }
         }
 
@@ -134,11 +108,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("FlashVersion", "9.0.45");
+                return (string)this.ViewState["FlashVersion"] ?? "9.0.45";
             }
             set
             {
-                this.State.Set("FlashVersion", value);
+                this.ViewState["FlashVersion"] = value;
             }
         }
 
@@ -146,7 +120,7 @@ namespace Ext.Net
         /// The URL of the swf object to include. Defaults to undefined.
         /// </summary>
         [Meta]
-        [ConfigOption(JsonMode.Url)]
+        [ConfigOption(JsonMode.Ignore)]
         [Category("5. FlashComponent")]
         [DefaultValue("")]
         [Description("The URL of the swf object to include. Defaults to undefined.")]
@@ -154,11 +128,25 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Url", "");
+                return (string)this.ViewState["Url"] ?? "";
             }
             set
             {
-                this.State.Set("Url", value);
+                this.ViewState["Url"] = value;
+            }
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+        [ConfigOption("url")]
+        [DefaultValue("")]
+		[Description("")]
+        protected virtual string UrlProxy
+        {
+            get
+            {
+                return this.ResolveUrlLink(this.Url);
             }
         }
 
@@ -191,7 +179,6 @@ namespace Ext.Net
 
         /// <summary>
         /// A set of key value pairs to be passed to the flash object as parameters.
-        /// Possible parameters can be found here: http://kb2.adobe.com/cps/127/tn_12701.html
         /// </summary>
         [Meta]
         [Category("5. FlashComponent")]
@@ -213,66 +200,6 @@ namespace Ext.Net
             }
         }
 
-        /// <summary>
-        /// The height of the embedded SWF movie inside the component. Defaults to "100%" so that the movie matches the height of the component.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("5. FlashComponent")]
-        [DefaultValue("")]
-        [Description("The height of the embedded SWF movie inside the component. Defaults to \"100%\" so that the movie matches the height of the component.")]
-        public virtual string SwfHeight
-        {
-            get
-            {
-                return this.State.Get<string>("SwfHeight", "");
-            }
-            set
-            {
-                this.State.Set("SwfHeight", value);
-            }
-        }
-
-        /// <summary>
-        /// The width of the embedded SWF movie inside the component. Defaults to "100%" so that the movie matches the width of the component.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("5. FlashComponent")]
-        [DefaultValue("")]
-        [Description("The width of the embedded SWF movie inside the component. Defaults to \"100%\" so that the movie matches the width of the component.")]
-        public virtual string SwfWidth
-        {
-            get
-            {
-                return this.State.Get<string>("SwfWidth", "");
-            }
-            set
-            {
-                this.State.Set("SwfWidth", value);
-            }
-        }
-
-        /// <summary>
-        /// The wmode of the flash object. This can be used to control layering. Set to 'transparent' to ignore the backgroundColor and make the background of the Flash movie transparent.
-        /// </summary>
-        [Meta]
-        [ConfigOption("wmode")]
-        [Category("5. FlashComponent")]
-        [DefaultValue("")]
-        [Description("The wmode of the flash object. This can be used to control layering. Set to 'transparent' to ignore the backgroundColor and make the background of the Flash movie transparent.")]
-        public virtual string WMode
-        {
-            get
-            {
-                return this.State.Get<string>("WMode", "");
-            }
-            set
-            {
-                this.State.Set("WMode", value);
-            }
-        }
-
         private FlashComponentListeners listeners;
 
         /// <summary>
@@ -284,6 +211,7 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public FlashComponentListeners Listeners
         {
@@ -309,6 +237,7 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side Ajax Event Handlers")]
         public FlashComponentDirectEvents DirectEvents
         {
@@ -316,7 +245,7 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new FlashComponentDirectEvents(this);
+                    this.directEvents = new FlashComponentDirectEvents();
                 }
 
                 return this.directEvents;

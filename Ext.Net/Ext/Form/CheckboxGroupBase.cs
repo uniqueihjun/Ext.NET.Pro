@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -9,6 +9,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
@@ -17,8 +19,39 @@ namespace Ext.Net
     /// </summary>
     [Meta]
     [Description("")]
-    public abstract partial class CheckboxGroupBase : FieldContainerBase
+    public abstract partial class CheckboxGroupBase : Field
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        [ConfigOption(JsonMode.Ignore)]
+        [DefaultValue("")]
+        public override string ItemCls
+        {
+            get 
+            { 
+                return base.ItemCls; 
+            }
+            set 
+            { 
+                base.ItemCls = value; 
+            }
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+        [ConfigOption("itemCls")]
+        [DefaultValue("")]
+		[Description("")]
+        protected virtual string ItemClsProxy
+        {
+            get
+            {
+                return this.ItemCls + " x-form-cb-label-nowrap";
+            }
+        }
+
         /// <summary>
         /// False to validate that at least one item in the group is checked (defaults to true). If no items are selected at validation time, BlankText will be used as the error text.
         /// </summary>
@@ -31,11 +64,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("AllowBlank", true);
+                object obj = this.ViewState["AllowBlank"];
+                return (obj == null) ? true : (bool)obj;
             }
             set
             {
-                this.State.Set("AllowBlank", value);
+                this.ViewState["AllowBlank"] = value;
             }
         }
 
@@ -52,31 +86,32 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("BlankText", "");
+                return (string)this.ViewState["BlankText"] ?? "";
             }
             set
             {
-                this.State.Set("BlankText", value);
+                this.ViewState["BlankText"] = value;
             }
         }
 
         /// <summary>
-        /// Specifies a number of columns will be created and the contained controls will be automatically distributed based on the value of vertical.
+        /// Specifies the number of columns to use when displaying grouped checkbox/radio controls using automatic layout.
         /// </summary>
         [Meta]
         [ConfigOption("columns")]
         [Category("6. CheckboxGroup")]
         [DefaultValue(0)]
-        [Description("Specifies a number of columns will be created and the contained controls will be automatically distributed based on the value of vertical.")]
+        [Description("Specifies the number of columns to use when displaying grouped checkbox/radio controls using automatic layout.")]
         public virtual int ColumnsNumber
         {
             get
             {
-                return this.State.Get<int>("ColumnsNumber", 0);
+                object obj = this.ViewState["ColumnsNumber"];
+                return (obj == null) ? 0 : (int)obj;
             }
             set
             {
-                this.State.Set("ColumnsNumber", value);
+                this.ViewState["ColumnsNumber"] = value;
             }
         }
 
@@ -84,16 +119,17 @@ namespace Ext.Net
         /// You can also specify an array of column widths, mixing integer (fixed width) and float (percentage width) values as needed (e.g., [100, .25, .75]). Any integer values will be rendered first, then any float values will be calculated as a percentage of the remaining space. Float values do not have to add up to 1 (100%) although if you want the controls to take up the entire field container you should do so.
         /// </summary>
         [Meta]
-        [ConfigOption("columns", JsonMode.Serialize)]
-        [TypeConverter(typeof(DoubleArrayConverter))]
+        [ConfigOption("columns", typeof(StringArrayJsonConverter))]
+        [TypeConverter(typeof(StringArrayConverter))]
         [Category("6. CheckboxGroup")]
         [DefaultValue(null)]
         [Description("You can also specify an array of column widths, mixing integer (fixed width) and float (percentage width) values as needed (e.g., [100, .25, .75]). Any integer values will be rendered first, then any float values will be calculated as a percentage of the remaining space. Float values do not have to add up to 1 (100%) although if you want the controls to take up the entire field container you should do so.")]
-        public virtual double[] ColumnsWidths
+        public virtual string[] ColumnsWidths
         {
             get
             {
-                double[] widths = this.State.Get<double[]>("ColumnsWidths", null);
+                object obj = this.ViewState["ColumnsWidths"];
+                string[] widths =  (obj == null) ? null : (string[])obj;
 
                 if (this.ColumnsNumber > 0 && widths != null && widths.Length > 0)
                 {
@@ -104,7 +140,7 @@ namespace Ext.Net
             }
             set
             {
-                this.State.Set("ColumnsWidths", value);
+                this.ViewState["ColumnsWidths"] = value;
             }
         }
 
@@ -120,11 +156,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("FireChangeOnLoad", false);
+                object obj = this.ViewState["FireChangeOnLoad"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("FireChangeOnLoad", value);
+                this.ViewState["FireChangeOnLoad"] = value;
             }
         }
 
@@ -140,70 +177,58 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("Vertical", false);
+                object obj = this.ViewState["Vertical"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("Vertical", value);
+                this.ViewState["Vertical"] = value;
             }
         }
 
         /// <summary>
-        /// Sets the value(s) of all checkboxes in the group. The expected format is an Object of name-value pairs corresponding to the names of the checkboxes in the group. Each pair can have either a single or multiple values:
-        /// 
-        /// A single Boolean or String value will be passed to the setValue method of the checkbox with that name. See the rules in Ext.form.field.Checkbox.setValue for accepted values.
-        /// An Array of String values will be matched against the inputValue of checkboxes in the group with that name; those checkboxes whose inputValue exists in the array will be checked and others will be unchecked.
-        /// If a checkbox's name is not in the mapping at all, it will be unchecked.
-        /// 
-        /// An example:
-        /// 
-        /// var myCheckboxGroup = new Ext.form.CheckboxGroup({
-        ///     columns: 3,
-        ///     items: [{
-        ///         name: 'cb1',
-        ///         boxLabel: 'Single 1'
-        ///     }, {
-        ///         name: 'cb2',
-        ///         boxLabel: 'Single 2'
-        ///     }, {
-        ///         name: 'cb3',
-        ///         boxLabel: 'Single 3'
-        ///     }, {
-        ///         name: 'cbGroup',
-        ///         boxLabel: 'Grouped 1'
-        ///         inputValue: 'value1'
-        ///     }, {
-        ///         name: 'cbGroup',
-        ///         boxLabel: 'Grouped 2'
-        ///         inputValue: 'value2'
-        ///     }, {
-        ///         name: 'cbGroup',
-        ///         boxLabel: 'Grouped 3'
-        ///         inputValue: 'value3'
-        ///     }]
-        /// });
-        /// 
-        /// myCheckboxGroup.setValue({
-        ///     cb1: true,
-        ///     cb3: false,
-        ///     cbGroup: ['value1', 'value3']
-        /// });
-        /// The above code will cause the checkbox named 'cb1' to be checked, as well as the first and third checkboxes named 'cbGroup'. The other three checkboxes will be unchecked.
+        /// Set the value(s) of an item or items in the group. 
         /// </summary>
-        /// <param name="values">bject literal specifying item:value pairs</param>
+        /// <param name="id">name</param>
+        /// <param name="value">value</param>
         [Meta]
         [Description("")]
-        public virtual void SetValue(Dictionary<string, object> values)
+        public virtual void SetValue(string id, bool value)
+        {
+            this.Call("setValue", id, value);
+        }
+
+        /// <summary>
+        /// Set the value(s) of an item or items in the group. 
+        /// </summary>
+        /// <param name="values">array of boolean values</param>
+        [Meta]
+        [Description("")]
+        public virtual void SetValue(bool[] values)
         {
             this.Call("setValue", values);
         }
 
         /// <summary>
-        /// Resets the checked state of all checkboxes in the group to their originally loaded values and clears any validation messages. See Ext.form.Basic.trackResetOnLoad
+        /// Set the value(s) of an item or items in the group. 
         /// </summary>
-        public void Reset()
+        /// <param name="values">bject literal specifying item:value pairs</param>
+        [Meta]
+        [Description("")]
+        public virtual void SetValue(Dictionary<string, bool> values)
         {
-            this.Call("reset");
+            this.Call("setValue", values);
+        }
+
+        /// <summary>
+        /// Set the value(s) of an item or items in the group. 
+        /// </summary>
+        /// <param name="values">comma separated string to set items with name to true (checked)</param>
+        [Meta]
+        [Description("")]
+        public virtual void SetValue(string values)
+        {
+            this.Call("setValue", values);
         }
     }
 }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -35,33 +35,7 @@ namespace Ext.Net
         {
             get
             {
-                return "Ext.ux.RowExpander";
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Category("0. About")]
-        [ConfigOption("ptype")]
-        [DefaultValue("")]
-        [Description("")]
-        public override string PType
-        {
-            get
-            {
-                return "rowexpander";
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected override System.Type RequiredOwnerType
-        {
-            get
-            {
-                return typeof(GridPanelBase);
+                return "Ext.grid.RowExpander";
             }
         }
 
@@ -82,7 +56,7 @@ namespace Ext.Net
         /// </summary>
         [Meta]
         [Category("3. RowExpander")]
-        [ConfigOption("rowBodyTpl", typeof(LazyControlJsonConverter))]
+        [ConfigOption("tpl", typeof(LazyControlJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
         [Description("The template string to use to display each item in the dropdown list.")]
@@ -99,7 +73,7 @@ namespace Ext.Net
             }
         }
 
-        ItemsCollection<AbstractComponent> component;
+        ItemsCollection<Component> component;
 
         /// <summary>
         /// 
@@ -109,15 +83,15 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption("component", typeof(SingleItemCollectionJsonConverter))]
+        [ConfigOption("component", typeof(ItemCollectionJsonConverter))]
         [Description("")]
-        public virtual ItemsCollection<AbstractComponent> Component
+        public virtual ItemsCollection<Component> Component
         {
             get
             {
                 if (this.component == null)
                 {
-                    this.component = new ItemsCollection<AbstractComponent>();
+                    this.component = new ItemsCollection<Component>();
                     this.component.SingleItemMode = true;
                 }
 
@@ -134,36 +108,16 @@ namespace Ext.Net
         [Category("3. RowExpander")]
         [NotifyParentProperty(true)]
         [Description("Recreate component on each row expand")]
-        public virtual bool RecreateComponent
+        public bool RecreateComponent
         {
             get
             {
-                return this.State.Get<bool>("RecreateComponent", false);
+                object obj = this.ViewState["RecreateComponent"];
+                return obj != null ? (bool)obj : false;
             }
             set
             {
-                this.State.Set("RecreateComponent", value);
-            }
-        }
-
-        /// <summary>
-        /// Call doLayout after a row expanding/collapsing
-        /// </summary>
-        [Meta]
-        [DefaultValue(true)]
-        [ConfigOption]
-        [Category("3. RowExpander")]
-        [NotifyParentProperty(true)]
-        [Description("Call doLayout after a row expanding/collapsing")]
-        public virtual bool DoLayoutOnExpand
-        {
-            get
-            {
-                return this.State.Get<bool>("DoLayoutOnExpand", true);
-            }
-            set
-            {
-                this.State.Set("DoLayoutOnExpand", value);
+                this.ViewState["RecreateComponent"] = value;
             }
         }
 
@@ -176,36 +130,36 @@ namespace Ext.Net
         [Category("3. RowExpander")]
         [NotifyParentProperty(true)]
         [Description("Swallow row body's events")]
-        public virtual bool SwallowBodyEvents
+        public bool SwallowBodyEvents
         {
             get
             {
-                return this.State.Get<bool>("SwallowBodyEvents", false);
+                object obj = this.ViewState["SwallowBodyEvents"];
+                return obj != null ? (bool)obj : false;
             }
             set
             {
-                this.State.Set("SwallowBodyEvents", value);
+                this.ViewState["SwallowBodyEvents"] = value;
             }
         }
 
         /// <summary>
-        /// True to select a row when clicking on the expander icon (defaults to false).
+        /// 
         /// </summary>
         [Meta]
-        [DefaultValue(false)]
-        [ConfigOption]
+        [DefaultValue(0)]
         [Category("3. RowExpander")]
-        [NotifyParentProperty(true)]
-        [Description("True to select a row when clicking on the expander icon (defaults to false).")]
-        public virtual bool SelectRowOnExpand
+        [Description("")]
+        public int ColumnPosition
         {
             get
             {
-                return this.State.Get<bool>("SelectRowOnExpand", false);
+                object obj = this.ViewState["ColumnPosition"];
+                return obj != null ? (int) obj : 0;
             }
             set
             {
-                this.State.Set("SelectRowOnExpand", value);
+                this.ViewState["ColumnPosition"] = value;
             }
         }
 
@@ -218,15 +172,16 @@ namespace Ext.Net
         [Category("3. RowExpander")]
         [NotifyParentProperty(true)]
         [Description("")]
-        public virtual bool ExpandOnEnter
+        public bool EnableCaching
         {
             get
             {
-                return this.State.Get<bool>("ExpandOnEnter", true);
+                object obj = this.ViewState["EnableCaching"];
+                return obj != null ? (bool)obj : true;
             }
             set
             {
-                this.State.Set("ExpandOnEnter", value);
+                this.ViewState["EnableCaching"] = value;
             }
         }
 
@@ -239,15 +194,60 @@ namespace Ext.Net
         [Category("3. RowExpander")]
         [NotifyParentProperty(true)]
         [Description("")]
-        public virtual bool ExpandOnDblClick
+        public bool ExpandOnEnter
         {
             get
             {
-                return this.State.Get<bool>("ExpandOnDblClick", true);
+                object obj = this.ViewState["ExpandOnEnter"];
+                return obj != null ? (bool)obj : true;
             }
             set
             {
-                this.State.Set("ExpandOnDblClick", value);
+                this.ViewState["ExpandOnEnter"] = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Meta]
+        [DefaultValue(true)]
+        [ConfigOption]
+        [Category("3. RowExpander")]
+        [NotifyParentProperty(true)]
+        [Description("")]
+        public bool ExpandOnDblClick
+        {
+            get
+            {
+                object obj = this.ViewState["ExpandOnDblClick"];
+                return obj != null ? (bool)obj : true;
+            }
+            set
+            {
+                this.ViewState["ExpandOnDblClick"] = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Meta]
+        [DefaultValue(true)]
+        [ConfigOption]
+        [Category("3. RowExpander")]
+        [NotifyParentProperty(true)]
+        [Description("")]
+        public bool LazyRender
+        {
+            get
+            {
+                object obj = this.ViewState["LazyRender"];
+                return obj != null ? (bool)obj : true;
+            }
+            set
+            {
+                this.ViewState["LazyRender"] = value;
             }
         }
 
@@ -260,15 +260,16 @@ namespace Ext.Net
         [Category("3. RowExpander")]
         [NotifyParentProperty(true)]
         [Description("")]
-        public virtual bool SingleExpand
+        public bool SingleExpand
         {
             get
             {
-                return this.State.Get<bool>("SingleExpand", false);
+                object obj = this.ViewState["SingleExpand"];
+                return obj != null ? (bool)obj : false;
             }
             set
             {
-                this.State.Set("SingleExpand", value);
+                this.ViewState["SingleExpand"] = value;
             }
         }
 
@@ -309,6 +310,24 @@ namespace Ext.Net
                     this.PluginOwner.LazyItems.Add(this.Component[0]);
                 }
             }
+
+            if(this.Page == null)
+            {
+                this.Init += new EventHandler(RowExpander_Init);
+                return;
+            }
+
+            this.InitRowExpanderColumn(grid);
+        }
+
+        void RowExpander_Init(object sender, EventArgs e)
+        {
+            this.InitRowExpanderColumn(this.PluginOwner as GridPanel);
+        }
+
+        public void InitRowExpanderColumn(GridPanel grid)
+        {
+            grid.ColumnModel.Columns.Insert(this.ColumnPosition, new ReferenceColumn(this.ClientID));
         }
 
         /// <summary>
@@ -386,7 +405,7 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new RowExpanderDirectEvents(this);
+                    this.directEvents = new RowExpanderDirectEvents();
                 }
 
                 return this.directEvents;

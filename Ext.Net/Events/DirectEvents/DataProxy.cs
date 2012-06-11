@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -12,12 +12,8 @@ using System.Web.UI;
 namespace Ext.Net
 {
     [TypeConverter(typeof(DirectEventsConverter))]
-    public partial class DataProxyDirectEvents : ComponentDirectEvents
+    public partial class DataProxyDirectEvents : ComponentBaseDirectEvents
     {
-        public DataProxyDirectEvents() { }
-
-        public DataProxyDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent beforeLoad;
 
         /// <summary>
@@ -34,7 +30,7 @@ namespace Ext.Net
             {
                 if (this.beforeLoad == null)
                 {
-                    this.beforeLoad = new ComponentDirectEvent(this);
+                    this.beforeLoad = new ComponentDirectEvent();
                 }
 
                 return this.beforeLoad;
@@ -57,7 +53,7 @@ namespace Ext.Net
             {
                 if (this.load == null)
                 {
-                    this.load = new ComponentDirectEvent(this);
+                    this.load = new ComponentDirectEvent();
                 }
 
                 return this.load;
@@ -109,7 +105,7 @@ namespace Ext.Net
             {
                 if (this.loadException == null)
                 {
-                    this.loadException = new ComponentDirectEvent(this);
+                    this.loadException = new ComponentDirectEvent();
                 }
 
                 return this.loadException;

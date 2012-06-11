@@ -1,15 +1,14 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
-using System.ComponentModel;
-
 using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 
 namespace Ext.Net
 {
@@ -114,7 +113,7 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public virtual string NodeID
+        public string NodeID
         {
             get
             {
@@ -122,35 +121,15 @@ namespace Ext.Net
             }
         }
 
-        private object attributes;
-
         /// <summary>
         /// 
         /// </summary>
-        public object Attributes
+        [Description("")]
+        public ParameterCollection ExtraParamsResponse
         {
             get
             {
-                return this.attributes;
-            }
-            set
-            {
-                this.attributes = value;
-
-                var p = ResourceManager.ExtraParamsResponse.GetParameter("ra_applyObject");
-                if (p == null)
-                {
-                    p = new Parameter("ra_applyObject", "{}", ParameterMode.Raw);
-                    ResourceManager.ExtraParamsResponse.Add(p);
-                }            
-
-                if (value == null)
-                {
-                    ResourceManager.ExtraParamsResponse.Remove(p);
-                    return;
-                }
-                
-                ResourceManager.ExtraParamsResponse["ra_applyObject"] = value is string ? value.ToString() : JSON.Serialize(value, JSON.ScriptConvertersInternal);
+                return ResourceManager.ExtraParamsResponse;
             }
         }
     }

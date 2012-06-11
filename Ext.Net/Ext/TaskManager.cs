@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -22,7 +22,7 @@ namespace Ext.Net
     [ToolboxBitmap(typeof(TaskManager), "Build.ToolboxIcons.TaskManager.bmp")]
     [Designer(typeof(EmptyDesigner))]
     [Description("Provides the ability to execute one or more arbitrary tasks in a multithreaded manner.")]
-    public partial class TaskManager : LazyObservable, IAjaxPostBackEventHandler
+    public partial class TaskManager : Observable, IAjaxPostBackEventHandler
     {
 		/// <summary>
 		/// 
@@ -44,18 +44,6 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        protected internal override bool IsIdRequired
-        {
-            get
-            {
-                return !this.IsDynamic;
-            }
-        }
-
-        /// <summary>
         /// The minimum precision in milliseconds supported by this TaskRunner instance (defaults to 10)
         /// </summary>
         [Meta]
@@ -67,11 +55,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("Interval", 10);
+                object obj = this.ViewState["Interval"];
+                return (obj == null) ? 10 : (int)obj;
             }
             set
             {
-                this.State.Set("Interval", value);
+                this.ViewState["Interval"] = value;
             }
         }
 
@@ -87,11 +76,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("AutoRunDelay", 50);
+                object obj = this.ViewState["AutoRunDelay"];
+                return (obj == null) ? 50 : (int)obj;
             }
             set
             {
-                this.State.Set("AutoRunDelay", value);
+                this.ViewState["AutoRunDelay"] = value;
             }
         }
 

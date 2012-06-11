@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,10 +17,6 @@ namespace Ext.Net
 	[Description("")]
     public partial class HtmlEditorDirectEvents : FieldDirectEvents
     {
-        public HtmlEditorDirectEvents() { }
-
-        public HtmlEditorDirectEvents(Observable parent) { this.Parent = parent; }
-
         /// <summary>
         /// 
         /// </summary>
@@ -48,7 +44,7 @@ namespace Ext.Net
                 return base.Focus;
             }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -63,20 +59,6 @@ namespace Ext.Net
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override ComponentDirectEvent SpecialKey
-        {
-            get
-            {
-                return base.SpecialKey;
-            }
-        }
-
         private ComponentDirectEvent activate;
 
         /// <summary>
@@ -88,11 +70,16 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
         [Description("Fires when the editor is first receives the focus. Any insertion must wait until after this event.")]
-        public override ComponentDirectEvent Activate
+        public virtual ComponentDirectEvent Activate
         {
             get
             {
-                return this.activate ?? (this.activate = new ComponentDirectEvent(this));
+                if (this.activate == null)
+                {
+                    this.activate = new ComponentDirectEvent();
+                }
+
+                return this.activate;
             }
         }
 
@@ -100,9 +87,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires before the iframe editor is updated with content from the textarea. Return false to cancel the push.
-        /// Parameters
-        /// item : Ext.form.field.HtmlEditor
-        /// html : String
         /// </summary>
         [ListenerArgument(0, "item", typeof(HtmlEditor), "this")]
         [ListenerArgument(1, "html", typeof(string), "Html")]
@@ -115,7 +99,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.beforePush ?? (this.beforePush = new ComponentDirectEvent(this));
+                if (this.beforePush == null)
+                {
+                    this.beforePush = new ComponentDirectEvent();
+                }
+
+                return this.beforePush;
             }
         }
 
@@ -123,9 +112,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires before the textarea is updated with content from the editor iframe. Return false to cancel the sync.
-        /// Parameters
-        /// item : Ext.form.field.HtmlEditor
-        /// html : String
         /// </summary>
         [ListenerArgument(0, "item", typeof(HtmlEditor), "this")]
         [ListenerArgument(1, "html", typeof(string), "Html")]
@@ -138,7 +124,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.beforeSync ?? (this.beforeSync = new ComponentDirectEvent(this));
+                if (this.beforeSync == null)
+                {
+                    this.beforeSync = new ComponentDirectEvent();
+                }
+
+                return this.beforeSync;
             }
         }
 
@@ -146,10 +137,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires when the editor switches edit modes.
-        /// Parameters
-        /// item : Ext.form.field.HtmlEditor
-        /// sourceEdit : Boolean
-        ///     True if source edit, false if standard editing.
         /// </summary>
         [ListenerArgument(0, "item", typeof(HtmlEditor), "this")]
         [ListenerArgument(1, "sourceEdit", typeof(bool), "True if source edit, false if standard editing.")]
@@ -162,7 +149,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.editModeChange ?? (this.editModeChange = new ComponentDirectEvent(this));
+                if (this.editModeChange == null)
+                {
+                    this.editModeChange = new ComponentDirectEvent();
+                }
+
+                return this.editModeChange;
             }
         }
 
@@ -181,7 +173,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.initialize ?? (this.initialize = new ComponentDirectEvent(this));
+                if (this.initialize == null)
+                {
+                    this.initialize = new ComponentDirectEvent();
+                }
+
+                return this.initialize;
             }
         }
 
@@ -189,9 +186,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires when the iframe editor is updated with content from the textarea.
-        /// Parameters
-        /// item : Ext.form.field.HtmlEditor
-        /// html : String
         /// </summary>
         [ListenerArgument(0, "item", typeof(HtmlEditor), "this")]
         [ListenerArgument(1, "html", typeof(string), "Html")]
@@ -204,7 +198,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.push ?? (this.push = new ComponentDirectEvent(this));
+                if (this.push == null)
+                {
+                    this.push = new ComponentDirectEvent();
+                }
+
+                return this.push;
             }
         }
 
@@ -212,9 +211,6 @@ namespace Ext.Net
 
         /// <summary>
         /// Fires when the textarea is updated with content from the editor iframe.
-        /// Parameters
-        /// item : Ext.form.field.HtmlEditor
-        /// html : String
         /// </summary>
         [ListenerArgument(0, "item", typeof(HtmlEditor), "this")]
         [ListenerArgument(1, "html", typeof(string), "Html")]
@@ -227,7 +223,12 @@ namespace Ext.Net
         {
             get
             {
-                return this.sync ?? (this.sync = new ComponentDirectEvent(this));
+                if (this.sync == null)
+                {
+                    this.sync = new ComponentDirectEvent();
+                }
+
+                return this.sync;
             }
         }
     }

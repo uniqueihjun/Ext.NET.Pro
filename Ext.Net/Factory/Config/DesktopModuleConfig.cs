@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class DesktopModule
     {
 		/*  Ctor
@@ -46,7 +43,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        new public partial class Config : BaseItem.Config 
+        new public partial class Config : StateManagedItem.Config 
         { 
 			/*  Implicit DesktopModule.Config Conversion to DesktopModule.Builder
 				-----------------------------------------------------------------------------------------------*/
@@ -80,58 +77,22 @@ namespace Ext.Net
 					this.moduleID = value;
 				}
 			}
-        
-			private WindowCollection window = null;
 
-			/// <summary>
-			/// Standard menu attribute consisting of a reference to a menu object, a menu id or a menu config blob.
-			/// </summary>
-			public WindowCollection Window
-			{
-				get
-				{
-					if (this.window == null)
-					{
-						this.window = new WindowCollection();
-					}
-			
-					return this.window;
-				}
-			}
-			
-			private MenuItem launcher = null;
+			private string windowID = "";
 
 			/// <summary>
 			/// 
 			/// </summary>
-			[DefaultValue(null)]
-			public virtual MenuItem Launcher 
+			[DefaultValue("")]
+			public virtual string WindowID 
 			{ 
 				get
 				{
-					return this.launcher;
+					return this.windowID;
 				}
 				set
 				{
-					this.launcher = value;
-				}
-			}
-
-			private DesktopShortcut shortcut = null;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue(null)]
-			public virtual DesktopShortcut Shortcut 
-			{ 
-				get
-				{
-					return this.shortcut;
-				}
-				set
-				{
-					this.shortcut = value;
+					this.windowID = value;
 				}
 			}
 
@@ -150,24 +111,6 @@ namespace Ext.Net
 				set
 				{
 					this.autoRun = value;
-				}
-			}
-
-			private string autoRunHandler = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string AutoRunHandler 
-			{ 
-				get
-				{
-					return this.autoRunHandler;
-				}
-				set
-				{
-					this.autoRunHandler = value;
 				}
 			}
 

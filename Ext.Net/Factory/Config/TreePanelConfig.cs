@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TreePanel
     {
 		/*  Ctor
@@ -62,132 +59,6 @@ namespace Ext.Net
 			
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
-			
-			private string remoteEditUrl = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string RemoteEditUrl 
-			{ 
-				get
-				{
-					return this.remoteEditUrl;
-				}
-				set
-				{
-					this.remoteEditUrl = value;
-				}
-			}
-
-			private string remoteRemoveUrl = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string RemoteRemoveUrl 
-			{ 
-				get
-				{
-					return this.remoteRemoveUrl;
-				}
-				set
-				{
-					this.remoteRemoveUrl = value;
-				}
-			}
-
-			private string remoteAppendUrl = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string RemoteAppendUrl 
-			{ 
-				get
-				{
-					return this.remoteAppendUrl;
-				}
-				set
-				{
-					this.remoteAppendUrl = value;
-				}
-			}
-
-			private string remoteInsertUrl = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string RemoteInsertUrl 
-			{ 
-				get
-				{
-					return this.remoteInsertUrl;
-				}
-				set
-				{
-					this.remoteInsertUrl = value;
-				}
-			}
-
-			private string remoteMoveUrl = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string RemoteMoveUrl 
-			{ 
-				get
-				{
-					return this.remoteMoveUrl;
-				}
-				set
-				{
-					this.remoteMoveUrl = value;
-				}
-			}
-        
-			private TreePanelListeners listeners = null;
-
-			/// <summary>
-			/// Client-side JavaScript Event Handlers
-			/// </summary>
-			public TreePanelListeners Listeners
-			{
-				get
-				{
-					if (this.listeners == null)
-					{
-						this.listeners = new TreePanelListeners();
-					}
-			
-					return this.listeners;
-				}
-			}
-			        
-			private TreePanelDirectEvents directEvents = null;
-
-			/// <summary>
-			/// Server-side DirectEventHandlers
-			/// </summary>
-			public TreePanelDirectEvents DirectEvents
-			{
-				get
-				{
-					if (this.directEvents == null)
-					{
-						this.directEvents = new TreePanelDirectEvents();
-					}
-			
-					return this.directEvents;
-				}
-			}
 			
         }
     }

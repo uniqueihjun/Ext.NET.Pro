@@ -1,16 +1,13 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json.Linq;
 
 namespace Ext.Net
 {
@@ -48,45 +45,6 @@ namespace Ext.Net
             get
             {
                 return this.GetValue<string>("targetId");
-            }
-        }
-
-        public List<string> Nodes
-        {
-            get
-            {
-                if (this.ServiceParams == null)
-                {
-                    return new List<string>(0);
-                }
-
-                JProperty p = this.ServiceParams.Property("ids");
-
-                if (p == null || p.Value == null)
-                {
-                    return new List<string>(0);
-                }
-
-                var nodes = (JArray)p.Value;
-                var list = new List<string>(nodes.Count);
-                for (int i = 0; i < nodes.Count; i++)
-			    {
-                    list.Add(nodes[i].Value<string>());
-			    }
-
-                return list;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("")]
-        public override string NodeID
-        {
-            get
-            {
-                return this.GetValue<string>("id");
             }
         }
     }

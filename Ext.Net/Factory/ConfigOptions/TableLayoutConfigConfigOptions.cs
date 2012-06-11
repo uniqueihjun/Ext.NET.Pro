@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -18,9 +18,6 @@ using Newtonsoft.Json;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class TableLayoutConfig
     {
         /// <summary>
@@ -37,11 +34,8 @@ namespace Ext.Net
             {
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
-                list.Add("layoutType", new ConfigOption("layoutType", new SerializationOptions("type"), "", this.LayoutType ));
                 list.Add("columns", new ConfigOption("columns", new SerializationOptions(JsonMode.Raw), 0, this.Columns ));
                 list.Add("tableAttrs", new ConfigOption("tableAttrs", new SerializationOptions(JsonMode.Object), null, this.TableAttrs ));
-                list.Add("tDAttrs", new ConfigOption("tDAttrs", new SerializationOptions("tdAttrs",JsonMode.Object), null, this.TDAttrs ));
-                list.Add("tRAttrs", new ConfigOption("tRAttrs", new SerializationOptions("trAttrs", JsonMode.Object), null, this.TRAttrs ));
 
                 return list;
             }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -14,9 +14,9 @@ namespace Ext.Net
 	/// 
 	/// </summary>
     public partial class TBarCollectionBuilder<TParent, TParentBuilder>
-         : AbstractComponentCollectionBuilder<TParent, TParentBuilder>
-        where TParent : AbstractPanel
-        where TParentBuilder : AbstractPanel.Builder<TParent, TParentBuilder>
+         : ComponentCollectionBuilder<TParent, TParentBuilder>
+        where TParent : PanelBase
+        where TParentBuilder : PanelBase.Builder<TParent, TParentBuilder>
     {
         /*  Ctor
             -----------------------------------------------------------------------------------------------*/
@@ -59,9 +59,9 @@ namespace Ext.Net
     /// <typeparam name="TParent"></typeparam>
     /// <typeparam name="TParentBuilder"></typeparam>
     public partial class BBarCollectionBuilder<TParent, TParentBuilder>
-        : AbstractComponentCollectionBuilder<TParent, TParentBuilder>
-        where TParent : AbstractPanel
-        where TParentBuilder : AbstractPanel.Builder<TParent, TParentBuilder>
+        : ComponentCollectionBuilder<TParent, TParentBuilder>
+        where TParent : PanelBase
+        where TParentBuilder : PanelBase.Builder<TParent, TParentBuilder>
     {
         /*  Ctor
             -----------------------------------------------------------------------------------------------*/
@@ -97,10 +97,10 @@ namespace Ext.Net
             return this;
         }
 
-        //public virtual TComponentBuilder Add(Action<AbstractComponent.Builder<TComponent, TComponentBuilder>> action)
+        //public virtual TComponentBuilder Add(Action<Component.Builder<TComponent, TComponentBuilder>> action)
         //{
 
-        //    //action(new AbstractComponent.Builder<TComponent, TComponentBuilder>(this.Owner, this as TParentBuilder));
+        //    //action(new Component.Builder<TComponent, TComponentBuilder>(this.Owner, this as TParentBuilder));
         //    return this;
         //}
     }
@@ -111,9 +111,9 @@ namespace Ext.Net
     /// <typeparam name="TParent"></typeparam>
     /// <typeparam name="TParentBuilder"></typeparam>
     public partial class FBarCollectionBuilder<TParent, TParentBuilder>
-         : AbstractComponentCollectionBuilder<TParent, TParentBuilder>
-        where TParent : AbstractPanel
-        where TParentBuilder : AbstractPanel.Builder<TParent, TParentBuilder>
+         : ComponentCollectionBuilder<TParent, TParentBuilder>
+        where TParent : PanelBase
+        where TParentBuilder : PanelBase.Builder<TParent, TParentBuilder>
     {
         /*  Ctor
             -----------------------------------------------------------------------------------------------*/

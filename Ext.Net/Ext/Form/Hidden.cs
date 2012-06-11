@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -11,15 +11,12 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Web.UI;
+using Ext.Net.Utilities;
 
 namespace Ext.Net
 {
     /// <summary>
-    /// A basic hidden field for storing hidden values in forms that need to be passed in the form submit.
-    ///
-    /// This creates an actual input element with type="submit" in the DOM. While its label is not rendered by default, it is still a real component and may be sized according to its owner container's layout.
-    ///
-    /// Because of this, in most cases it is more convenient and less problematic to simply pass hidden parameters directly when submitting the form.
+    /// A basic hidden field for storing hidden values in forms that need to be passed in the form submit. Can be used as a direct replacement for the traditional &lt;asp:Hidden> Web Control.
     /// </summary>
     [Meta]
     [ToolboxData("<{0}:Hidden runat=\"server\" />")]
@@ -31,6 +28,7 @@ namespace Ext.Net
     [PersistChildren(false)]
     [SupportsEventValidation]
     [NonVisualControl]
+    [Designer(typeof(HiddenFieldDesigner))]
     [ToolboxBitmap(typeof(Hidden), "Build.ToolboxIcons.Hidden.bmp")]
     [Description("A basic hidden field for storing hidden values in forms that need to be passed in the form submit. Can be used as a direct replacement for the traditional &lt;asp:Hidden> Web Control.")]
     public partial class Hidden : Field
@@ -50,7 +48,7 @@ namespace Ext.Net
         {
             get
             {
-                return "hiddenfield";
+                return "hidden";
             }
         }
 
@@ -63,7 +61,7 @@ namespace Ext.Net
         {
             get
             {
-                return "Ext.form.field.Hidden";
+                return "Ext.form.Hidden";
             }
         }
 
@@ -87,12 +85,34 @@ namespace Ext.Net
             }
         }
 
+        private bool hideInDesign = false;
+
+        /// <summary>
+        /// Hide this Control at Design Time.
+        /// </summary>
+        [Category("Appearance")]
+        [DefaultValue(false)]
+        [Description("Hide this Control at Design Time.")]
+        public virtual bool HideInDesign
+        {
+            get
+            {
+                return this.hideInDesign;
+            }
+            set
+            {
+                this.hideInDesign = value;
+            }
+        }
+
+
         /*  IField
             -----------------------------------------------------------------------------------------------*/
 
         /// <summary>
         /// The fields null value.
         /// </summary>
+        [Meta]
         [Category("5. Field")]
         [DefaultValue("")]
         [Description("The fields null value.")]
@@ -100,11 +120,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("EmptyValue", "");
+                return this.ViewState["EmptyValue"] ?? "";
             }
             set
             {
-                this.State.Set("EmptyValue", value);
+                this.ViewState["EmptyValue"] = value;
             }
         }
 
@@ -118,7 +138,8 @@ namespace Ext.Net
         [Category("2. Observable")]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public FieldListeners Listeners
         {
@@ -143,7 +164,8 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption("directEvents", JsonMode.Object)]        
+        [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side Ajax Event Handlers")]
         public FieldDirectEvents DirectEvents
         {
@@ -151,7 +173,7 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new FieldDirectEvents(this);
+                    this.directEvents = new FieldDirectEvents();
                 }
 
                 return this.directEvents;

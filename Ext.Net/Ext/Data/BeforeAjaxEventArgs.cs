@@ -1,15 +1,14 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
 using System.ComponentModel;
-
-using Newtonsoft.Json.Linq;
+using System.Xml;
 
 namespace Ext.Net
 {
@@ -19,9 +18,9 @@ namespace Ext.Net
 	[Description("")]
     public partial class BeforeDirectEventArgs : EventArgs
     {
-        private readonly StoreAction action;
+        private readonly string action;
         private readonly string data;
-        private readonly JToken parameters;
+        private readonly XmlNode parameters;
 
 		/// <summary>
 		/// 
@@ -29,9 +28,9 @@ namespace Ext.Net
 		[Description("")]
         public BeforeDirectEventArgs() { }
 
-        internal BeforeDirectEventArgs(string action, string data, JToken parameters)
+        internal BeforeDirectEventArgs(string action, string data, XmlNode parameters)
         {
-            this.action = Store.Action(action);
+            this.action = action;
             this.data = data;
             this.parameters = parameters;
         }
@@ -40,7 +39,7 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public StoreAction Action
+        public string Action
         {
             get { return action; }
         }
@@ -86,7 +85,12 @@ namespace Ext.Net
                     return p;
                 }
 
-                p = ResourceManager.JTokenToParams(this.parameters);
+                p = ResourceManager.XmlToParams(this.parameters);
+
+                //foreach (XmlNode param in this.parameters.ChildNodes)
+                //{
+                //    p.Add(new Parameter(param.Name, param.InnerXml));
+                //}
 
                 return p;
             }

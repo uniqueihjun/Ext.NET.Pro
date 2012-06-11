@@ -1,8 +1,8 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
- * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-02-21
+ * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -15,9 +15,6 @@ using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class DataView
     {
 		/*  Ctor
@@ -46,7 +43,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        new public partial class Config : AbstractDataView.Config 
+        new public partial class Config : DataViewBase.Config 
         { 
 			/*  Implicit DataView.Config Conversion to DataView.Builder
 				-----------------------------------------------------------------------------------------------*/
@@ -62,43 +59,7 @@ namespace Ext.Net
 			
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
-			
-			private bool deselectOnContainerClick = true;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool DeselectOnContainerClick 
-			{ 
-				get
-				{
-					return this.deselectOnContainerClick;
-				}
-				set
-				{
-					this.deselectOnContainerClick = value;
-				}
-			}
-
-			private bool enableKeyNav = true;
-
-			/// <summary>
-			/// Turns on/off keyboard navigation within the DataView. 
-			/// </summary>
-			[DefaultValue(true)]
-			public virtual bool EnableKeyNav 
-			{ 
-				get
-				{
-					return this.enableKeyNav;
-				}
-				set
-				{
-					this.enableKeyNav = value;
-				}
-			}
-        
+			        
 			private DataViewListeners listeners = null;
 
 			/// <summary>
@@ -132,24 +93,6 @@ namespace Ext.Net
 					}
 			
 					return this.directEvents;
-				}
-			}
-			        
-			private SelectedRowCollection selectedRows = null;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public SelectedRowCollection SelectedRows
-			{
-				get
-				{
-					if (this.selectedRows == null)
-					{
-						this.selectedRows = new SelectedRowCollection();
-					}
-			
-					return this.selectedRows;
 				}
 			}
 			

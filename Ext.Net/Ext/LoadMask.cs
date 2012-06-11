@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -16,7 +16,7 @@ namespace Ext.Net
     /// </summary>
     [Meta]
     [Description("A simple utility class for generically masking elements while loading data. If the element being masked has an underlying Ext.data.Store, the masking will be automatically synchronized with the store's loading process and the mask element will be cached for reuse. For all other elements, this mask will replace the element's UpdateOptions load indicator and will be destroyed after the initial load.")]
-    public partial class LoadMask : BaseItem
+    public partial class LoadMask : StateManagedItem
     {
 		/// <summary>
 		/// 
@@ -36,16 +36,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("ShowMask", false);
+                object obj = this.ViewState["ShowMask"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("ShowMask", value);
+                this.ViewState["ShowMask"] = value;
             }
         }
 
         /// <summary>
-        /// The text to display in a centered loading message box. Defaults to: "Loading..."
+        /// The text to display in a centered loading message box (defaults to 'Loading...').
         /// </summary>
         [Meta]
         [ConfigOption]
@@ -56,11 +57,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Msg", "Loading...");
+                return (string)this.ViewState["Msg"] ?? "Loading...";
             }
             set
             {
-                this.State.Set("Msg", value);
+                this.ViewState["Msg"] = value;
             }
         }
 
@@ -76,52 +77,32 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("MsgCls", "x-mask-loading");
+                return (string)this.ViewState["MsgCls"] ?? "x-mask-loading";
             }
             set
             {
-                this.State.Set("MsgCls", value);
+                this.ViewState["MsgCls"] = value;
             }
         }
 
         /// <summary>
-        /// Optional Store to which the mask is bound. The mask is displayed when a load request is issued, and hidden on either load success, or load fail.
-        /// </summary>
-        [Meta]
-        [ConfigOption("store", JsonMode.ToClientID)]
-        [Category("Config Options")]
-        [DefaultValue("")]
-        [IDReferenceProperty(typeof(Store))]
-        [Description("Optional Store to which the mask is bound. The mask is displayed when a load request is issued, and hidden on either load success, or load fail.")]
-        public virtual string StoreID
-        {
-            get
-            {
-                return this.State.Get<string>("StoreID", "");
-            }
-            set
-            {
-                this.State.Set("StoreID", value);
-            }
-        }
-
-        /// <summary>
-        /// Whether or not to use a loading message class or simply mask the bound element. Defaults to: true
+        /// True to create a single-use mask that is automatically destroyed after loading (useful for page loads), False to persist the mask element reference for multiple uses (e.g., for paged data widgets). Defaults to false.
         /// </summary>
         [Meta]
         [ConfigOption]
         [Category("Config Options")]
-        [DefaultValue(true)]
-        [Description("Whether or not to use a loading message class or simply mask the bound element. Defaults to: true")]
-        public virtual bool UseMsg
+        [DefaultValue(false)]
+        [Description("True to create a single-use mask that is automatically destroyed after loading (useful for page loads), False to persist the mask element reference for multiple uses (e.g., for paged data widgets). Defaults to false.")]
+        public virtual bool RemoveMask
         {
             get
             {
-                return this.State.Get<bool>("UseMsg", true);
+                object obj = this.ViewState["RemoveMask"];
+                return (obj == null) ? false : (bool)obj;
             }
             set
             {
-                this.State.Set("UseMsg", value);
+                this.ViewState["RemoveMask"] = value;
             }
         }
 

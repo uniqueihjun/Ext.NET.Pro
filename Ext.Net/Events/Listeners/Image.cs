@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,14 +15,14 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class ImageListeners : AbstractComponentListeners
+    public partial class ImageListeners : BoxComponentListeners
     {
         private ComponentListener complete;
 
         /// <summary>
         /// Fires after the image is loaded.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("complete", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -46,7 +46,7 @@ namespace Ext.Net
         /// <summary>
         /// Fires before the image is loaded.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("beforeload", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -70,7 +70,7 @@ namespace Ext.Net
         /// <summary>
         /// Fired after a resizer resize.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [ListenerArgument(1, "width", typeof(int), "width")]
         [ListenerArgument(2, "height", typeof(int), "height")]
         [ListenerArgument(3, "e", typeof(object), "e")]
@@ -97,7 +97,7 @@ namespace Ext.Net
         /// <summary>
         /// Fired before resize is allowed. Set enabled to false to cancel resize.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [ListenerArgument(1, "e", typeof(object), "e")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [ConfigOption("resizerbeforeresize", typeof(ListenerJsonConverter))]
@@ -122,7 +122,7 @@ namespace Ext.Net
         /// <summary>
         /// Fired after a pan.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [ListenerArgument(1, "x", typeof(int), "x")]
         [ListenerArgument(2, "y", typeof(int), "yDeylta")]
         [ListenerArgument(3, "xDelta", typeof(int), "xDelta")]
@@ -150,7 +150,7 @@ namespace Ext.Net
         /// <summary>
         /// Fired after a click.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [ListenerArgument(1, "e", typeof(object), "e")]
         [ListenerArgument(2, "t", typeof(object), "t")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -176,7 +176,7 @@ namespace Ext.Net
         /// <summary>
         /// Fired after a double click.
         /// </summary>
-        [ListenerArgument(0, "item", typeof(AbstractComponent), "this")]
+        [ListenerArgument(0, "item", typeof(Component), "this")]
         [ListenerArgument(1, "e", typeof(object), "e")]
         [ListenerArgument(2, "t", typeof(object), "t")]
         [TypeConverter(typeof(ExpandableObjectConverter))]

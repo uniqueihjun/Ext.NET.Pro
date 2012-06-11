@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,10 +17,6 @@ namespace Ext.Net
 	[Description("")]
     public partial class PortalDirectEvents : PanelDirectEvents
     {
-        public PortalDirectEvents() { }
-
-        public PortalDirectEvents(Observable parent) { this.Parent = parent; }
-
         private ComponentDirectEvent validateDrop;
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace Ext.Net
             {
                 if (this.validateDrop == null)
                 {
-                    this.validateDrop = new ComponentDirectEvent(this);
+                    this.validateDrop = new ComponentDirectEvent();
                 }
 
                 return this.validateDrop;
@@ -62,7 +58,7 @@ namespace Ext.Net
             {
                 if (this.beforeDragOver == null)
                 {
-                    this.beforeDragOver = new ComponentDirectEvent(this);
+                    this.beforeDragOver = new ComponentDirectEvent();
                 }
 
                 return this.beforeDragOver;
@@ -86,7 +82,7 @@ namespace Ext.Net
             {
                 if (this.dragOver == null)
                 {
-                    this.dragOver = new ComponentDirectEvent(this);
+                    this.dragOver = new ComponentDirectEvent();
                 }
 
                 return this.dragOver;
@@ -110,7 +106,7 @@ namespace Ext.Net
             {
                 if (this.beforeDrop == null)
                 {
-                    this.beforeDrop = new ComponentDirectEvent(this);
+                    this.beforeDrop = new ComponentDirectEvent();
                 }
 
                 return this.beforeDrop;
@@ -134,7 +130,7 @@ namespace Ext.Net
             {
                 if (this.drop == null)
                 {
-                    this.drop = new ComponentDirectEvent(this);
+                    this.drop = new ComponentDirectEvent();
                 }
 
                 return this.drop;

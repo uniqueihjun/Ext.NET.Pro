@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -14,22 +14,13 @@ using System.Web.UI;
 namespace Ext.Net
 {
 	/// <summary>
-	/// A DragTracker listens for drag events on an Element and fires events at the start and end of the drag, as well as during the drag. This is useful for components such as Ext.slider.Multi, where there is an element that can be dragged around to change the Slider's value.
-    /// DragTracker provides a series of template methods that should be overridden to provide functionality in response to detected drag operations. These are onBeforeStart, onStart, onDrag and onEnd. See Ext.slider.Multi's initEvents function for an example implementation.
+	/// 
 	/// </summary>
     [ToolboxBitmap(typeof(DragSource), "Build.ToolboxIcons.DragDrop.bmp")]
     [Designer(typeof(EmptyDesigner))]
     [Description("")]
-    [Meta]
     public partial class DragTracker : Observable
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public DragTracker()
-        {
-        }
-
         /// <summary>
 		/// 
 		/// </summary>
@@ -43,52 +34,43 @@ namespace Ext.Net
             }
         }
 
-        /// <summary>
-        /// Defaults to false. Set to true to fire mouseover and mouseout events when the mouse enters or leaves the target element.
-        /// This is implicitly set when an overCls is specified.
-        /// If the delegate option is used, these events fire only when a delegate element is entered of left.
-        /// </summary>
-        [Meta]
-        [Category("3. DragTracker")]
-        [DefaultValue(false)]
-        [ConfigOption]
-        [Description("Set to true to fire mouseover and mouseout events when the mouse enters or leaves the target element.")]
-        public virtual bool TrackOver
+		/// <summary>
+		/// 
+		/// </summary>
+        [ConfigOption(JsonMode.Ignore)]
+        [DefaultValue("")]
+		[Description("")]
+        protected override string ConfigIDProxy
         {
             get
             {
-                return this.State.Get<bool>("TrackOver", false);
-            }
-            set
-            {
-                this.State.Set("TrackOver", value);
+                return base.ConfigIDProxy;
             }
         }
 
         /// <summary>
-        /// Number of pixels the drag target must be moved before dragging is considered to have started. Defaults to 5.
+        /// Defaults to 5.
         /// </summary>
-        [Meta]
         [Category("3. DragTracker")]
         [DefaultValue(5)]
         [ConfigOption]
-        [Description("Number of pixels the drag target must be moved before dragging is considered to have started. Defaults to 5.")]
+        [Description("Defaults to 5.")]
         public virtual int Tolerance
         {
             get
             {
-                return this.State.Get<int>("Tolerance", 5);
+                object obj = this.ViewState["Tolerance"];
+                return obj != null ? (int) obj : 5;
             }
             set
             {
-                this.State.Set("Tolerance", value);
+                this.ViewState["Tolerance"] = value;
             }
         }
 
         /// <summary>
         /// Defaults to 0. Specify a Number for the number of milliseconds to defer trigger start.
         /// </summary>
-        [Meta]
         [Category("3. DragTracker")]
         [DefaultValue(0)]
         [ConfigOption]
@@ -97,18 +79,18 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<int>("AutoStart", 0);
+                object obj = this.ViewState["AutoStart"];
+                return obj != null ? (int)obj : 0;
             }
             set
             {
-                this.State.Set("AutoStart", value);
+                this.ViewState["AutoStart"] = value;
             }
         }
 
         /// <summary>
         /// Proxy class
         /// </summary>
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue("x-view-selector")]
         [ConfigOption]
@@ -117,122 +99,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("ProxyCls", "x-view-selector");
+                return (string)this.ViewState["ProxyCls"] ?? "x-view-selector";
             }
             set
             {
-                this.State.Set("ProxyCls", value);
+                this.ViewState["ProxyCls"] = value;
             }
         }
-
-        /// <summary>
-        /// A CSS class to add to the DragTracker's target element when the element (or, if the delegate option is used, when a delegate element) is mouseovered.
-        /// If the delegate option is used, these events fire only when a delegate element is entered of left..
-        /// </summary>
-        [Meta]
-        [Category("3. DragDrop")]
-        [DefaultValue("")]
-        [ConfigOption]
-        [Description("A CSS class to add to the DragTracker's target element when the element (or, if the delegate option is used, when a delegate element) is mouseovered.")]
-        public virtual string OverCls
-        {
-            get
-            {
-                return this.State.Get<string>("OverCls", "");
-            }
-            set
-            {
-                this.State.Set("OverCls", value);
-            }
-        }
-
-        /// <summary>
-        /// A Region (Or an element from which a Region measurement will be read) which is used to constrain the result of the getOffset call.
-        /// This may be set any time during the DragTracker's lifecycle to set a dynamic constraining region.
-        /// </summary>
-        [Meta]
-        [Category("3. DragDrop")]
-        [DefaultValue("")]
-        [ConfigOption]
-        [Description("A Region (Or an element from which a Region measurement will be read) which is used to constrain the result of the getOffset call.")]
-        public virtual string ConstrainTo
-        {
-            get
-            {
-                return this.State.Get<string>("ConstrainTo", "");
-            }
-            set
-            {
-                this.State.Set("ConstrainTo", value);
-            }
-        }
-
-        /// <summary>
-        /// A DomQuery selector which identifies child elements within the DragTracker's encapsulating Element which are the tracked elements. This limits tracking to only begin when the matching elements are mousedowned.
-        /// This may also be a specific child element within the DragTracker's encapsulating element to use as the tracked element.
-        /// </summary>
-        [Meta]
-        [Category("3. DragDrop")]
-        [DefaultValue("")]
-        [ConfigOption]
-        [Description("A DomQuery selector which identifies child elements within the DragTracker's encapsulating Element which are the tracked elements. This limits tracking to only begin when the matching elements are mousedowned.")]
-        public virtual string Delegate
-        {
-            get
-            {
-                return this.State.Get<string>("Delegate", "");
-            }
-            set
-            {
-                this.State.Set("Delegate", value);
-            }
-        }
-
-        /// <summary>
-        /// Specify false to enable default actions on onMouseDown events. Defaults to true.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("3. DragTracker")]
-        [DefaultValue(true)]
-        [Description("Specify false to enable default actions on onMouseDown events. Defaults to true.")]
-        public virtual bool PreventDefault 
-        {
-            get
-            {
-                return this.State.Get<bool>("PreventDefault", true);
-            }
-            set
-            {
-                this.State.Set("PreventDefault", value);
-            }
-        }
-
-        /// <summary>
-        /// Specify true to stop the mousedown event from bubbling to outer listeners from the target element (or its delegates). Defaults to false.
-        /// </summary>
-        [Meta]
-        [ConfigOption]
-        [Category("3. DragTracker")]
-        [DefaultValue(false)]
-        [Description("Specify true to stop the mousedown event from bubbling to outer listeners from the target element (or its delegates). Defaults to false.")]
-        public virtual bool StopEvent
-        {
-            get
-            {
-                return this.State.Get<bool>("StopEvent", false);
-            }
-            set
-            {
-                this.State.Set("StopEvent", value);
-            }
-        }
-
 
         /// <summary>
         /// Defaults to true. If false then no selection tracker
         /// </summary>
-        [Meta]
         [Category("3. DragTracker")]
         [DefaultValue(true)]
         [Description("Defaults to true. If false then no selection tracker")]
@@ -240,18 +117,18 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<bool>("Selection", true);
+                object obj = this.ViewState["Selection"];
+                return obj != null ? (bool)obj : true;
             }
             set
             {
-                this.State.Set("Selection", value);
+                this.ViewState["Selection"] = value;
             }
         }
 
         /// <summary>
         /// ID of the element that is linked to this instance
         /// </summary>
-        [Meta]
         [Category("3. DragDrop")]
         [DefaultValue("")]
         [ConfigOption("el")]
@@ -260,22 +137,22 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Target", "");
+                return (string)this.ViewState["Target"] ?? "";
             }
             set
             {
-                this.State.Set("Target", value);
+                this.ViewState["Target"] = value;
             }
         }
 
         private JFunction onBeforeStart;
 
         /// <summary>
-        /// Template method which should be overridden by each DragTracker instance. Called when the user first clicks and holds the mouse button down. Return false to disallow the drag
+        /// 
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("")]
@@ -300,11 +177,11 @@ namespace Ext.Net
         private JFunction onStart;
 
         /// <summary>
-        /// Template method which should be overridden by each DragTracker instance. Called when a drag operation starts (e.g. the user has moved the tracked element beyond the specified tolerance)
+        /// 
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("")]
@@ -329,11 +206,11 @@ namespace Ext.Net
         private JFunction onDrag;
 
         /// <summary>
-        /// Template method which should be overridden by each DragTracker instance. Called whenever a drag has been detected.
+        /// 
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("")]
@@ -358,11 +235,11 @@ namespace Ext.Net
         private JFunction onEnd;
 
         /// <summary>
-        /// Template method which should be overridden by each DragTracker instance. Called when a drag operation has been completed (e.g. the user clicked and held the mouse down, dragged the element and then released the mouse button)
+        /// 
         /// </summary>
         [ConfigOption(JsonMode.Raw)]
         [Category("3. DragDrop")]
-        [Meta]
+        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("")]
@@ -395,6 +272,7 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [ViewStateMember]
         [Description("Client-side JavaScript Event Handlers")]
         public DragTrackerListeners Listeners
         {
@@ -421,6 +299,7 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [ConfigOption("directEvents", JsonMode.Object)]
+        [ViewStateMember]
         [Description("Server-side DirectEventHandlers")]
         public DragTrackerDirectEvents DirectEvents
         {
@@ -428,7 +307,7 @@ namespace Ext.Net
             {
                 if (this.directEvents == null)
                 {
-                    this.directEvents = new DragTrackerDirectEvents(this);
+                    this.directEvents = new DragTrackerDirectEvents();
                 }
 
                 return this.directEvents;

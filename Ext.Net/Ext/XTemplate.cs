@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 1.3.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-02-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -14,7 +14,6 @@ using System.Text;
 using System.Web.UI;
 
 using Ext.Net.Utilities;
-using System.Web;
 
 namespace Ext.Net
 {
@@ -33,13 +32,7 @@ namespace Ext.Net
         /// 
         /// </summary>
         [Description("")]
-        public XTemplate() 
-        {
-            if (HttpContext.Current != null)
-            {
-                this.EnableViewState = false;
-            }
-        }
+        public XTemplate() { }
 
         /// <summary>
         /// 
@@ -61,7 +54,7 @@ namespace Ext.Net
         /// </summary>
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
-        [Meta]
+        [DefaultValue(null)]
         [Description("Inline functions")]
         public List<JFunction> Functions
         {
@@ -130,11 +123,11 @@ namespace Ext.Net
         {
             get
             {
-                return this.State.Get<string>("Html", "");
+                return (string)this.ViewState["Html"] ?? "";
             }
             set
             {
-                this.State.Set("Html", value);
+                this.ViewState["Html"] = value;
             }
         }
 
@@ -152,27 +145,10 @@ namespace Ext.Net
                 {
                     return "";
                 }
-                
-                return "<!token>" + JSON.Serialize(this.TemplateString(true));
+                string[] lines = this.Html.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+                lines = Array.ConvertAll<string, string>(lines, delegate(string input) { return (input??"").Trim(); });
+                return "<!token>"+JSON.Serialize(lines);
             }
-        }
-
-        /// <summary>
-        /// Return template string
-        /// </summary>
-        /// <param name="array">true to return array of string</param>
-        /// <returns></returns>
-        public object TemplateString(bool array)
-        {
-            if (this.Html.IsEmpty())
-            {
-                return "";
-            }
-
-            string[] lines = this.Html.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-            lines = Array.ConvertAll<string, string>(lines, delegate(string input) { return (input ?? "").Trim(); });
-
-            return array ? (object)lines : (object)lines.Join("");
         }
 
         /// <summary>
@@ -195,7 +171,7 @@ namespace Ext.Net
         {
             get
             {
-                if (!base.Visible || this.DesignMode)
+                if (!base.Visible)
                 {
                     return base.Visible;
                 }
@@ -236,7 +212,7 @@ namespace Ext.Net
         /// <param name="data">The template values. Can be an array if your params are numeric (i.e. {0}) or an object (i.e. {foo: 'bar'})</param>
         [Meta]
         [Description("Applies the supplied values to the template and appends the new node(s) to el.")]
-        public void Append(AbstractComponent target, object data)
+        public void Append(Component target, object data)
         {
             this.ScriptHelper("append", target, data);
         }
@@ -272,7 +248,7 @@ namespace Ext.Net
         /// <param name="data">The template values. Can be an array if your params are numeric (i.e. {0}) or an object (i.e. {foo: 'bar'})</param>
         [Meta]
         [Description("Applies the supplied values to the template and inserts the new node(s) after el.")]
-        public void InsertAfter(AbstractComponent target, object data)
+        public void InsertAfter(Component target, object data)
         {
             this.ScriptHelper("insertAfter", target, data);
         }
@@ -308,7 +284,7 @@ namespace Ext.Net
         /// <param name="data">The template values. Can be an array if your params are numeric (i.e. {0}) or an object (i.e. {foo: 'bar'})</param>
         [Meta]
         [Description("Applies the supplied values to the template and inserts the new node(s) before el.")]
-        public void InsertBefore(AbstractComponent target, object data)
+        public void InsertBefore(Component target, object data)
         {
             this.ScriptHelper("insertBefore", target, data);
         }
@@ -344,7 +320,7 @@ namespace Ext.Net
         /// <param name="data">The template values. Can be an array if your params are numeric (i.e. {0}) or an object (i.e. {foo: 'bar'})</param>
         [Meta]
         [Description("Applies the supplied values to the template and inserts the new node(s) as the first child of el.")]
-        public void InsertFirst(AbstractComponent target, object data)
+        public void InsertFirst(Component target, object data)
         {
             this.ScriptHelper("insertFirst", target, data);
         }
@@ -392,7 +368,7 @@ namespace Ext.Net
         /// <param name="data">The template values. Can be an array if your params are numeric (i.e. {0}) or an object (i.e. {foo: 'bar'})</param>
         [Meta]
         [Description("Applies the supplied values to the template and overwrites the content of el with the new node(s).")]
-        public void Overwrite(AbstractComponent target, object data)
+        public void Overwrite(Component target, object data)
         {
             this.ScriptHelper("overwrite", target, data);
         }
@@ -401,7 +377,7 @@ namespace Ext.Net
         /// <param name="target"></param>
         /// <param name="data"></param>
         [Description("")]
-        protected void ScriptHelper(string name, AbstractComponent target, object data)
+        protected void ScriptHelper(string name, Component target, object data)
         {
             this.ScriptHelper(name, "={".ConcatWith(target.ClientID, ".getContentTarget()}"), data);
         }
