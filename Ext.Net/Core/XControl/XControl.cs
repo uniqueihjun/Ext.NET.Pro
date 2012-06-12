@@ -1,7 +1,7 @@
 /********
- * @version   : 1.3.0 - Ext.NET Pro License
+ * @version   : 1.4.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-02-21
+ * @date      : 2012-05-24
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -78,7 +78,7 @@ namespace Ext.Net
         {
             get
             {
-                return true;
+                return false;
             }
         }
 
@@ -294,13 +294,13 @@ namespace Ext.Net
         /// The IDMode property is defined in Ext.Net.XControl, the base class for all Ext.NET controls.
         /// The related things: ID - the native ASP.NET System.Web.UI.Control property, ID is used to access the control on server side;
         /// ClientID - the native ASP.NET System.Web.UI.Control.ClientID property has been overrode in the Ext.Net.XControl class, 
-        /// ClientID is used on client as a reference which might be used to access the respective control’s JavaScript instance on client side. 
+        /// ClientID is used on client as a reference which might be used to access the respective controlï¿½s JavaScript instance on client side. 
         /// ClientID is the concatenation of Namespace and ConfigID or Namespace and ItemID if ItemID is explicitly specified and 
         /// there is at least one Namespace explicitly specified in the chain from the control and all its parent controls or in ResourceManager;
         /// BaseClientID - the base ClientID property, i.e. the native ASP.NET System.Web.UI.Control.ClientID property; 
-        /// ConfigID - The Ext.Net.XControl property which means the client side “id” config option, 
-        /// so, you can access the respective control’s JavaScript instance on client using the Ext.getCmp method.
-        /// How to set up IDMode: application level - “idMode” option of “extnet” section in Web.config. Please see the sample Web.config in README, 
+        /// ConfigID - The Ext.Net.XControl property which means the client side ï¿½idï¿½ config option, 
+        /// so, you can access the respective controlï¿½s JavaScript instance on client using the Ext.getCmp method.
+        /// How to set up IDMode: application level - ï¿½idModeï¿½ option of ï¿½extnetï¿½ section in Web.config. Please see the sample Web.config in README, 
         /// page level - IDMode of ResourceManager, control level - IDMode of Control.
         /// </summary>
         [Category("1. XControl")]

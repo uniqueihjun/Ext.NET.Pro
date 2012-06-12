@@ -1,7 +1,7 @@
 /********
- * @version   : 1.3.0 - Ext.NET Pro License
+ * @version   : 1.4.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-02-21
+ * @date      : 2012-05-24
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Web.UI;
 
-[assembly: AssemblyVersion("1.3.0.*")]
+[assembly: AssemblyVersion("1.4.0.*")]
 [assembly: TagPrefix("Ext.NET", "ext")]
 
 [assembly: AssemblyTitle("Ext.NET")]
@@ -33,6 +33,7 @@ using System.Web.UI;
 
 /* EXT.NET EMBEDDED RESOURCES */
 
+[assembly: WebResource("Ext.Net.Build.Ext.Net..<%=webresource(ext.net.build.ext.net.extnet.unlicensed.images.unlicensed-bg.png", "image/png")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extjs.adapter.ext.ext-base.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extjs.adapter.ext.ext-base-debug.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extjs.adapter.jquery.ext-jquery-adapter.js", "text/javascript")]
@@ -1029,6 +1030,7 @@ using System.Web.UI;
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.core.form.ComboBox.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.core.form.CompositeField.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.core.form.DateField.js", "text/javascript")]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.core.form.DisplayField.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.core.form.DropDownField.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.core.form.Field.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.core.form.FieldLabeler.js", "text/javascript")]
@@ -1184,6 +1186,11 @@ using System.Web.UI;
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.locale.ext-lang-vi.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.locale.ext-lang-zh-CN.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.locale.ext-lang-zh-TW.js", "text/javascript")]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.css.un.css", "text/css", PerformSubstitution = true)]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.css.un-embedded.css", "text/css", PerformSubstitution = true)]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.images.unlicensed-bg.png", "image/png")]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.images.unlicensed-button-txt.png", "image/png")]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.un.js", "text/javascript")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.icons.accept.png", "image/png")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.icons.add.png", "image/png")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.icons.anchor.png", "image/png")]
@@ -3134,7 +3141,3 @@ using System.Web.UI;
 [assembly: WebResource("Ext.Net.Build.Ext.Net.ux.plugins.validationstatus.images.accept.png", "image/png")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.ux.plugins.validationstatus.images.exclamation.gif", "image/gif")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.ux.plugins.validationstatus.validationstatus.js", "text/javascript")]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.css.un.css", "text/css", PerformSubstitution = true)]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.images.unlincensed-bg.png", "image/png")]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.images.unlincensed-button-txt.png", "image/png")]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.unlicensed.un.js", "text/javascript")]

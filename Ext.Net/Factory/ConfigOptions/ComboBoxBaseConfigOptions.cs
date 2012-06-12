@@ -1,8 +1,8 @@
 /********
- * @version   : 1.3.0 - Ext.NET Pro License
+ * @version   : 1.4.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-02-21
- * @copyright : Copyright (c) 2007-2011, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @date      : 2012-05-24
+ * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
@@ -48,6 +48,7 @@ namespace Ext.Net
                 list.Add("fireSelectOnLoad", new ConfigOption("fireSelectOnLoad", null, false, this.FireSelectOnLoad ));
                 list.Add("listAlign", new ConfigOption("listAlign", null, "", this.ListAlign ));
                 list.Add("listClass", new ConfigOption("listClass", null, "", this.ListClass ));
+                list.Add("listEmptyText", new ConfigOption("listEmptyText", null, "", this.ListEmptyText ));
                 list.Add("listWidth", new ConfigOption("listWidth", null, Unit.Empty, this.ListWidth ));
                 list.Add("loadingText", new ConfigOption("loadingText", null, "Loading...", this.LoadingText ));
                 list.Add("maxHeight", new ConfigOption("maxHeight", null, Unit.Pixel(300), this.MaxHeight ));

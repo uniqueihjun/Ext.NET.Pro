@@ -1,7 +1,7 @@
 /********
- * @version   : 1.3.0 - Ext.NET Pro License
+ * @version   : 1.4.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-02-21
+ * @date      : 2012-05-24
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -51,6 +51,24 @@ namespace Ext.Net
             get
             {
                 return this.control;
+            }
+        }
+
+        private ResourceManager manager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public ResourceManager ResourceManager
+        {
+            get
+            {
+                return this.manager;
+            }
+            set
+            {
+                this.manager = value;
             }
         }
 
@@ -274,7 +292,7 @@ namespace Ext.Net
             return HttpUtility.HtmlAttributeEncode(new Page().ClientScript.GetWebResourceUrl(type, resourceName));
         }
 
-        protected virtual void CheckResources(XControl control)
+        protected virtual void CheckResources(XControl control, ResourceManager manager)
         {
             if (HttpContext.Current.CurrentHandler is Page && !(HttpContext.Current.CurrentHandler is ISelfRenderingPage) && !this.ForceResources)
             {
@@ -283,9 +301,10 @@ namespace Ext.Net
 
             foreach (ClientScriptItem item in control.GetScripts())
             {
-                if (!scriptsResources.ContainsKey(item.PathEmbedded))
+                var resourcePath = manager != null && manager.ScriptMode == ScriptMode.Debug && item.PathEmbeddedDebug.IsNotEmpty() ? item.PathEmbeddedDebug : item.PathEmbedded;
+                if (!scriptsResources.ContainsKey(resourcePath))
                 {
-                    scriptsResources.Add(item.PathEmbedded, GetWebResourceUrl(item.Type, item.PathEmbedded));
+                    scriptsResources.Add(resourcePath, GetWebResourceUrl(item.Type, resourcePath));
                 }
             }
 
@@ -315,12 +334,12 @@ namespace Ext.Net
                 return null;
             }
 
-            ResourceManager manager = ResourceManager.GetInstance(HttpContext.Current);
-
             if (icons == null)
             {
                 icons = new List<Icon>();
             }
+
+            ResourceManager manager = this.ResourceManager;
 
             if (sb != null && !searchOnly && manager != null)
             {
@@ -356,7 +375,7 @@ namespace Ext.Net
                 if (!searchOnly)
                 {
                     this.CheckIcon(ctrl, icons);
-                    this.CheckResources(ctrl);
+                    this.CheckResources(ctrl, manager);
                 }
                 ctrl.IsDynamic = true;
                 ctrl.EnsureChildControlsInternal();
@@ -384,7 +403,7 @@ namespace Ext.Net
                     if (!searchOnly)
                     {
                         this.CheckIcon(ctrl, icons);
-                        this.CheckResources(ctrl);
+                        this.CheckResources(ctrl, manager);
                     }
                     foundControls.Add(ctrl);
 

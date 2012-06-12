@@ -1,7 +1,7 @@
 /********
- * @version   : 1.3.0 - Ext.NET Pro License
+ * @version   : 1.4.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-02-21
+ * @date      : 2012-05-24
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -1488,12 +1488,19 @@ namespace Ext.Net
                         }
                     }
 
-                    if (ResourceManager.IsSupportedCulture(locale, out isParent))
+                    /*if (ResourceManager.IsSupportedCulture(locale, out isParent))
                     {
                         string cultureName = isParent ? locale.Split(new char[] { '-' })[0] : locale;
                         this.currentLocale = new CultureInfo(cultureName.Length == 2 ? new CultureInfo(cultureName).TextInfo.CultureName : cultureName);
+                    }*/
+					
+					try
+                    {
+                        this.currentLocale = new CultureInfo(locale);
                     }
-                    
+                    catch (Exception)
+                    {
+                    }                    
                 }
 
                 return this.currentLocale;
@@ -1732,6 +1739,8 @@ namespace Ext.Net
             {
                 methods[ns][name] = new DirectMethodList();
             }
+
+            method = method.Clone();
             
             method.ControlID = control is Page ? null : control.ClientID;
 
@@ -2675,7 +2684,7 @@ namespace Ext.Net
         [Description("")]
         public static string GetIconClassName(Icon icon)
         {
-            return (icon != Icon.None) ? "icon-{0}".FormatWith(icon.ToString().ToLower()) : "";
+            return (icon != Icon.None) ? "icon-{0}".FormatWith(icon.ToString().ToLower(CultureInfo.InvariantCulture)) : "";
         }
 
         /// <summary>
