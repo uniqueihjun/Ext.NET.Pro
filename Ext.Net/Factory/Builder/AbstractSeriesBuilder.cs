@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -114,6 +114,15 @@ namespace Ext.Net
             }
              
  			/// <summary>
+			/// The human-readable name of the series.
+			/// </summary>
+            public virtual TBuilder Titles(string[] titles)
+            {
+                this.ToComponent().Titles = titles;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
 			/// The field used to access the x axis value from the items from the data source.
 			/// </summary>
             public virtual TBuilder XField(string[] xField)
@@ -170,6 +179,15 @@ namespace Ext.Net
             public virtual TBuilder SetTitle(string title)
             {
                 this.ToComponent().SetTitle(title);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder SetTitles(string[] titles)
+            {
+                this.ToComponent().SetTitles(titles);
                 return this as TBuilder;
             }
             

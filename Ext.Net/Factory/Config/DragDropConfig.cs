@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -529,6 +529,132 @@ namespace Ext.Net
 					}
 			
 					return this.startDrag;
+				}
+			}
+			        
+			private JFunction b4Drag = null;
+
+			/// <summary>
+			/// Code that executes immediately before the onDrag event
+			/// </summary>
+			public JFunction B4Drag
+			{
+				get
+				{
+					if (this.b4Drag == null)
+					{
+						this.b4Drag = new JFunction();
+					}
+			
+					return this.b4Drag;
+				}
+			}
+			        
+			private JFunction b4DragDrop = null;
+
+			/// <summary>
+			/// Code that executes immediately before the onDragDrop event
+			/// </summary>
+			public JFunction B4DragDrop
+			{
+				get
+				{
+					if (this.b4DragDrop == null)
+					{
+						this.b4DragDrop = new JFunction();
+					}
+			
+					return this.b4DragDrop;
+				}
+			}
+			        
+			private JFunction b4DragOut = null;
+
+			/// <summary>
+			/// Code that executes immediately before the onDragOut event
+			/// </summary>
+			public JFunction B4DragOut
+			{
+				get
+				{
+					if (this.b4DragOut == null)
+					{
+						this.b4DragOut = new JFunction();
+					}
+			
+					return this.b4DragOut;
+				}
+			}
+			        
+			private JFunction b4DragOver = null;
+
+			/// <summary>
+			/// Code that executes immediately before the onDragOver event
+			/// </summary>
+			public JFunction B4DragOver
+			{
+				get
+				{
+					if (this.b4DragOver == null)
+					{
+						this.b4DragOver = new JFunction();
+					}
+			
+					return this.b4DragOver;
+				}
+			}
+			        
+			private JFunction b4EndDrag = null;
+
+			/// <summary>
+			/// Code that executes immediately before the endDrag event
+			/// </summary>
+			public JFunction B4EndDrag
+			{
+				get
+				{
+					if (this.b4EndDrag == null)
+					{
+						this.b4EndDrag = new JFunction();
+					}
+			
+					return this.b4EndDrag;
+				}
+			}
+			        
+			private JFunction b4MouseDown = null;
+
+			/// <summary>
+			/// Code executed immediately before the onMouseDown event
+			/// </summary>
+			public JFunction B4MouseDown
+			{
+				get
+				{
+					if (this.b4MouseDown == null)
+					{
+						this.b4MouseDown = new JFunction();
+					}
+			
+					return this.b4MouseDown;
+				}
+			}
+			        
+			private JFunction b4StartDrag = null;
+
+			/// <summary>
+			/// Code that executes immediately before the startDrag event
+			/// </summary>
+			public JFunction B4StartDrag
+			{
+				get
+				{
+					if (this.b4StartDrag == null)
+					{
+						this.b4StartDrag = new JFunction();
+					}
+			
+					return this.b4StartDrag;
 				}
 			}
 			

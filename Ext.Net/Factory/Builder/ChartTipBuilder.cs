@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ToolTip.Builder<ChartTip, ChartTip.Builder>
+        public partial class Builder : ToolTipBase.Builder<ChartTip, ChartTip.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -78,7 +78,29 @@ namespace Ext.Net
                 this.ToComponent().ConstrainPosition = constrainPosition;
                 return this as ChartTip.Builder;
             }
-            
+             
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of ChartTip.Builder</returns>
+            public virtual ChartTip.Builder Listeners(Action<PanelListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as ChartTip.Builder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of ChartTip.Builder</returns>
+            public virtual ChartTip.Builder DirectEvents(Action<PanelDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as ChartTip.Builder;
+            }
+			
 
 			/*  Methods
 				-----------------------------------------------------------------------------------------------*/

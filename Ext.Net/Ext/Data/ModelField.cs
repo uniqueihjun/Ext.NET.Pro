@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -418,6 +418,35 @@ namespace Ext.Net
                 }
 
                 return this.convert;
+            }
+        }
+
+        /// <summary>
+        /// If you ensure that data comes with correct format then convert can be set to null, it increase a parsing performance 
+        /// </summary>
+        [Meta]
+        [Category("Config Options")]
+        [DefaultValue(false)]
+        [Description("")]
+        public virtual bool NullConvert
+        {
+            get
+            {
+                return this.State.Get<bool>("NullConvert", false);
+            }
+            set
+            {
+                this.State.Set("NullConvert", value);
+            }
+        }
+
+        [ConfigOption("convert", JsonMode.Raw)]
+        [DefaultValue(null)]
+        protected virtual string NullConvertProxy
+        {
+            get
+            {
+                return this.NullConvert ? "null" : null;
             }
         }
 

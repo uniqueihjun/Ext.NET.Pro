@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -174,10 +174,12 @@ namespace Ext.Net
 
         private ResourceLocationType DetermineRequiredResourceMode(ResourceLocationType mode, ResourceItem item)
         {
+#if ISPRO            
             if (mode == ResourceLocationType.CDN && (item.PathEmbedded.IsEmpty() || !item.PathEmbedded.StartsWith("Ext.Net.Build.Ext.Net")))
             {
                 mode = ResourceLocationType.Embedded;
             }
+#endif
 
             if (mode == ResourceLocationType.Embedded && item.PathEmbedded.IsEmpty())
             {
@@ -262,9 +264,11 @@ namespace Ext.Net
                             case ResourceLocationType.File:
                                 this.ResourceManager.RegisterThemeIncludeInternal(item.PathEmbedded, item.Path.StartsWith("~") ? this.ResolveUrlLink(item.Path) : this.ResourceManager.ResourcePathInternal.ConcatWith(item.Path));
                                 break;
+#if ISPRO
                             case ResourceLocationType.CDN:
                                 this.ResourceManager.RegisterThemeIncludeInternal(item.PathEmbedded, ResourceManager.CDNPath.ConcatWith(item.Path));
                                 break;
+#endif
                         }
                     }
                 }
@@ -365,9 +369,11 @@ namespace Ext.Net
                         case ResourceLocationType.File:
                             rm.RegisterClientStyleIncludeInternal(item.PathEmbedded, item.Path.StartsWith("~") ? this.ResolveUrlLink(item.Path) : rm.ResourcePathInternal.ConcatWith(item.Path));
                             break;
+#if ISPRO
                         case ResourceLocationType.CDN:
                             rm.RegisterClientStyleIncludeInternal(item.PathEmbedded, ResourceManager.CDNPath.ConcatWith(item.Path));
                             break;
+#endif
                     }
                 }
             }
@@ -433,6 +439,7 @@ namespace Ext.Net
                         rm.RegisterClientScriptIncludeInternal(item.PathEmbedded, item.PathDebug.StartsWith("~") ? this.ResolveUrlLink(item.PathDebug) : rm.ResourcePathInternal.ConcatWith(item.PathDebug));
                     }
                 }
+#if ISPRO
                 else if (mode == ResourceLocationType.CDN)
                 {
                     if (rm.ScriptMode == ScriptMode.Release || item.PathDebug.IsEmpty())
@@ -444,6 +451,7 @@ namespace Ext.Net
                         rm.RegisterClientScriptIncludeInternal(item.PathEmbedded, ResourceManager.CDNPath.ConcatWith(item.PathDebug));
                     }
                 }
+#endif
             }
         }
 

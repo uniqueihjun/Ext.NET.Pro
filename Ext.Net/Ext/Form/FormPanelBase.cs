@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -128,7 +128,7 @@ namespace Ext.Net
         /// The errorReader does not have to be a full-blown implementation of a Reader. It simply needs to implement a read(xhr) function which returns an Array of Records in an object with the following structure:
         /// </summary>
         [Meta]
-        [ConfigOption("reader>Reader")]
+        [ConfigOption("errorReader>PrimaryProxy")]
         [Category("6. FormPanel")]        
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -140,6 +140,7 @@ namespace Ext.Net
                 if (this.errorReader == null)
                 {
                     this.errorReader = new ReaderCollection();
+                    this.errorReader.LazyMode = Ext.Net.LazyMode.Instance;
                 }
 
                 return this.errorReader;
@@ -172,7 +173,7 @@ namespace Ext.Net
         /// An Ext.data.DataReader (e.g. Ext.data.reader.Xml) to be used to read data when executing 'load' actions. This is optional as there is built-in support for processing JSON responses.
         /// </summary>
         [Meta]
-        [ConfigOption("reader>Reader")]
+        [ConfigOption("reader>PrimaryProxy")]
         [Category("6. FormPanel")]        
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
@@ -184,6 +185,7 @@ namespace Ext.Net
                 if (this.reader == null)
                 {
                     this.reader = new ReaderCollection();
+                    this.reader.LazyMode = Ext.Net.LazyMode.Instance;
                 }
 
                 return this.reader;

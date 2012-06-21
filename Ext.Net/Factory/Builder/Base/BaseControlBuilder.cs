@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -44,6 +44,36 @@ namespace Ext.Net
             public virtual TBuilder ItemID(string itemId)
             {
                 this.ToComponent().ItemID = itemId;
+                return this as TBuilder;
+            }
+
+            public virtual TBuilder RegisterAllResources(bool registerAllResources)
+            {
+                this.ToComponent().RegisterAllResources = registerAllResources;
+                return this as TBuilder;
+            }
+
+            public virtual TBuilder AutoDataBind(bool autoDataBind)
+            {
+                this.ToComponent().AutoDataBind = autoDataBind;
+                return this as TBuilder;
+            }
+
+            public virtual TBuilder IDMode(IDMode idMode)
+            {
+                this.ToComponent().IDMode = idMode;
+                return this as TBuilder;
+            }
+
+            public virtual TBuilder LazyMode(LazyMode lazyMode)
+            {
+                this.ToComponent().LazyMode = lazyMode;
+                return this as TBuilder;
+            }
+
+            public virtual TBuilder Namespace(string ns)
+            {
+                this.ToComponent().Namespace = ns;
                 return this as TBuilder;
             }
 

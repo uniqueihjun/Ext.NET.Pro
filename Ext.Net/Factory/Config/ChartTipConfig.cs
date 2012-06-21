@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -46,7 +46,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        new public partial class Config : ToolTip.Config 
+        new public partial class Config : ToolTipBase.Config 
         { 
 			/*  Implicit ChartTip.Config Conversion to ChartTip.Builder
 				-----------------------------------------------------------------------------------------------*/
@@ -98,7 +98,43 @@ namespace Ext.Net
 					this.constrainPosition = value;
 				}
 			}
+        
+			private PanelListeners listeners = null;
 
+			/// <summary>
+			/// Client-side JavaScript Event Handlers
+			/// </summary>
+			public PanelListeners Listeners
+			{
+				get
+				{
+					if (this.listeners == null)
+					{
+						this.listeners = new PanelListeners();
+					}
+			
+					return this.listeners;
+				}
+			}
+			        
+			private PanelDirectEvents directEvents = null;
+
+			/// <summary>
+			/// Server-side Ajax Event Handlers
+			/// </summary>
+			public PanelDirectEvents DirectEvents
+			{
+				get
+				{
+					if (this.directEvents == null)
+					{
+						this.directEvents = new PanelDirectEvents();
+					}
+			
+					return this.directEvents;
+				}
+			}
+			
         }
     }
 }

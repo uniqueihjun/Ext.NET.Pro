@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -499,7 +499,7 @@ namespace Ext.Net
                 return path.EndsWith("/") ? path.LeftOfRightmostOf('/') : path;
             }
         }
-
+#if ISPRO
         /// <summary>
         /// 
         /// </summary>
@@ -507,9 +507,10 @@ namespace Ext.Net
         {
             get
             {
-                return "http://speed.ext.net/ext.net/2.0.0.beta";
+                return "http://speed.ext.net/ext.net/2.0.0.rc1";
             }
         }
+#endif
 
         private object scriptMode = null;
 
@@ -617,8 +618,10 @@ namespace Ext.Net
                         return this.GetWebResourceUrl(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all-embedded.css");
                     case ResourceLocationType.File:
                         return this.ConvertToFilePath(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all.css");
+#if ISPRO
                     case ResourceLocationType.CDN:
                         return ResourceManager.CDNPath.ConcatWith("/extjs/resources/css/ext-all.css");
+#endif
                 }
             }
             
@@ -632,8 +635,10 @@ namespace Ext.Net
                             return this.GetWebResourceUrl(item.Type, item.PathEmbedded);
                         case ResourceLocationType.File:
                             return this.ResourcePathInternal.ConcatWith(item.Path);
+#if ISPRO                        
                         case ResourceLocationType.CDN:
                             return ResourceManager.CDNPath.ConcatWith(item.Path);
+#endif
                     }
                 }
             }

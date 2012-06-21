@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -45,6 +45,7 @@ namespace Ext.Net
                 list.Add("showInLegend", new ConfigOption("showInLegend", null, true, this.ShowInLegend ));
                 list.Add("tips", new ConfigOption("tips", new SerializationOptions("tips", typeof(LazyControlJsonConverter)), null, this.Tips ));
                 list.Add("title", new ConfigOption("title", null, "", this.Title ));
+                list.Add("titles", new ConfigOption("titles", new SerializationOptions("title", typeof(SingleStringArrayJsonConverter)), null, this.Titles ));
                 list.Add("xField", new ConfigOption("xField", new SerializationOptions(typeof(SingleStringArrayJsonConverter)), null, this.XField ));
                 list.Add("yField", new ConfigOption("yField", new SerializationOptions(typeof(SingleStringArrayJsonConverter)), null, this.YField ));
                 list.Add("listeners", new ConfigOption("listeners", new SerializationOptions("listeners", JsonMode.Object), null, this.Listeners ));

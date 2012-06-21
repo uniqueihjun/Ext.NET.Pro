@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -207,21 +207,21 @@ namespace Ext.Net
 				}
 			}
 			
-			private Alignment buttonAlign = Alignment.Left;
+			private BoxPack pack = BoxPack.Start;
 
 			/// <summary>
-			/// Valid values are \"left\", \"center\" and \"right\" (defaults to \"left\").
+			/// Valid values are \"start\", \"center\" and \"end\" (defaults to \"start\").
 			/// </summary>
-			[DefaultValue(Alignment.Left)]
-			public virtual Alignment ButtonAlign 
+			[DefaultValue(BoxPack.Start)]
+			public virtual BoxPack Pack 
 			{ 
 				get
 				{
-					return this.buttonAlign;
+					return this.pack;
 				}
 				set
 				{
-					this.buttonAlign = value;
+					this.pack = value;
 				}
 			}
         

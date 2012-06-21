@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.beta3 - Ext.NET Pro License
+ * @version   : 2.0.0.rc1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-05-28
+ * @date      : 2012-06-19
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -41,7 +41,7 @@ namespace Ext.Net
                 list.Add("associationKey", new ConfigOption("associationKey", null, null, this.AssociationKey ));
                 list.Add("primaryKey", new ConfigOption("primaryKey", null, null, this.PrimaryKey ));
                 list.Add("model", new ConfigOption("model", null, null, this.Model ));
-                list.Add("reader", new ConfigOption("reader", new SerializationOptions("reader>Primary"), null, this.Reader ));
+                list.Add("reader", new ConfigOption("reader", new SerializationOptions("reader>PrimaryProxy"), null, this.Reader ));
 
                 return list;
             }
