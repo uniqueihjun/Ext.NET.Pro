@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ext.Net">
-      <HintPath>..\packages\Ext.NET.2.0.0-rc1\lib\Ext.Net.dll</HintPath>
-    </Reference>
     <Reference Include="Ext.Net.Utilities">
       <HintPath>..\packages\Ext.NET.Utilities.2.0.1\lib\Ext.Net.Utilities.dll</HintPath>
     </Reference>
@@ -236,9 +233,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Readme\Ext.NET.CHANGELOG.txt" />
-    <Content Include="App_Readme\Ext.NET.LICENSE.txt" />
-    <Content Include="App_Readme\Ext.NET.README.txt" />
     <Content Include="App_Readme\Ext.NET.Utilities.LICENSE.txt" />
     <Content Include="App_Readme\Ext.NET.Utilities.README.txt" />
     <Content Include="App_Readme\Transformer.NET.LICENSE.txt" />
@@ -1623,6 +1617,12 @@
     <Folder Include="Examples\Calendar\Overview\Shared\resources\images\" />
     <Folder Include="Examples\Getting_Started\Introduction\Overview\images\" />
     <Folder Include="Examples\TreePanel\Basic\Built_in_CodeBehind\images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ext.Net\Ext.Net.csproj">
+      <Project>{195F2E70-F5E6-4A61-AAD9-2639657C29C4}</Project>
+      <Name>Ext.Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
