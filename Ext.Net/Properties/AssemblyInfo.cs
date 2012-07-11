@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.rc1 - Ext.NET Pro License
+ * @version   : 2.0.0.rc2 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-06-19
+ * @date      : 2012-07-10
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -2025,22 +2025,22 @@ using System.Web.UI;
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.commands.commands-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.commands.imagecommandcolumn.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.commands.imagecommandcolumn-embedded.css", "text/css", PerformSubstitution = true)]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.extnet-all.css", "text/css", PerformSubstitution = true)]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.extnet-all-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.field.field.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.field.field-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.grid.checkheader.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.grid.checkheader-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.grid.componentcolumn.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.grid.componentcolumn-embedded.css", "text/css", PerformSubstitution = true)]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.init.Start.css", "text/css", PerformSubstitution = true)]
+[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.init.Start-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.label.label.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.label.label-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.multicombo.multicombo.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.multicombo.multicombo-embedded.css", "text/css", PerformSubstitution = true)]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.Start.css", "text/css", PerformSubstitution = true)]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.Start-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.tree.tree.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.css.tree.tree-embedded.css", "text/css", PerformSubstitution = true)]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.extnet-all.css", "text/css", PerformSubstitution = true)]
-[assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.extnet-all-embedded.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.images.grid.checked.gif", "image/gif")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.images.grid.unchecked.gif", "image/gif")]
 [assembly: WebResource("Ext.Net.Build.Ext.Net.extnet.resources.images.loading.gif", "image/gif")]

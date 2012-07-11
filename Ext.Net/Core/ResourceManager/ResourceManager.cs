@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.rc1 - Ext.NET Pro License
+ * @version   : 2.0.0.rc2 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-06-19
+ * @date      : 2012-07-10
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -182,7 +182,7 @@ namespace Ext.Net
                 int i = widgets.Count - 1;
                 BaseControl final = widgets[i--];
 
-                while ((!final.Visible || final.AlreadyRendered || final.IsDefault) && i >= 0)
+                while ((!final.Visible || final.AlreadyRendered || final.IsDefault || final is UserControlLoader) && i >= 0)
                 {
                     final = widgets[i--];
                 }
@@ -834,7 +834,7 @@ namespace Ext.Net
                             source.Append(string.Format(ResourceManager.ThemeIncludeTemplate, item.Value));
                         }
 
-                        source.Append(string.Format(ResourceManager.StyleIncludeTemplate, this.GetWebResourceUrl(ResourceManager.ASSEMBLYSLUG + ".extnet.resources.extnet-all-embedded.css")));
+                        source.Append(string.Format(ResourceManager.StyleIncludeTemplate, this.GetWebResourceUrl(ResourceManager.ASSEMBLYSLUG + ".extnet.resources.css.extnet-all-embedded.css")));
 
                         foreach (KeyValuePair<string, string> item in this.ClientStyleIncludeInternalBag)
                         {
@@ -857,13 +857,13 @@ namespace Ext.Net
                         if (type == ResourceLocationType.File)
                         {
                             source.Append(string.Format(ResourceManager.StyleIncludeTemplate, this.ConvertToFilePath(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all" + themeName + ".css")));
-                            source.Append(string.Format(ResourceManager.StyleIncludeTemplate, this.ConvertToFilePath(ResourceManager.ASSEMBLYSLUG + ".extnet.resources.extnet-all.css")));
+                            source.Append(string.Format(ResourceManager.StyleIncludeTemplate, this.ConvertToFilePath(ResourceManager.ASSEMBLYSLUG + ".extnet.resources.css.extnet-all.css")));
                         }
 #if ISPRO                        
                         else
                         {
                             source.Append(string.Format(ResourceManager.StyleIncludeTemplate, ResourceManager.CDNPath.ConcatWith("/extjs/resources/css/ext-all" + themeName + ".css")));
-                            source.Append(string.Format(ResourceManager.StyleIncludeTemplate, ResourceManager.CDNPath.ConcatWith("/extnet/resources/extnet-all.css")));
+                            source.Append(string.Format(ResourceManager.StyleIncludeTemplate, ResourceManager.CDNPath.ConcatWith("/extnet/resources/css/extnet-all.css")));
                         }                        
 #endif
 

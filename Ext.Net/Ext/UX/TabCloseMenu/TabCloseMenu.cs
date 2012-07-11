@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.rc1 - Ext.NET Pro License
+ * @version   : 2.0.0.rc2 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-06-19
+ * @date      : 2012-07-10
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -102,15 +102,15 @@ namespace Ext.Net
         [Localizable(true)]
         [NotifyParentProperty(true)]
         [Description("Text to display in ContextMenu for menu option to close other Tabs.")]
-        public string CloseOtherTabsText
+        public string CloseOthersTabsText
         {
             get
             {
-                return this.State.Get<string>("CloseOtherTabsText", "Close Other Tabs");
+                return this.State.Get<string>("CloseOthersTabsText", "Close Other Tabs");
             }
             set
             {
-                this.State.Set("CloseOtherTabsText", value);
+                this.State.Set("CloseOthersTabsText", value);
             }
         }
 

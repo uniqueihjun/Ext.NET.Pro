@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.rc1 - Ext.NET Pro License
+ * @version   : 2.0.0.rc2 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-06-19
+ * @date      : 2012-07-10
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -42,7 +42,7 @@ namespace Ext.Net
     [ToolboxBitmap(typeof(ToolTip), "Build.ToolboxIcons.ToolTip.bmp")]
     [Designer(typeof(EmptyDesigner))]
     [Description("ToolTip is a Ext.tip.Tip implementation that handles the common case of displaying a tooltip when hovering over a certain element or elements on the page. It allows fine-grained control over the tooltip's alignment relative to the target element or mouse, and the timing of when it is automatically shown and hidden.")]
-    public partial class ToolTip : Tip
+    public partial class ToolTip : ToolTipBase
     {
         /// <summary>
         /// 

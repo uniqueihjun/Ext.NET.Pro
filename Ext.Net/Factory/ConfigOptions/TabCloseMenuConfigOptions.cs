@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.rc1 - Ext.NET Pro License
+ * @version   : 2.0.0.rc2 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-06-19
+ * @date      : 2012-07-10
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -39,7 +39,7 @@ namespace Ext.Net
                 
                 list.Add("closeTabText", new ConfigOption("closeTabText", null, "Close Tab", this.CloseTabText ));
                 list.Add("showCloseOthers", new ConfigOption("showCloseOthers", null, true, this.ShowCloseOthers ));
-                list.Add("closeOtherTabsText", new ConfigOption("closeOtherTabsText", null, "Close Other Tabs", this.CloseOtherTabsText ));
+                list.Add("closeOthersTabsText", new ConfigOption("closeOthersTabsText", null, "Close Other Tabs", this.CloseOthersTabsText ));
                 list.Add("showCloseAll", new ConfigOption("showCloseAll", null, true, this.ShowCloseAll ));
                 list.Add("closeAllTabsText", new ConfigOption("closeAllTabsText", null, "Close All Tabs", this.CloseAllTabsText ));
                 list.Add("closeTabIconClsProxy", new ConfigOption("closeTabIconClsProxy", new SerializationOptions("closeTabIconCls"), "", this.CloseTabIconClsProxy ));
