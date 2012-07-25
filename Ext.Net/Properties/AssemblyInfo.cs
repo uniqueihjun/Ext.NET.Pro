@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0.rc2 - Ext.NET Pro License
+ * @version   : 2.0.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-07-24
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Web.UI;
 
-[assembly: AssemblyVersion("2.0.0.*")]
+[assembly: AssemblyVersion("2.0.0")]
 [assembly: TagPrefix("Ext.NET", "ext")]
 
 [assembly: AssemblyTitle("Ext.NET")]

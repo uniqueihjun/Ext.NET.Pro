@@ -17,7 +17,7 @@
  *
  * @version   : 2.0.0 - Community Edition (AGPLv3 License)
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-02-15
+ * @date      : 2012-07-24
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) 3.0. 
  *              See license.txt and http://www.ext.net/license/.
@@ -689,6 +689,5 @@ For more information on this, and how to apply and follow the GNU AGPL, see
                      Copyright 2010 Ext.NET, Inc., All rights reserved.
                   
                                      Ext.NET, Inc.
-                                   +1(888)775-5888
                                   licensing@ext.net
                                      www.ext.net
