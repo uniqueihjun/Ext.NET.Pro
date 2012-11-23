@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -196,6 +196,7 @@ namespace Ext.Net
 
         /*  onReady
             -----------------------------------------------------------------------------------------------*/
+        private static string scriptOrderkey = "Ext.Net.ScriptOrder";
         internal static int ScriptOrderNumber
         {
             get
@@ -204,13 +205,43 @@ namespace Ext.Net
                 {
                     return 0;
                 }
-                if (HttpContext.Current.Items["Ext.Net.ScriptOrder"] == null)
+                if (HttpContext.Current.Items[ResourceManager.scriptOrderkey] == null)
                 {
-                    HttpContext.Current.Items["Ext.Net.ScriptOrder"] = new CounterStore();                    
+                    HttpContext.Current.Items[ResourceManager.scriptOrderkey] = new CounterStore();                    
                 }
 
-                return ((CounterStore)HttpContext.Current.Items["Ext.Net.ScriptOrder"]).counter++;
+                return ((CounterStore)HttpContext.Current.Items[ResourceManager.scriptOrderkey]).counter++;
             }
+        }
+
+        internal static void ScriptOrderNextRange()
+        {
+            if (HttpContext.Current == null)
+            {
+                return;
+            }
+            if (HttpContext.Current.Items[ResourceManager.scriptOrderkey] == null)
+            {
+                HttpContext.Current.Items[ResourceManager.scriptOrderkey] = new CounterStore();
+            }
+
+            CounterStore c = ((CounterStore)HttpContext.Current.Items[ResourceManager.scriptOrderkey]);
+            c.counter = c.counter + 1000000;
+        }
+
+        internal static void ScriptOrderPrevRange()
+        {
+            if (HttpContext.Current == null)
+            {
+                return;
+            }
+            if (HttpContext.Current.Items[ResourceManager.scriptOrderkey] == null)
+            {
+                return;
+            }
+
+            CounterStore c = ((CounterStore)HttpContext.Current.Items[ResourceManager.scriptOrderkey]);
+            c.counter = c.counter - 1000000;
         }
 
         /// <summary>
@@ -260,97 +291,6 @@ namespace Ext.Net
                 this.ScriptOnReadyBag.Add(orderNumber, script);
             }
         }
-
-
-        /*  onWindowResize
-            -----------------------------------------------------------------------------------------------*/
-
-        private InsertOrderedDictionary<string, string> scriptOnWindowResizeBag = new InsertOrderedDictionary<string, string>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        [Description("")]
-        public bool IsOnWindowResizeScriptRegistered(string key)
-        {
-            return this.scriptOnWindowResizeBag.ContainsKey(key);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Description("")]
-        public InsertOrderedDictionary<string, string> ScriptOnWindowResizeBag
-        {
-            get
-            {
-                return this.scriptOnWindowResizeBag;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="script"></param>
-        [Description("")]
-        public void RegisterOnWindowResizeScript(string key, string script)
-        {
-            if (!this.IsOnWindowResizeScriptRegistered(key))
-            {
-                this.scriptOnWindowResizeBag.Add(key, script);
-            }
-        }
-
-
-        /*  onTextResize
-            -----------------------------------------------------------------------------------------------*/
-
-        private InsertOrderedDictionary<string, string> scriptOnTextResizeBag = new InsertOrderedDictionary<string, string>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        [Description("")]
-        public bool IsOnTextResizeScriptRegistered(string key)
-        {
-            return this.scriptOnTextResizeBag.ContainsKey(key);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Description("")]
-        public InsertOrderedDictionary<string, string> ScriptOnTextResizeBag
-        {
-            get
-            {
-                return this.scriptOnTextResizeBag;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="script"></param>
-        [Description("")]
-        public void RegisterOnTextResizeScript(string key, string script)
-        {
-            if (!this.IsOnTextResizeScriptRegistered(key))
-            {
-                this.scriptOnTextResizeBag.Add(key, script);
-            }
-        }
-
 
         /*  JavaScript - Blocks
             -----------------------------------------------------------------------------------------------*/
@@ -771,7 +711,7 @@ namespace Ext.Net
             {
                 if (ResourceManager.locales == null)
                 {
-                    ResourceManager.locales = new List<string>("af bg ca cs da de el-GR en en-GB es fa fi fr fr-CA he hr hu id it ja ko lt lv mk nl no nn-NO pl pt pt-BR pt-PT ro ru sk sl sr sr-Cyrl-CS sv-SE th tr uk vi zh-CN zh-TW".Split(' '));
+                    ResourceManager.locales = new List<string>("af bg ca cs da de el-GR en en-GB es et fa fi fr fr-CA he hr hu id it ja ko lt lv mk nl no nn-NO pl pt pt-BR pt-PT ro ru sk sl sr sr-Cyrl-CS sv-SE th tr uk vi zh-CN zh-TW".Split(' '));
                 }
 
                 return ResourceManager.locales;

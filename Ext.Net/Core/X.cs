@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -11,7 +11,6 @@ using System.Web;
 using System.Web.UI;
 
 using Ext.Net.Utilities;
-using System.Web.UI.WebControls;
 
 namespace Ext.Net
 {
@@ -19,13 +18,13 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public partial class X : ExtNet { }
+    public partial class ExtNet : X { }
 
     /// <summary>
     /// Ext core utilities and functions.
     /// </summary>
     [Description("")]
-    public partial class ExtNet
+    public partial class X
     {
         /*  Properties
             -----------------------------------------------------------------------------------------------*/
@@ -276,10 +275,28 @@ namespace Ext.Net
         /// <param name="ns">Namespace</param>
         /// <typeparam name="T">The Type of AbstractComponent to return.</typeparam>
         /// <returns>The AbstractComponent, or throws ArgumentNullException if not found</returns>
-        [Description("")]
         public static T GetCmp<T>(string id, string ns) where T : BaseControl, new()
         {
-            T component = ComponentManager.Get<T>(id) ?? new T { ID = id, IsProxy = true, Namespace = ns};
+            return X.GetCmp<T>(id, new BaseControl.Config { Namespace = ns });
+        }
+
+        /// <summary>
+        /// Returns the AbstractComponent by id and sets the .Value related fields by calling if available from the Request.
+        /// </summary>
+        /// <param name="id">The AbstractComponent id</param>
+        /// <param name="config">Config for proxy widget</param>
+        /// <typeparam name="T">The Type of AbstractComponent to return.</typeparam>
+        /// <returns>The AbstractComponent, or throws ArgumentNullException if not found</returns>
+        [Description("")]
+        public static T GetCmp<T>(string id, BaseControl.Config config) where T : BaseControl, new()
+        {
+            T component = ComponentManager.Get<T>(id) ?? new T { ID = id, IsProxy = true};
+            if (config != null)
+            {
+                component.SuspendScripting();
+                component = (T)component.Apply(config);
+                component.ResumeScripting();
+            }
 
             if (X.IsAjaxRequest)
             {
@@ -297,6 +314,23 @@ namespace Ext.Net
             }
 
             component.AllowCallbackScriptMonitoring = true;
+
+            return component as T;
+        }
+
+        public static T ComponentQuery<T>(string selector) where T : BaseControl, new()
+        {
+            string id = BaseControl.GenerateID();
+            T component = new T { ID = id, IsProxy = true, Namespace = ""};
+            
+            if (X.ResourceManager == null)
+            {
+                component.GenerateMethodsCalling = true;
+            }
+
+            component.AllowCallbackScriptMonitoring = true;
+
+            component.AddScript("var {0} = Ext.ComponentQuery.query({1})[0];", id, JSON.Serialize(selector));
 
             return component as T;
         }
@@ -501,7 +535,8 @@ namespace Ext.Net
         {
             get
             {
-                var obj = HttpContext.Current.Items["Ext.Net.ControlsScripting"];
+                object obj = HttpContext.Current.Items["Ext.Net.ControlsScripting"];
+
                 return obj != null ? (bool)obj : true;
             }
             set

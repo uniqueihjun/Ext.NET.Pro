@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -50,17 +50,20 @@ namespace Ext.Net
             }
         }
 
-        string Format(Control control)
+        protected virtual string Format(Control control)
         {
             bool islazy = false;
             Observable observable = control as Observable;
+            string clientID = control.ClientID;
+
             if (observable != null)
             {
                 islazy = observable.IsLazy;
+                clientID = observable.BaseClientID;
             }           
 
             return Transformer.NET.Net.CreateToken(typeof(Transformer.NET.AnchorTag), new Dictionary<string, string>{                        
-                            {"id", islazy ? control.ClientID + "_ClientInit" : control.ClientID}                            
+                            {"id", islazy ? clientID + "_ClientInit" : clientID}                            
                         });
         }
 
@@ -71,6 +74,14 @@ namespace Ext.Net
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public partial class FunctionLazyControlJsonConverter : LazyControlJsonConverter
+    {
+        protected override string Format(Control control)
+        {
+            return string.Concat("function(){return ", base.Format(control), ";}");
         }
     }
 }

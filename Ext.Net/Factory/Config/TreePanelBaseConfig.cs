@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -64,6 +64,42 @@ namespace Ext.Net
 				}
 			}
 			
+			private string selectedHiddenName = null;
+
+			/// <summary>
+			/// HiddenField name which submits selected nodes
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual string SelectedHiddenName 
+			{ 
+				get
+				{
+					return this.selectedHiddenName;
+				}
+				set
+				{
+					this.selectedHiddenName = value;
+				}
+			}
+
+			private string checkedHiddenName = null;
+
+			/// <summary>
+			/// HiddenField name which submits checked nodes
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual string CheckedHiddenName 
+			{ 
+				get
+				{
+					return this.checkedHiddenName;
+				}
+				set
+				{
+					this.checkedHiddenName = value;
+				}
+			}
+
 			private string modelName = null;
 
 			/// <summary>
@@ -385,6 +421,24 @@ namespace Ext.Net
 				set
 				{
 					this.noLeafIcon = value;
+				}
+			}
+
+			private string submitUrl = "";
+
+			/// <summary>
+			/// The default URL to be used for requests to the server.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string SubmitUrl 
+			{ 
+				get
+				{
+					return this.submitUrl;
+				}
+				set
+				{
+					this.submitUrl = value;
 				}
 			}
 

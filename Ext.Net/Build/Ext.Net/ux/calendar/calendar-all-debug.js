@@ -1,10 +1,9 @@
 /*
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
- * @license   : See license.txt and http://www.ext.net/license/. 
- * @website   : http://www.ext.net/
+ * @license   : See license.txt and http://www.ext.net/license/.
  */
 
 Ext.define('Ext.calendar.util.Date', {
@@ -42,6 +41,13 @@ Ext.define('Ext.calendar.util.Date', {
             dt2.setMilliseconds(0);
         }
         return dt2.getTime() - dt1.getTime();
+    },
+
+    isMidnight: function(dt) {
+        return dt.getHours() === 0 &&
+               dt.getMinutes() === 0 &&
+               dt.getSeconds() === 0 && 
+               dt.getMilliseconds() === 0;    
     },
 
     // private helper fn
@@ -1253,6 +1259,17 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         me.endDate = me.down('#' + me.id + '-end-date');
         me.allDay = me.down('#' + me.id + '-allday');
         me.toLabel = me.down('#' + me.id + '-to-label');
+
+        me.startDate.validateOnChange = me.endDate.validateOnChange = false;
+
+        me.startDate.isValid = me.endDate.isValid = function() {
+                                    var me = this,
+                                        valid = Ext.isDate(me.getValue());
+                                    if (!valid) {
+                                        me.focus();
+                                    }
+                                    return valid;
+                                 };
     },
     
     getFieldConfigs: function() {
@@ -1431,10 +1448,25 @@ Ext.define('Ext.calendar.form.field.DateRange', {
     
     
     getValue: function(){
+        var eDate = Ext.calendar.util.Date,
+            start = this.getDT('start'),
+            end = this.getDT('end'),
+            allDay = this.allDay.getValue();
+        
+        if (Ext.isDate(start) && Ext.isDate(end) && start.getTime() !== end.getTime()) {
+            if (!allDay && eDate.isMidnight(start) && eDate.isMidnight(end)) {
+                // 12:00am -> 12:00am over n days, all day event
+                allDay = true;
+                end = eDate.add(end, {
+                    days: -1
+                });
+            }
+        }
+        
         return [
-            this.getDT('start'), 
-            this.getDT('end'),
-            this.allDay.getValue()
+            start, 
+            end,
+            allDay
         ];
     },
     

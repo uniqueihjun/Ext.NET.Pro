@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,63 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : MenuItemBase.Builder<MenuItem, MenuItem.Builder>
+        new public abstract partial class Builder<TMenuItem, TBuilder> : MenuItemBase.Builder<TMenuItem, TBuilder>
+            where TMenuItem : MenuItem
+            where TBuilder : Builder<TMenuItem, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TMenuItem component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<MenuItemListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side DirectEventHandlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<MenuItemDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder DirectClickUrl(string directClickUrl)
+            {
+                this.ToComponent().DirectClickUrl = directClickUrl;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : MenuItem.Builder<MenuItem, MenuItem.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,37 +110,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of MenuItem.Builder</returns>
-            public virtual MenuItem.Builder Listeners(Action<MenuItemListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as MenuItem.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side DirectEventHandlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of MenuItem.Builder</returns>
-            public virtual MenuItem.Builder DirectEvents(Action<MenuItemDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as MenuItem.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -93,6 +118,14 @@ namespace Ext.Net
         public MenuItem.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.MenuItem(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -107,7 +140,11 @@ namespace Ext.Net
         /// </summary>
         public MenuItem.Builder MenuItem()
         {
-            return this.MenuItem(new MenuItem());
+#if MVC
+			return this.MenuItem(new MenuItem { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.MenuItem(new MenuItem());
+#endif			
         }
 
         /// <summary>
@@ -115,7 +152,10 @@ namespace Ext.Net
         /// </summary>
         public MenuItem.Builder MenuItem(MenuItem component)
         {
-            return new MenuItem.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new MenuItem.Builder(component);
         }
 
         /// <summary>
@@ -123,7 +163,11 @@ namespace Ext.Net
         /// </summary>
         public MenuItem.Builder MenuItem(MenuItem.Config config)
         {
-            return new MenuItem.Builder(new MenuItem(config));
+#if MVC
+			return new MenuItem.Builder(new MenuItem(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new MenuItem.Builder(new MenuItem(config));
+#endif			
         }
     }
 }

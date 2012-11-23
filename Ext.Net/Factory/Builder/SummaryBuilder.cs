@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,32 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractSummary.Builder<Summary, Summary.Builder>
+        new public abstract partial class Builder<TSummary, TBuilder> : AbstractSummary.Builder<TSummary, TBuilder>
+            where TSummary : Summary
+            where TBuilder : Builder<TSummary, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TSummary component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : Summary.Builder<Summary, Summary.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,15 +79,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -71,6 +87,14 @@ namespace Ext.Net
         public Summary.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.Summary(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -85,7 +109,11 @@ namespace Ext.Net
         /// </summary>
         public Summary.Builder Summary()
         {
-            return this.Summary(new Summary());
+#if MVC
+			return this.Summary(new Summary { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.Summary(new Summary());
+#endif			
         }
 
         /// <summary>
@@ -93,7 +121,10 @@ namespace Ext.Net
         /// </summary>
         public Summary.Builder Summary(Summary component)
         {
-            return new Summary.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new Summary.Builder(component);
         }
 
         /// <summary>
@@ -101,7 +132,11 @@ namespace Ext.Net
         /// </summary>
         public Summary.Builder Summary(Summary.Config config)
         {
-            return new Summary.Builder(new Summary(config));
+#if MVC
+			return new Summary.Builder(new Summary(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new Summary.Builder(new Summary(config));
+#endif			
         }
     }
 }

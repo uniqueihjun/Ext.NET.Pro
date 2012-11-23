@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -16,7 +16,8 @@ namespace Ext.Net
     /// A Grid header type which renders an icon, or a series of icons in a grid cell, and offers a scoped click handler for each icon.
     /// The action column can be at any index in the columns array, and a grid can have any number of action columns.
     /// </summary>
-    public partial class ActionColumn : ColumnBase, IIcon
+    [Meta]
+    public partial class ActionColumn : ColumnBase, IIcon, INoneEditable
     {
         /// <summary>
         /// 

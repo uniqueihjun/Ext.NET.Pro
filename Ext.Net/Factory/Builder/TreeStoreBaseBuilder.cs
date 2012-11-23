@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TTreeStoreBase, TBuilder> : AbstractStore.Builder<TTreeStoreBase, TBuilder>
+        new public abstract partial class Builder<TTreeStoreBase, TBuilder> : AbstractStore.Builder<TTreeStoreBase, TBuilder>
             where TTreeStoreBase : TreeStoreBase
             where TBuilder : Builder<TTreeStoreBase, TBuilder>
         {
@@ -54,6 +54,15 @@ namespace Ext.Net
             public virtual TBuilder DefaultRootId(string defaultRootId)
             {
                 this.ToComponent().DefaultRootId = defaultRootId;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The default root text (if not specified). Defaults to: \"Root\"
+			/// </summary>
+            public virtual TBuilder DefaultRootText(string defaultRootText)
+            {
+                this.ToComponent().DefaultRootText = defaultRootText;
                 return this as TBuilder;
             }
              
@@ -95,6 +104,24 @@ namespace Ext.Net
                 return this as TBuilder;
             }
 			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder DataSource(object dataSource)
+            {
+                this.ToComponent().DataSource = dataSource;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder DataSourceID(string dataSourceID)
+            {
+                this.ToComponent().DataSourceID = dataSourceID;
+                return this as TBuilder;
+            }
+             
  			/// <summary>
 			/// 
  			/// </summary>

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,54 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ColumnBase.Builder<TreeColumn, TreeColumn.Builder>
+        new public abstract partial class Builder<TTreeColumn, TBuilder> : ColumnBase.Builder<TTreeColumn, TBuilder>
+            where TTreeColumn : TreeColumn
+            where TBuilder : Builder<TTreeColumn, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TTreeColumn component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<ColumnListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<ColumnDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : TreeColumn.Builder<TreeColumn, TreeColumn.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,37 +101,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TreeColumn.Builder</returns>
-            public virtual TreeColumn.Builder Listeners(Action<ColumnListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as TreeColumn.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TreeColumn.Builder</returns>
-            public virtual TreeColumn.Builder DirectEvents(Action<ColumnDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as TreeColumn.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -93,6 +109,14 @@ namespace Ext.Net
         public TreeColumn.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.TreeColumn(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -107,7 +131,11 @@ namespace Ext.Net
         /// </summary>
         public TreeColumn.Builder TreeColumn()
         {
-            return this.TreeColumn(new TreeColumn());
+#if MVC
+			return this.TreeColumn(new TreeColumn { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.TreeColumn(new TreeColumn());
+#endif			
         }
 
         /// <summary>
@@ -115,7 +143,10 @@ namespace Ext.Net
         /// </summary>
         public TreeColumn.Builder TreeColumn(TreeColumn component)
         {
-            return new TreeColumn.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new TreeColumn.Builder(component);
         }
 
         /// <summary>
@@ -123,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public TreeColumn.Builder TreeColumn(TreeColumn.Config config)
         {
-            return new TreeColumn.Builder(new TreeColumn(config));
+#if MVC
+			return new TreeColumn.Builder(new TreeColumn(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new TreeColumn.Builder(new TreeColumn(config));
+#endif			
         }
     }
 }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -241,6 +241,24 @@ namespace Ext.Net
 				set
 				{
 					this.waitTitle = value;
+				}
+			}
+
+			private bool jsonSubmit = false;
+
+			/// <summary>
+			/// If set to true, the field values are sent as JSON in the request body. All of the field values, plus any additional params configured via baseParams and/or the options to submit, will be included in the values POSTed in the body of the request.
+			/// </summary>
+			[DefaultValue(false)]
+			public virtual bool JsonSubmit 
+			{ 
+				get
+				{
+					return this.jsonSubmit;
+				}
+				set
+				{
+					this.jsonSubmit = value;
 				}
 			}
         

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TAbstractPanel, TBuilder> : AbstractContainer.Builder<TAbstractPanel, TBuilder>
+        new public abstract partial class Builder<TAbstractPanel, TBuilder> : AbstractContainer.Builder<TAbstractPanel, TBuilder>
             where TAbstractPanel : AbstractPanel
             where TBuilder : Builder<TAbstractPanel, TBuilder>
         {
@@ -433,17 +433,6 @@ namespace Ext.Net
                 return this as TBuilder;
             }
              
- 			/// <summary>
-			/// A KeyMap config object (in the format expected by Ext.KeyMap.addBinding used to assign custom key handling to this panel (defaults to null).
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TBuilder</returns>
-            public virtual TBuilder KeyMap(Action<KeyBindingCollection> action)
-            {
-                action(this.ToComponent().KeyMap);
-                return this as TBuilder;
-            }
-			 
  			/// <summary>
 			/// An array of tool button configs to be added to the header tool area. When rendered, each tool is stored as an Element referenced by a public property called tools.
  			/// </summary>

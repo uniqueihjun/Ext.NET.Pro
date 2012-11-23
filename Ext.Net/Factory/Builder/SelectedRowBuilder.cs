@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<SelectedRow, SelectedRow.Builder>
+        new public abstract partial class Builder<TSelectedRow, TBuilder> : BaseItem.Builder<TSelectedRow, TBuilder>
+            where TSelectedRow : SelectedRow
+            where TBuilder : Builder<TSelectedRow, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TSelectedRow component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder RecordID(string recordID)
+            {
+                this.ToComponent().RecordID = recordID;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder RowIndex(int rowIndex)
+            {
+                this.ToComponent().RowIndex = rowIndex;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : SelectedRow.Builder<SelectedRow, SelectedRow.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual SelectedRow.Builder RecordID(string recordID)
-            {
-                this.ToComponent().RecordID = recordID;
-                return this as SelectedRow.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual SelectedRow.Builder RowIndex(int rowIndex)
-            {
-                this.ToComponent().RowIndex = rowIndex;
-                return this as SelectedRow.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public SelectedRow.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.SelectedRow(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public SelectedRow.Builder SelectedRow()
         {
-            return this.SelectedRow(new SelectedRow());
+#if MVC
+			return this.SelectedRow(new SelectedRow { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.SelectedRow(new SelectedRow());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public SelectedRow.Builder SelectedRow(SelectedRow component)
         {
-            return new SelectedRow.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new SelectedRow.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public SelectedRow.Builder SelectedRow(SelectedRow.Config config)
         {
-            return new SelectedRow.Builder(new SelectedRow(config));
+#if MVC
+			return new SelectedRow.Builder(new SelectedRow(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new SelectedRow.Builder(new SelectedRow(config));
+#endif			
         }
     }
 }

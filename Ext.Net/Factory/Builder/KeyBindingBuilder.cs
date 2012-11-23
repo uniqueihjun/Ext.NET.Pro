@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,95 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<KeyBinding, KeyBinding.Builder>
+        new public abstract partial class Builder<TKeyBinding, TBuilder> : BaseItem.Builder<TKeyBinding, TBuilder>
+            where TKeyBinding : KeyBinding
+            where TBuilder : Builder<TKeyBinding, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TKeyBinding component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// True to handle key only when shift is pressed, False to handle the key only when shift is not pressed (defaults to undefined)
+			/// </summary>
+            public virtual TBuilder Shift(bool? shift)
+            {
+                this.ToComponent().Shift = shift;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// True to handle key only when ctrl is pressed, False to handle the key only when ctrl is not pressed (defaults to undefined)
+			/// </summary>
+            public virtual TBuilder Ctrl(bool? ctrl)
+            {
+                this.ToComponent().Ctrl = ctrl;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// True to handle key only when alt is pressed, False to handle the key only when alt is not pressed (defaults to undefined)
+			/// </summary>
+            public virtual TBuilder Alt(bool? alt)
+            {
+                this.ToComponent().Alt = alt;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The function to call when KeyMap finds the expected key combination
+			/// </summary>
+            public virtual TBuilder Handler(string handler)
+            {
+                this.ToComponent().Handler = handler;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The scope of the callback function
+			/// </summary>
+            public virtual TBuilder Scope(string scope)
+            {
+                this.ToComponent().Scope = scope;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// A default action to apply to the event. Possible values are: stopEvent, stopPropagation, preventDefault. If no value is set no action is performed.
+			/// </summary>
+            public virtual TBuilder DefaultEventAction(EventAction defaultEventAction)
+            {
+                this.ToComponent().DefaultEventAction = defaultEventAction;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// A single keycode or an array of keycodes to handle
+			/// </summary>
+            public virtual TBuilder KeysString(string keysString)
+            {
+                this.ToComponent().KeysString = keysString;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : KeyBinding.Builder<KeyBinding, KeyBinding.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,71 +142,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// True to handle key only when shift is pressed, False to handle the key only when shift is not pressed (defaults to undefined)
-			/// </summary>
-            public virtual KeyBinding.Builder Shift(bool? shift)
-            {
-                this.ToComponent().Shift = shift;
-                return this as KeyBinding.Builder;
-            }
-             
- 			/// <summary>
-			/// True to handle key only when ctrl is pressed, False to handle the key only when ctrl is not pressed (defaults to undefined)
-			/// </summary>
-            public virtual KeyBinding.Builder Ctrl(bool? ctrl)
-            {
-                this.ToComponent().Ctrl = ctrl;
-                return this as KeyBinding.Builder;
-            }
-             
- 			/// <summary>
-			/// True to handle key only when alt is pressed, False to handle the key only when alt is not pressed (defaults to undefined)
-			/// </summary>
-            public virtual KeyBinding.Builder Alt(bool? alt)
-            {
-                this.ToComponent().Alt = alt;
-                return this as KeyBinding.Builder;
-            }
-             
- 			/// <summary>
-			/// True to stop the event from bubbling and prevent the default browser action if the key was handled by the KeyMap (defaults to false)
-			/// </summary>
-            public virtual KeyBinding.Builder StopEvent(bool stopEvent)
-            {
-                this.ToComponent().StopEvent = stopEvent;
-                return this as KeyBinding.Builder;
-            }
-             
- 			/// <summary>
-			/// The scope of the callback function
-			/// </summary>
-            public virtual KeyBinding.Builder Scope(string scope)
-            {
-                this.ToComponent().Scope = scope;
-                return this as KeyBinding.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of KeyBinding.Builder</returns>
-            public virtual KeyBinding.Builder Listeners(Action<KeyListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as KeyBinding.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -127,6 +150,14 @@ namespace Ext.Net
         public KeyBinding.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.KeyBinding(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -141,7 +172,11 @@ namespace Ext.Net
         /// </summary>
         public KeyBinding.Builder KeyBinding()
         {
-            return this.KeyBinding(new KeyBinding());
+#if MVC
+			return this.KeyBinding(new KeyBinding { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.KeyBinding(new KeyBinding());
+#endif			
         }
 
         /// <summary>
@@ -149,7 +184,10 @@ namespace Ext.Net
         /// </summary>
         public KeyBinding.Builder KeyBinding(KeyBinding component)
         {
-            return new KeyBinding.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new KeyBinding.Builder(component);
         }
 
         /// <summary>
@@ -157,7 +195,11 @@ namespace Ext.Net
         /// </summary>
         public KeyBinding.Builder KeyBinding(KeyBinding.Config config)
         {
-            return new KeyBinding.Builder(new KeyBinding(config));
+#if MVC
+			return new KeyBinding.Builder(new KeyBinding(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new KeyBinding.Builder(new KeyBinding(config));
+#endif			
         }
     }
 }

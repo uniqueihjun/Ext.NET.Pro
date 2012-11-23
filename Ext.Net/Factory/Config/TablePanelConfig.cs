@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -280,21 +280,21 @@ namespace Ext.Net
 				}
 			}
 
-			private bool restrictColumnReorder = false;
+			private bool sealedColumns = false;
 
 			/// <summary>
-			/// True to constrain column dragging so that a column cannot be dragged in or out of it's current group. Only relevant while enableColumnMove is enabled. Defaults to: false
+			/// True to constrain column dragging so that a column cannot be dragged in or out of it's current group. Only relevant while enableColumnMove is enabled.
 			/// </summary>
 			[DefaultValue(false)]
-			public virtual bool RestrictColumnReorder 
+			public virtual bool SealedColumns 
 			{ 
 				get
 				{
-					return this.restrictColumnReorder;
+					return this.sealedColumns;
 				}
 				set
 				{
-					this.restrictColumnReorder = value;
+					this.sealedColumns = value;
 				}
 			}
 

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,32 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : JsonReader.Builder<ArrayReader, ArrayReader.Builder>
+        new public abstract partial class Builder<TArrayReader, TBuilder> : JsonReader.Builder<TArrayReader, TBuilder>
+            where TArrayReader : ArrayReader
+            where TBuilder : Builder<TArrayReader, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TArrayReader component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : ArrayReader.Builder<ArrayReader, ArrayReader.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,15 +79,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -71,6 +87,14 @@ namespace Ext.Net
         public ArrayReader.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.ArrayReader(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -85,7 +109,11 @@ namespace Ext.Net
         /// </summary>
         public ArrayReader.Builder ArrayReader()
         {
-            return this.ArrayReader(new ArrayReader());
+#if MVC
+			return this.ArrayReader(new ArrayReader { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.ArrayReader(new ArrayReader());
+#endif			
         }
 
         /// <summary>
@@ -93,7 +121,10 @@ namespace Ext.Net
         /// </summary>
         public ArrayReader.Builder ArrayReader(ArrayReader component)
         {
-            return new ArrayReader.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new ArrayReader.Builder(component);
         }
 
         /// <summary>
@@ -101,7 +132,11 @@ namespace Ext.Net
         /// </summary>
         public ArrayReader.Builder ArrayReader(ArrayReader.Config config)
         {
-            return new ArrayReader.Builder(new ArrayReader(config));
+#if MVC
+			return new ArrayReader.Builder(new ArrayReader(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new ArrayReader.Builder(new ArrayReader(config));
+#endif			
         }
     }
 }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,32 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Plugin.Builder<TabMenu, TabMenu.Builder>
+        new public abstract partial class Builder<TTabMenu, TBuilder> : Plugin.Builder<TTabMenu, TBuilder>
+            where TTabMenu : TabMenu
+            where TBuilder : Builder<TTabMenu, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TTabMenu component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : TabMenu.Builder<TabMenu, TabMenu.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,15 +79,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -71,6 +87,14 @@ namespace Ext.Net
         public TabMenu.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.TabMenu(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -85,7 +109,11 @@ namespace Ext.Net
         /// </summary>
         public TabMenu.Builder TabMenu()
         {
-            return this.TabMenu(new TabMenu());
+#if MVC
+			return this.TabMenu(new TabMenu { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.TabMenu(new TabMenu());
+#endif			
         }
 
         /// <summary>
@@ -93,7 +121,10 @@ namespace Ext.Net
         /// </summary>
         public TabMenu.Builder TabMenu(TabMenu component)
         {
-            return new TabMenu.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new TabMenu.Builder(component);
         }
 
         /// <summary>
@@ -101,7 +132,11 @@ namespace Ext.Net
         /// </summary>
         public TabMenu.Builder TabMenu(TabMenu.Config config)
         {
-            return new TabMenu.Builder(new TabMenu(config));
+#if MVC
+			return new TabMenu.Builder(new TabMenu(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new TabMenu.Builder(new TabMenu(config));
+#endif			
         }
     }
 }

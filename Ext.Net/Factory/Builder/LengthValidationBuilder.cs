@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractValidation.Builder<LengthValidation, LengthValidation.Builder>
+        new public abstract partial class Builder<TLengthValidation, TBuilder> : AbstractValidation.Builder<TLengthValidation, TBuilder>
+            where TLengthValidation : LengthValidation
+            where TBuilder : Builder<TLengthValidation, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TLengthValidation component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Maximum value length allowed.
+			/// </summary>
+            public virtual TBuilder Max(int max)
+            {
+                this.ToComponent().Max = max;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Minimum value length allowed.
+			/// </summary>
+            public virtual TBuilder Min(int min)
+            {
+                this.ToComponent().Min = min;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : LengthValidation.Builder<LengthValidation, LengthValidation.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Maximum value length allowed.
-			/// </summary>
-            public virtual LengthValidation.Builder Max(int max)
-            {
-                this.ToComponent().Max = max;
-                return this as LengthValidation.Builder;
-            }
-             
- 			/// <summary>
-			/// Minimum value length allowed.
-			/// </summary>
-            public virtual LengthValidation.Builder Min(int min)
-            {
-                this.ToComponent().Min = min;
-                return this as LengthValidation.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public LengthValidation.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.LengthValidation(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public LengthValidation.Builder LengthValidation()
         {
-            return this.LengthValidation(new LengthValidation());
+#if MVC
+			return this.LengthValidation(new LengthValidation { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.LengthValidation(new LengthValidation());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public LengthValidation.Builder LengthValidation(LengthValidation component)
         {
-            return new LengthValidation.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new LengthValidation.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public LengthValidation.Builder LengthValidation(LengthValidation.Config config)
         {
-            return new LengthValidation.Builder(new LengthValidation(config));
+#if MVC
+			return new LengthValidation.Builder(new LengthValidation(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new LengthValidation.Builder(new LengthValidation(config));
+#endif			
         }
     }
 }

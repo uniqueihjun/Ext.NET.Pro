@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -154,24 +154,27 @@ namespace Ext.Net
             {
                 if (this.StoreID.IsNotEmpty())
                 {                    
-                    var store = Ext.Net.Utilities.ControlUtils.FindControl<AbstractStore>(this.Page, this.StoreID);
+                    AbstractStore store = Ext.Net.Utilities.ControlUtils.FindControl<AbstractStore>(this.Page, this.StoreID);
+                    
                     if (store != null)
                     {
                         return store.ConfigID;    
                     }                    
                 }
 
-                var cmp = this.ParentComponent as IStore<Store>;
+                IStore<Store> cmp = this.ParentComponent as IStore<Store>;
+
                 if (cmp != null)
                 {
-                    if(cmp.Store.Primary != null)
-                    {
+                    if (cmp.Store.Primary != null)
+                    {                     
                         return cmp.Store.Primary.ConfigID;
                     }
 
-                    var store = Ext.Net.Utilities.ControlUtils.FindControl<AbstractStore>(this.Page, cmp.StoreID);
+                    AbstractStore store = Ext.Net.Utilities.ControlUtils.FindControl<AbstractStore>(this.Page, cmp.StoreID);
+                    
                     if (store != null)
-                    {
+                    {                        
                         return store.ConfigID;   
                     }
 
@@ -192,7 +195,8 @@ namespace Ext.Net
 
             if (this.StoreID.IsNotEmpty())
             {
-                var store = Ext.Net.Utilities.ControlUtils.FindControl<StoreBase>(this.Page, this.StoreID);
+                StoreBase store = Ext.Net.Utilities.ControlUtils.FindControl<StoreBase>(this.Page, this.StoreID);
+                
                 if (store != null)
                 {
                     store.IsPagingStore = true;
@@ -200,22 +204,47 @@ namespace Ext.Net
             }
             else
             {
-                var cmp = this.ParentComponent as IStore<Store>;
+                IStore<Store> cmp = this.ParentComponent as IStore<Store>;
+                
                 if (cmp != null)
                 {
                     if (cmp.Store.Primary != null)
                     {
                         cmp.Store.Primary.IsPagingStore = true;
+                        cmp.Store.Primary.ForceIdRendering = true;
                     }
                     else if (cmp.StoreID.IsNotEmpty())
                     {
-                        var store = Ext.Net.Utilities.ControlUtils.FindControl<StoreBase>(this.Page, cmp.StoreID);
+                        StoreBase store = Ext.Net.Utilities.ControlUtils.FindControl<StoreBase>(this.Page, cmp.StoreID);
+                        
                         if (store != null)
                         {
+                            store.ForceIdRendering = true;
                             store.IsPagingStore = true;
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Meta]
+        [ConfigOption("doRefresh", typeof(FunctionJsonConverter))]
+        [Category("7. PagingToolbar")]
+        [DefaultValue("")]
+        [NotifyParentProperty(true)]
+        [Description("")]
+        public virtual string RefreshHandler
+        {
+            get
+            {
+                return this.State.Get<string>("RefreshHandler", "");
+            }
+            set
+            {
+                this.State.Set("RefreshHandler", value);
             }
         }
 

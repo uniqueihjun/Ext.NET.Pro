@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -17,7 +17,7 @@ namespace Ext.Net
     /// </summary>
     [Meta]
     [Description("")]
-    public partial class ComponentColumn : ColumnBase
+    public partial class ComponentColumn : ColumnBase, INoneEditable
     {
 		/// <summary>
 		/// 
@@ -34,6 +34,11 @@ namespace Ext.Net
             if(!this.OverOnly && this.Component.Count > 0)
             {
                 this.Component[0].IDMode = Ext.Net.IDMode.Ignore;
+            }
+
+            if (this.Parent != null && this.Parent.Parent is TreePanelBase)
+            {
+                throw new System.Exception("TreePanel doesn't support ComponentColumn");
             }
 
             base.OnBeforeClientInit(sender);
@@ -62,7 +67,7 @@ namespace Ext.Net
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [ConfigOption("component", typeof(SingleItemCollectionJsonConverter))]
+        [ConfigOption("component", typeof(FunctionItemCollectionJsonConverter))]
         [Description("")]
         public virtual ItemsCollection<AbstractComponent> Component
         {

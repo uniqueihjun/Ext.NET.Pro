@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -158,7 +158,7 @@ namespace Ext.Net
         {
             get
             {
-                if (this.EmptyText.IsNotEmpty() && this.Text.IsEmpty())
+                /*if (this.EmptyText.IsNotEmpty() && this.Text.IsEmpty())
                 {
                     return this.EmptyText;
                 }
@@ -166,7 +166,7 @@ namespace Ext.Net
                 if (this.Text.IsNotEmpty() && this.Format.IsNotEmpty())
                 {
                     return string.Format(this.Format, this.Text);
-                }
+                }*/
 
                 return this.Text;
             }

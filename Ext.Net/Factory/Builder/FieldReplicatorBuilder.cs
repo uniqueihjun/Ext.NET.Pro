@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,32 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Plugin.Builder<FieldReplicator, FieldReplicator.Builder>
+        new public abstract partial class Builder<TFieldReplicator, TBuilder> : Plugin.Builder<TFieldReplicator, TBuilder>
+            where TFieldReplicator : FieldReplicator
+            where TBuilder : Builder<TFieldReplicator, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TFieldReplicator component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : FieldReplicator.Builder<FieldReplicator, FieldReplicator.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,15 +79,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -71,6 +87,14 @@ namespace Ext.Net
         public FieldReplicator.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.FieldReplicator(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -85,7 +109,11 @@ namespace Ext.Net
         /// </summary>
         public FieldReplicator.Builder FieldReplicator()
         {
-            return this.FieldReplicator(new FieldReplicator());
+#if MVC
+			return this.FieldReplicator(new FieldReplicator { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.FieldReplicator(new FieldReplicator());
+#endif			
         }
 
         /// <summary>
@@ -93,7 +121,10 @@ namespace Ext.Net
         /// </summary>
         public FieldReplicator.Builder FieldReplicator(FieldReplicator component)
         {
-            return new FieldReplicator.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new FieldReplicator.Builder(component);
         }
 
         /// <summary>
@@ -101,7 +132,11 @@ namespace Ext.Net
         /// </summary>
         public FieldReplicator.Builder FieldReplicator(FieldReplicator.Config config)
         {
-            return new FieldReplicator.Builder(new FieldReplicator(config));
+#if MVC
+			return new FieldReplicator.Builder(new FieldReplicator(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new FieldReplicator.Builder(new FieldReplicator(config));
+#endif			
         }
     }
 }

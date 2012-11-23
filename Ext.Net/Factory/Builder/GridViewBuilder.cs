@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,63 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : TableView.Builder<GridView, GridView.Builder>
+        new public abstract partial class Builder<TGridView, TBuilder> : TableView.Builder<TGridView, TBuilder>
+            where TGridView : GridView
+            where TBuilder : Builder<TGridView, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TGridView component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// True to stripe the rows. Default is true.
+			/// </summary>
+            public virtual TBuilder StripeRows(bool stripeRows)
+            {
+                this.ToComponent().StripeRows = stripeRows;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<GridViewListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<GridViewDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : GridView.Builder<GridView, GridView.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,46 +110,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// True to stripe the rows. Default is true.
-			/// </summary>
-            public virtual GridView.Builder StripeRows(bool stripeRows)
-            {
-                this.ToComponent().StripeRows = stripeRows;
-                return this as GridView.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of GridView.Builder</returns>
-            public virtual GridView.Builder Listeners(Action<GridViewListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as GridView.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of GridView.Builder</returns>
-            public virtual GridView.Builder DirectEvents(Action<GridViewDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as GridView.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -102,6 +118,14 @@ namespace Ext.Net
         public GridView.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.GridView(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -116,7 +140,11 @@ namespace Ext.Net
         /// </summary>
         public GridView.Builder GridView()
         {
-            return this.GridView(new GridView());
+#if MVC
+			return this.GridView(new GridView { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.GridView(new GridView());
+#endif			
         }
 
         /// <summary>
@@ -124,7 +152,10 @@ namespace Ext.Net
         /// </summary>
         public GridView.Builder GridView(GridView component)
         {
-            return new GridView.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new GridView.Builder(component);
         }
 
         /// <summary>
@@ -132,7 +163,11 @@ namespace Ext.Net
         /// </summary>
         public GridView.Builder GridView(GridView.Config config)
         {
-            return new GridView.Builder(new GridView(config));
+#if MVC
+			return new GridView.Builder(new GridView(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new GridView.Builder(new GridView(config));
+#endif			
         }
     }
 }

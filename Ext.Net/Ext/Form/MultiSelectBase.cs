@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -11,9 +11,9 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Web.UI;
-
 using Ext.Net.Utilities;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Ext.Net
 {
@@ -47,7 +47,8 @@ namespace Ext.Net
         {
             add
             {
-                this.Events.AddHandler(EventSelectionChanged, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventSelectionChanged, value);
             }
             remove
             {
@@ -90,23 +91,34 @@ namespace Ext.Net
 
             if (state.IsNotEmpty())
             {
-                var items = ComboBoxBase.ParseSelectedItems(state);
-
-                bool fireEvent = false;
-
-                foreach (var item in items)
+                try
                 {
-                    if (!this.SelectedItems.Contains(item))
+                    List<ListItem> items = ComboBoxBase.ParseSelectedItems(state);
+
+                    bool fireEvent = false;
+
+                    foreach (ListItem item in items)
                     {
-                        fireEvent = true;
-                        break;
+                        if (!this.SelectedItems.Contains(item))
+                        {
+                            fireEvent = true;
+                            break;
+                        }
+                    }
+
+                    this.SelectedItems.Clear();
+                    this.SelectedItems.AddRange(items);
+
+                    return fireEvent;
+                }
+                catch
+                {
+                    this.SuccessLoadPostData = false;
+                    if (this.RethrowLoadPostDataException)
+                    {
+                        throw;
                     }
                 }
-
-                this.SelectedItems.Clear();
-                this.SelectedItems.AddRange(items);
-
-                return fireEvent;
             }
             else
             {
@@ -191,6 +203,28 @@ namespace Ext.Net
                 }
 
                 return items;
+            }
+        }
+
+        private Type type;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Meta]
+        [TypeConverter(typeof(NetTypeConverter))]
+        [DefaultValue(null)]
+        public Type ItemsFromEnum
+        {
+            get
+            {
+                return this.type;
+            }
+            set
+            {
+                this.type = value;
+                this.Items.Clear();
+                this.Items.AddRange(ListItemCollection.FromEnum(value));
             }
         }
 

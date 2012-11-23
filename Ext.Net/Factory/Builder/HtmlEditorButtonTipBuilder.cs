@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,59 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<HtmlEditorButtonTip, HtmlEditorButtonTip.Builder>
+        new public abstract partial class Builder<THtmlEditorButtonTip, TBuilder> : BaseItem.Builder<THtmlEditorButtonTip, TBuilder>
+            where THtmlEditorButtonTip : HtmlEditorButtonTip
+            where TBuilder : Builder<THtmlEditorButtonTip, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(THtmlEditorButtonTip component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Title(string title)
+            {
+                this.ToComponent().Title = title;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Text(string text)
+            {
+                this.ToComponent().Text = text;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Cls(string cls)
+            {
+                this.ToComponent().Cls = cls;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : HtmlEditorButtonTip.Builder<HtmlEditorButtonTip, HtmlEditorButtonTip.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,42 +106,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual HtmlEditorButtonTip.Builder Title(string title)
-            {
-                this.ToComponent().Title = title;
-                return this as HtmlEditorButtonTip.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual HtmlEditorButtonTip.Builder Text(string text)
-            {
-                this.ToComponent().Text = text;
-                return this as HtmlEditorButtonTip.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual HtmlEditorButtonTip.Builder Cls(string cls)
-            {
-                this.ToComponent().Cls = cls;
-                return this as HtmlEditorButtonTip.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -98,6 +114,14 @@ namespace Ext.Net
         public HtmlEditorButtonTip.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.HtmlEditorButtonTip(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -112,7 +136,11 @@ namespace Ext.Net
         /// </summary>
         public HtmlEditorButtonTip.Builder HtmlEditorButtonTip()
         {
-            return this.HtmlEditorButtonTip(new HtmlEditorButtonTip());
+#if MVC
+			return this.HtmlEditorButtonTip(new HtmlEditorButtonTip { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.HtmlEditorButtonTip(new HtmlEditorButtonTip());
+#endif			
         }
 
         /// <summary>
@@ -120,7 +148,10 @@ namespace Ext.Net
         /// </summary>
         public HtmlEditorButtonTip.Builder HtmlEditorButtonTip(HtmlEditorButtonTip component)
         {
-            return new HtmlEditorButtonTip.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new HtmlEditorButtonTip.Builder(component);
         }
 
         /// <summary>
@@ -128,7 +159,11 @@ namespace Ext.Net
         /// </summary>
         public HtmlEditorButtonTip.Builder HtmlEditorButtonTip(HtmlEditorButtonTip.Config config)
         {
-            return new HtmlEditorButtonTip.Builder(new HtmlEditorButtonTip(config));
+#if MVC
+			return new HtmlEditorButtonTip.Builder(new HtmlEditorButtonTip(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new HtmlEditorButtonTip.Builder(new HtmlEditorButtonTip(config));
+#endif			
         }
     }
 }

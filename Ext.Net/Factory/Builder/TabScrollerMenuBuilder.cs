@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,59 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Plugin.Builder<TabScrollerMenu, TabScrollerMenu.Builder>
+        new public abstract partial class Builder<TTabScrollerMenu, TBuilder> : Plugin.Builder<TTabScrollerMenu, TBuilder>
+            where TTabScrollerMenu : TabScrollerMenu
+            where TBuilder : Builder<TTabScrollerMenu, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TTabScrollerMenu component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The page size.
+			/// </summary>
+            public virtual TBuilder PageSize(int pageSize)
+            {
+                this.ToComponent().PageSize = pageSize;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The maximum text length to truncate.
+			/// </summary>
+            public virtual TBuilder MaxText(int maxText)
+            {
+                this.ToComponent().MaxText = maxText;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Menu prefix text.
+			/// </summary>
+            public virtual TBuilder MenuPrefixText(string menuPrefixText)
+            {
+                this.ToComponent().MenuPrefixText = menuPrefixText;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : TabScrollerMenu.Builder<TabScrollerMenu, TabScrollerMenu.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,42 +106,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The page size.
-			/// </summary>
-            public virtual TabScrollerMenu.Builder PageSize(int pageSize)
-            {
-                this.ToComponent().PageSize = pageSize;
-                return this as TabScrollerMenu.Builder;
-            }
-             
- 			/// <summary>
-			/// The maximum text length to truncate.
-			/// </summary>
-            public virtual TabScrollerMenu.Builder MaxText(int maxText)
-            {
-                this.ToComponent().MaxText = maxText;
-                return this as TabScrollerMenu.Builder;
-            }
-             
- 			/// <summary>
-			/// Menu prefix text.
-			/// </summary>
-            public virtual TabScrollerMenu.Builder MenuPrefixText(string menuPrefixText)
-            {
-                this.ToComponent().MenuPrefixText = menuPrefixText;
-                return this as TabScrollerMenu.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -98,6 +114,14 @@ namespace Ext.Net
         public TabScrollerMenu.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.TabScrollerMenu(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -112,7 +136,11 @@ namespace Ext.Net
         /// </summary>
         public TabScrollerMenu.Builder TabScrollerMenu()
         {
-            return this.TabScrollerMenu(new TabScrollerMenu());
+#if MVC
+			return this.TabScrollerMenu(new TabScrollerMenu { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.TabScrollerMenu(new TabScrollerMenu());
+#endif			
         }
 
         /// <summary>
@@ -120,7 +148,10 @@ namespace Ext.Net
         /// </summary>
         public TabScrollerMenu.Builder TabScrollerMenu(TabScrollerMenu component)
         {
-            return new TabScrollerMenu.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new TabScrollerMenu.Builder(component);
         }
 
         /// <summary>
@@ -128,7 +159,11 @@ namespace Ext.Net
         /// </summary>
         public TabScrollerMenu.Builder TabScrollerMenu(TabScrollerMenu.Config config)
         {
-            return new TabScrollerMenu.Builder(new TabScrollerMenu(config));
+#if MVC
+			return new TabScrollerMenu.Builder(new TabScrollerMenu(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new TabScrollerMenu.Builder(new TabScrollerMenu(config));
+#endif			
         }
     }
 }

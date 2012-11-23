@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -207,13 +207,20 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
+        [Description("")]
+        public delegate void RemoteRemoveEventHandler(object sender, RemoteRemoveEventArgs e);        
+		
+		/// <summary>
+        /// 
+        /// </summary>
         [Category("Action")]
         [Description("")]
         public event SubmitEventHandler Submit
         {
             add
             {
-                this.Events.AddHandler(EventSubmit, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventSubmit, value);
             }
             remove
             {
@@ -230,7 +237,8 @@ namespace Ext.Net
         {
             add
             {
-                this.Events.AddHandler(EventEdit, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventEdit, value);
             }
             remove
             {
@@ -243,11 +251,12 @@ namespace Ext.Net
         /// </summary>
         [Category("Action")]
         [Description("")]
-        public event RemoteActionEventHandler RemoteRemove
+        public event RemoteRemoveEventHandler RemoteRemove
         {
             add
             {
-                this.Events.AddHandler(EventRemove, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventRemove, value);
             }
             remove
             {
@@ -264,7 +273,8 @@ namespace Ext.Net
         {
             add
             {
-                this.Events.AddHandler(EventAppend, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventAppend, value);
             }
             remove
             {
@@ -281,7 +291,8 @@ namespace Ext.Net
         {
             add
             {
-                this.Events.AddHandler(EventMove, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventMove, value);
             }
             remove
             {
@@ -309,9 +320,9 @@ namespace Ext.Net
             }
         }
 
-        internal virtual void OnRemoteRemove(RemoteActionEventArgs e)
+        internal virtual void OnRemoteRemove(RemoteRemoveEventArgs e)
         {
-            RemoteActionEventHandler handler = (RemoteActionEventHandler)Events[EventRemove];
+            RemoteRemoveEventHandler handler = (RemoteRemoveEventHandler)Events[EventRemove];
 
             if (handler != null)
             {
@@ -477,18 +488,44 @@ namespace Ext.Net
         protected override bool LoadPostData(string postDataKey, NameValueCollection postCollection)
         {
             bool result = base.LoadPostData(postDataKey, postCollection);
-            string val = postCollection[this.ConfigID.ConcatWith("_SM")];
+            string val = postCollection[this.SelectedHiddenName ?? this.ConfigID.ConcatWith("_SM")];
 
-            if (val != null && this.SelectionModel.Primary != null)
+            if (val != null)
             {
+                if (this.SelectionModel.Primary == null)
+                {
+                    this.SelectionModel.Add(new TreeSelectionModel { 
+                        EnableViewState = false
+                    });
+                }
+                
                 List<SubmittedNode> nodes = JSON.Deserialize<List<SubmittedNode>>(val, new CamelCasePropertyNamesContractResolver());
-                ((TreeSelectionModel)this.SelectionModel.Primary).SelectedNodes = nodes;
+                
+                if (nodes != null)
+                {
+                    nodes.Each(n => { n.Tree = this; });
+                }
+
+                TreeSelectionModel selModel = (TreeSelectionModel)this.SelectionModel.Primary;
+                
+                selModel.SelectedNodes = nodes;
+                this.SelectedNodes = nodes;
+                selModel.SelectedRows.Clear();
+                
+                if (selModel.SelectedNodes != null && selModel.SelectedNodes.Count > 0)
+                {
+                    selModel.SelectedRows.AddRange(selModel.SelectedNodes.ConvertAll<SelectedRow>(n => new SelectedRow(n.NodeID)));
+                }
             }
 
-            val = postCollection[this.ConfigID.ConcatWith("_CheckNodes")];
+            val = postCollection[this.CheckedHiddenName ?? this.ConfigID.ConcatWith("_CheckNodes")];
             if (val != null)
             {
                 List<SubmittedNode> nodes = JSON.Deserialize<List<SubmittedNode>>(val, new CamelCasePropertyNamesContractResolver());
+                if (nodes != null)
+                {
+                    nodes.Each(n => { n.Tree = this; });
+                }
                 this.CheckedNodes = nodes;
             }
 
@@ -552,15 +589,6 @@ namespace Ext.Net
 
                 switch(eventArgument)
                 {
-                    case "nodeload":
-                        //NodeLoadEventArgs e = new NodeLoadEventArgs(extraParams);
-                        //PageTreeLoader loader = (PageTreeLoader) this.Loader.Primary;
-                        //loader.OnNodeLoad(e);
-                        //TreeNodeCollection nodes = e.Nodes;
-                        //success = e.Success;
-                        //msg = e.ErrorMessage;
-                        //response.Data = nodes != null ? nodes.ToJson() : null;
-                        break;
                     case "submit":
                         SubmitEventArgs se = new SubmitEventArgs(extraParams, JSON.Deserialize<SubmittedNode>(data, new CamelCasePropertyNamesContractResolver()));
                         this.OnSubmit(se);
@@ -572,7 +600,7 @@ namespace Ext.Net
                         msg = rr.RefusalMessage;
                         break;
                     case "raRemove":
-                        RemoteActionEventArgs rrm = new RemoteActionEventArgs(data, extraParams);
+                        RemoteRemoveEventArgs rrm = new RemoteRemoveEventArgs(data, extraParams);
                         this.OnRemoteRemove(rrm);
                         success = rrm.Accept;
                         msg = rrm.RefusalMessage;

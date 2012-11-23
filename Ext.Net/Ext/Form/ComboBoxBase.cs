@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,6 +15,7 @@ using System.Web.UI;
 
 using Ext.Net.Utilities;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace Ext.Net
 {
@@ -24,14 +25,13 @@ namespace Ext.Net
     [Meta]
     [Description("A combobox control with support for autocomplete, remote-loading, paging and many other features.")]
     public abstract partial class ComboBoxBase : PickerField, IStore<Store> 
-    {
+    {        
         private ListItemCollection selectedItems;
 
         /// <summary>
         /// List of selected items
         /// </summary>
-        [Meta]
-        [ConfigOption(JsonMode.AlwaysArray)]
+        [Meta]        
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [Description("")]
         public virtual ListItemCollection SelectedItems
@@ -46,6 +46,23 @@ namespace Ext.Net
                 return this.selectedItems;
             }
         }
+
+        [ConfigOption("selectedItems", JsonMode.Raw)]
+        [DefaultValue("")]
+        protected virtual string SelectedItemsProxy
+        {
+            get
+            {
+                if (this.SelectedItems.Count == 0)
+                {
+                    return "";
+                }
+
+                string items = this.SelectedItems.Serialize();
+
+                return items != "[]" ? items : "";
+            }
+        }
         
         /// <summary>
         /// First item from SelectedItems or null if no selected items
@@ -57,7 +74,17 @@ namespace Ext.Net
         {
             get
             {
-                return this.SelectedItems.Count > 0 ? this.SelectedItems[0] : null;
+                if (this.SelectedItems.Count == 0)
+                {
+                    if (this.MultiSelect)
+                    {
+                        return null;
+                    }
+
+                    this.SelectedItems.Add(new ListItem());
+                }
+
+                return this.SelectedItems[0];
             }
         }
 
@@ -85,60 +112,79 @@ namespace Ext.Net
                 return false;
             }
 
-            if (!this.EmptyText.Equals(text) && text.IsNotEmpty())
+            try
             {
-                List<ListItem> items = null;
-                if (this.SimpleSubmit)
+                this.SuspendScripting();
+                if (!this.EmptyText.Equals(text) && text.IsNotEmpty())
                 {
-                    var array = state.Split(new char[] { ',' });
-                    items = new List<ListItem>(array.Length);
-                    foreach (var item in array)
+                    List<ListItem> items = null;
+
+                    if (this.SimpleSubmit)
                     {
-                        items.Add(new ListItem(item));
-                    }                    
-                }
-                else if(state.IsNotEmpty())
-                {
-                    items = ComboBoxBase.ParseSelectedItems(state);
-                }
+                        string[] array = state.Split(new char[] { ',' });
 
-                bool fireEvent = false;
+                        items = new List<ListItem>(array.Length);
 
-                if (items == null)
-                {
-                    items = new List<ListItem> 
-                    { 
-                        new ListItem(text)
-                    };                    
-                    
-                    /*fireEvent = this.SelectedItems.Count > 0;
+                        foreach (string item in array)
+                        {
+                            items.Add(new ListItem(item));
+                        }
+                    }
+                    else if (state.IsNotEmpty())
+                    {
+                        items = ComboBoxBase.ParseSelectedItems(state);
+                    }
+
+                    bool fireEvent = false;
+
+                    if (items == null)
+                    {
+                        items = new List<ListItem> 
+                        { 
+                            new ListItem(text)
+                        };
+                    }
+
+                    foreach (ListItem item in items)
+                    {
+                        if (!this.SelectedItems.Contains(item))
+                        {
+                            fireEvent = true;
+                            break;
+                        }
+                    }
+
                     this.SelectedItems.Clear();
-                    return fireEvent;
-                    */
-                }
+                    this.SelectedItems.AddRange(items);
 
-                foreach (var item in items)
-                {
-                    if (!this.SelectedItems.Contains(item))
+                    if (this.SelectedItems.Count > 0)
                     {
-                        fireEvent = true;
-                        break;
+                        this.Value = this.SelectedItems[0].Value;
+                    }
+
+                    return fireEvent;
+                }
+                else
+                {
+                    if (this.EmptyText.Equals(text) && this.SelectedItems.Count > 0)
+                    {
+                        this.SelectedItems.Clear();
+
+                        return true;
                     }
                 }
-
-                this.SelectedItems.Clear();
-                this.SelectedItems.AddRange(items);
-
-                return fireEvent;
             }
-            else
+            catch
             {
-                if (this.EmptyText.Equals(text) && this.SelectedItems.Count > 0)
+                this.SuccessLoadPostData = false;
+                if (this.RethrowLoadPostDataException)
                 {
-                    this.SelectedItems.Clear();
-
-                    return true;
+                    throw;
                 }
+            }
+            finally
+            {
+                this.ResumeScripting();
             }
             
             return false;
@@ -772,6 +818,28 @@ namespace Ext.Net
                 }
 
                 return items;
+            }
+        }
+
+        private Type type;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Meta]
+        [TypeConverter(typeof(NetTypeConverter))]
+        [DefaultValue(null)]
+        public Type ItemsFromEnum
+        {
+            get
+            {
+                return this.type;
+            }
+            set
+            {
+                this.type = value;
+                this.Items.Clear();
+                this.Items.AddRange(ListItemCollection.FromEnum(value));
             }
         }
 

@@ -1,13 +1,15 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
 using System.Text;
+using System.Linq;
+using Ext.Net.Utilities;
 
 namespace Ext.Net
 {
@@ -82,6 +84,24 @@ namespace Ext.Net
             {
                 this.camelName = value;
             }
+        }
+
+        public virtual void Add(object parameters)
+        {
+            if (parameters == null)
+            {
+                return;
+            }
+
+            if (parameters is ConfigItem)
+            {
+                base.Add((ConfigItem)parameters);
+                return;
+            }
+
+            var props = parameters.GetType().GetProperties().Select(x => new ConfigItem(this.CamelName ? x.Name.ToLowerCamelCase() : x.Name, JSON.Serialize(x.GetValue(parameters, null), this.CamelName ? new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() : null), ParameterMode.Raw));
+            
+            this.AddRange(props);
         }
         
         /// <summary>

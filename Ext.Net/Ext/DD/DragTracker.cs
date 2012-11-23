@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Web;
 using System.Web.UI;
+using Ext.Net.Utilities;
     
 namespace Ext.Net
 {
@@ -17,11 +18,11 @@ namespace Ext.Net
 	/// A DragTracker listens for drag events on an Element and fires events at the start and end of the drag, as well as during the drag. This is useful for components such as Ext.slider.Multi, where there is an element that can be dragged around to change the Slider's value.
     /// DragTracker provides a series of template methods that should be overridden to provide functionality in response to detected drag operations. These are onBeforeStart, onStart, onDrag and onEnd. See Ext.slider.Multi's initEvents function for an example implementation.
 	/// </summary>
-    [ToolboxBitmap(typeof(DragSource), "Build.ToolboxIcons.DragDrop.bmp")]
+    [ToolboxBitmap(typeof(DragTracker), "Build.ToolboxIcons.DragDrop.bmp")]
     [Designer(typeof(EmptyDesigner))]
     [Description("")]
     [Meta]
-    public partial class DragTracker : Observable
+    public partial class DragTracker : LazyObservable
     {
         /// <summary>
         /// 
@@ -438,7 +439,7 @@ namespace Ext.Net
         /// <summary>
         /// Destroy this instance
         /// </summary>
-        public void Destroy()
+        public override void Destroy()
         {
             this.Call("destroy");
         }

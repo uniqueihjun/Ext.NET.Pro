@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,32 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Button.Builder<LinkButton, LinkButton.Builder>
+        new public abstract partial class Builder<TLinkButton, TBuilder> : Button.Builder<TLinkButton, TBuilder>
+            where TLinkButton : LinkButton
+            where TBuilder : Builder<TLinkButton, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TLinkButton component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : LinkButton.Builder<LinkButton, LinkButton.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,15 +79,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -71,6 +87,14 @@ namespace Ext.Net
         public LinkButton.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.LinkButton(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -85,7 +109,11 @@ namespace Ext.Net
         /// </summary>
         public LinkButton.Builder LinkButton()
         {
-            return this.LinkButton(new LinkButton());
+#if MVC
+			return this.LinkButton(new LinkButton { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.LinkButton(new LinkButton());
+#endif			
         }
 
         /// <summary>
@@ -93,7 +121,10 @@ namespace Ext.Net
         /// </summary>
         public LinkButton.Builder LinkButton(LinkButton component)
         {
-            return new LinkButton.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new LinkButton.Builder(component);
         }
 
         /// <summary>
@@ -101,7 +132,11 @@ namespace Ext.Net
         /// </summary>
         public LinkButton.Builder LinkButton(LinkButton.Config config)
         {
-            return new LinkButton.Builder(new LinkButton(config));
+#if MVC
+			return new LinkButton.Builder(new LinkButton(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new LinkButton.Builder(new LinkButton(config));
+#endif			
         }
     }
 }

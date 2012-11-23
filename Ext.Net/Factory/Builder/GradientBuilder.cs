@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,61 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<Gradient, Gradient.Builder>
+        new public abstract partial class Builder<TGradient, TBuilder> : BaseItem.Builder<TGradient, TBuilder>
+            where TGradient : Gradient
+            where TBuilder : Builder<TGradient, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TGradient component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The unique name of the gradient.
+			/// </summary>
+            public virtual TBuilder GradientID(string gradientID)
+            {
+                this.ToComponent().GradientID = gradientID;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The angle of the gradient in degrees.
+			/// </summary>
+            public virtual TBuilder Angle(int angle)
+            {
+                this.ToComponent().Angle = angle;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// An object with numbers as keys (from 0 to 100) and style objects as values
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Stops(Action<GradientStops> action)
+            {
+                action(this.ToComponent().Stops);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : Gradient.Builder<Gradient, Gradient.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,44 +108,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The unique name of the gradient.
-			/// </summary>
-            public virtual Gradient.Builder GradientID(string gradientID)
-            {
-                this.ToComponent().GradientID = gradientID;
-                return this as Gradient.Builder;
-            }
-             
- 			/// <summary>
-			/// The angle of the gradient in degrees.
-			/// </summary>
-            public virtual Gradient.Builder Angle(int angle)
-            {
-                this.ToComponent().Angle = angle;
-                return this as Gradient.Builder;
-            }
-             
- 			/// <summary>
-			/// An object with numbers as keys (from 0 to 100) and style objects as values
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Gradient.Builder</returns>
-            public virtual Gradient.Builder Stops(Action<GradientStops> action)
-            {
-                action(this.ToComponent().Stops);
-                return this as Gradient.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -100,6 +116,14 @@ namespace Ext.Net
         public Gradient.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.Gradient(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -114,7 +138,11 @@ namespace Ext.Net
         /// </summary>
         public Gradient.Builder Gradient()
         {
-            return this.Gradient(new Gradient());
+#if MVC
+			return this.Gradient(new Gradient { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.Gradient(new Gradient());
+#endif			
         }
 
         /// <summary>
@@ -122,7 +150,10 @@ namespace Ext.Net
         /// </summary>
         public Gradient.Builder Gradient(Gradient component)
         {
-            return new Gradient.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new Gradient.Builder(component);
         }
 
         /// <summary>
@@ -130,7 +161,11 @@ namespace Ext.Net
         /// </summary>
         public Gradient.Builder Gradient(Gradient.Config config)
         {
-            return new Gradient.Builder(new Gradient(config));
+#if MVC
+			return new Gradient.Builder(new Gradient(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new Gradient.Builder(new Gradient(config));
+#endif			
         }
     }
 }

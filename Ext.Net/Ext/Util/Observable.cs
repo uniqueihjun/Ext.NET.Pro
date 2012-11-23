@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -79,7 +79,7 @@ namespace Ext.Net
                 return this.customConfig ?? (this.customConfig = new ConfigItemCollection{Owner = this});
             }
         }
-
+#if NET40
         private DynamicConfigDictionary configs;        
         public dynamic Configs
         {
@@ -92,6 +92,7 @@ namespace Ext.Net
                 return this.configs;
             }
         }
+#endif
 
         [DefaultValue(null)]
         [ConfigOption("-", typeof(ConfigBagJsonConverter))]
@@ -99,7 +100,11 @@ namespace Ext.Net
         {
             get
             {
+#if NET40
                 return this.configs;
+#else
+                return null;
+#endif
             }
         }
 
@@ -177,15 +182,17 @@ namespace Ext.Net
                                Mode = ParameterMode.Value
                            };
 
-            if (value.StartsWith("<raw>"))
+            string rawMarker = TokenUtils.Settings.RawMarker;
+
+            if (value.StartsWith(rawMarker))
             {
                 item.Mode = ParameterMode.Raw;
-                value = value.Remove(0, 5);
+                value = value.Remove(0, rawMarker.Length);
             }
             else if (value.StartsWith("<string>"))
             {
                 item.Mode = ParameterMode.Value;
-                value = value.Remove(0, value.StartsWith("<string><raw>") ? 13 : 8);
+                value = value.Remove(0, value.StartsWith("<string>" + rawMarker) ? (8 + rawMarker.Length) : 8);
             }
             else
             {
@@ -201,7 +208,7 @@ namespace Ext.Net
                 else if (DateTime.TryParse(value, CultureInfo.CurrentCulture, DateTimeStyles.None, out dateTest))
                 {
                     item.Mode = ParameterMode.Raw;
-                    value = DateTimeUtils.DateNetToJs(dateTest);
+                    value = JSON.Serialize(dateTest, JSON.ScriptConverters);
                 }
             }
 
@@ -446,7 +453,7 @@ namespace Ext.Net
         [Meta]
         public virtual void On(string eventName, JFunction fn)
         {
-            this.AddListener(eventName, "<raw>" + fn.ToScript());
+            this.AddListener(eventName, TokenUtils.Settings.RawMarker + fn.ToScript());
         }
 
         /// <summary>
@@ -458,7 +465,7 @@ namespace Ext.Net
         [Meta]
         public virtual void On(string eventName, JFunction fn, string scope)
         {
-            this.AddListener(eventName, "<raw>" + fn.ToScript(), scope);
+            this.AddListener(eventName, TokenUtils.Settings.RawMarker + fn.ToScript(), scope);
         }
 
         /// <summary>
@@ -471,7 +478,7 @@ namespace Ext.Net
         [Meta]
         public virtual void On(string eventName, JFunction fn, string scope, HandlerConfig options)
         {
-            this.AddListener(eventName, "<raw>" + fn.ToScript(), scope, options);
+            this.AddListener(eventName, TokenUtils.Settings.RawMarker + fn.ToScript(), scope, options);
         }
 
         /// <summary>
@@ -791,12 +798,18 @@ namespace Ext.Net
             this.OnAfterClientInitHandler();
         }
 
-        private const string DirectEventsKey = "DirectEvents";
+        protected virtual string DirectEventsKey
+        {
+            get
+            {
+                return "DirectEvents";
+            }
+        }
 
         private ComponentDirectEvents GetDirectEvents()
         {
             // assumption: server side listeners class should have name 'DirectEvents'
-            PropertyInfo ssl = this.GetType().GetProperty(Observable.DirectEventsKey);
+            PropertyInfo ssl = this.GetType().GetProperty(this.DirectEventsKey);
 
             if (ssl == null)
             {

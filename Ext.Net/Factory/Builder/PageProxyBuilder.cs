@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,61 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ServerProxy.Builder<PageProxy, PageProxy.Builder>
+        new public abstract partial class Builder<TPageProxy, TBuilder> : ServerProxy.Builder<TPageProxy, TBuilder>
+            where TPageProxy : PageProxy
+            where TBuilder : Builder<TPageProxy, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TPageProxy component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Total(int total)
+            {
+                this.ToComponent().Total = total;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder DirectFn(string directFn)
+            {
+                this.ToComponent().DirectFn = directFn;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder RequestConfig(Action<BaseDirectEvent> action)
+            {
+                action(this.ToComponent().RequestConfig);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : PageProxy.Builder<PageProxy, PageProxy.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,44 +108,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual PageProxy.Builder Total(int total)
-            {
-                this.ToComponent().Total = total;
-                return this as PageProxy.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual PageProxy.Builder DirectFn(string directFn)
-            {
-                this.ToComponent().DirectFn = directFn;
-                return this as PageProxy.Builder;
-            }
-             
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of PageProxy.Builder</returns>
-            public virtual PageProxy.Builder RequestConfig(Action<BaseDirectEvent> action)
-            {
-                action(this.ToComponent().RequestConfig);
-                return this as PageProxy.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -100,6 +116,14 @@ namespace Ext.Net
         public PageProxy.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.PageProxy(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -114,7 +138,11 @@ namespace Ext.Net
         /// </summary>
         public PageProxy.Builder PageProxy()
         {
-            return this.PageProxy(new PageProxy());
+#if MVC
+			return this.PageProxy(new PageProxy { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.PageProxy(new PageProxy());
+#endif			
         }
 
         /// <summary>
@@ -122,7 +150,10 @@ namespace Ext.Net
         /// </summary>
         public PageProxy.Builder PageProxy(PageProxy component)
         {
-            return new PageProxy.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new PageProxy.Builder(component);
         }
 
         /// <summary>
@@ -130,7 +161,11 @@ namespace Ext.Net
         /// </summary>
         public PageProxy.Builder PageProxy(PageProxy.Config config)
         {
-            return new PageProxy.Builder(new PageProxy(config));
+#if MVC
+			return new PageProxy.Builder(new PageProxy(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new PageProxy.Builder(new PageProxy(config));
+#endif			
         }
     }
 }

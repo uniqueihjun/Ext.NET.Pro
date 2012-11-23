@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,77 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractAxis.Builder<GaugeAxis, GaugeAxis.Builder>
+        new public abstract partial class Builder<TGaugeAxis, TBuilder> : AbstractAxis.Builder<TGaugeAxis, TBuilder>
+            where TGaugeAxis : GaugeAxis
+            where TBuilder : Builder<TGaugeAxis, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TGaugeAxis component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The offset positioning of the tick marks and labels in pixels. Defaults to: 10
+			/// </summary>
+            public virtual TBuilder Margin(int margin)
+            {
+                this.ToComponent().Margin = margin;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The maximum value of the interval to be displayed in the axis (REQUIRED).
+			/// </summary>
+            public virtual TBuilder Maximum(double? maximum)
+            {
+                this.ToComponent().Maximum = maximum;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The minimum value of the interval to be displayed in the axis (REQUIRED).
+			/// </summary>
+            public virtual TBuilder Minimum(double? minimum)
+            {
+                this.ToComponent().Minimum = minimum;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The number of steps and tick marks to add to the interval. (REQUIRED).
+			/// </summary>
+            public virtual TBuilder Steps(double? steps)
+            {
+                this.ToComponent().Steps = steps;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The title for the Axis.
+			/// </summary>
+            public virtual TBuilder Title(string title)
+            {
+                this.ToComponent().Title = title;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : GaugeAxis.Builder<GaugeAxis, GaugeAxis.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,60 +124,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The offset positioning of the tick marks and labels in pixels. Defaults to: 10
-			/// </summary>
-            public virtual GaugeAxis.Builder Margin(int margin)
-            {
-                this.ToComponent().Margin = margin;
-                return this as GaugeAxis.Builder;
-            }
-             
- 			/// <summary>
-			/// The maximum value of the interval to be displayed in the axis (REQUIRED).
-			/// </summary>
-            public virtual GaugeAxis.Builder Maximum(int? maximum)
-            {
-                this.ToComponent().Maximum = maximum;
-                return this as GaugeAxis.Builder;
-            }
-             
- 			/// <summary>
-			/// The minimum value of the interval to be displayed in the axis (REQUIRED).
-			/// </summary>
-            public virtual GaugeAxis.Builder Minimum(int? minimum)
-            {
-                this.ToComponent().Minimum = minimum;
-                return this as GaugeAxis.Builder;
-            }
-             
- 			/// <summary>
-			/// The number of steps and tick marks to add to the interval. (REQUIRED).
-			/// </summary>
-            public virtual GaugeAxis.Builder Steps(int? steps)
-            {
-                this.ToComponent().Steps = steps;
-                return this as GaugeAxis.Builder;
-            }
-             
- 			/// <summary>
-			/// The title for the Axis.
-			/// </summary>
-            public virtual GaugeAxis.Builder Title(string title)
-            {
-                this.ToComponent().Title = title;
-                return this as GaugeAxis.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -116,6 +132,14 @@ namespace Ext.Net
         public GaugeAxis.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.GaugeAxis(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -130,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public GaugeAxis.Builder GaugeAxis()
         {
-            return this.GaugeAxis(new GaugeAxis());
+#if MVC
+			return this.GaugeAxis(new GaugeAxis { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.GaugeAxis(new GaugeAxis());
+#endif			
         }
 
         /// <summary>
@@ -138,7 +166,10 @@ namespace Ext.Net
         /// </summary>
         public GaugeAxis.Builder GaugeAxis(GaugeAxis component)
         {
-            return new GaugeAxis.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new GaugeAxis.Builder(component);
         }
 
         /// <summary>
@@ -146,7 +177,11 @@ namespace Ext.Net
         /// </summary>
         public GaugeAxis.Builder GaugeAxis(GaugeAxis.Config config)
         {
-            return new GaugeAxis.Builder(new GaugeAxis(config));
+#if MVC
+			return new GaugeAxis.Builder(new GaugeAxis(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new GaugeAxis.Builder(new GaugeAxis(config));
+#endif			
         }
     }
 }

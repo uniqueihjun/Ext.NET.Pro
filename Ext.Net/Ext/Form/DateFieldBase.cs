@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -12,7 +12,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Web.UI;
-
 using Ext.Net.Utilities;
 using Newtonsoft.Json;
 
@@ -27,7 +26,7 @@ namespace Ext.Net
     /// </summary>
     [Meta]    
     public abstract partial class DateFieldBase : PickerField, IDate
-    {
+    {   
         /// <summary>
         /// Gets or sets the current selected date of the DatePicker. Accepts and returns a DateTime object.
         /// </summary>
@@ -99,7 +98,7 @@ namespace Ext.Net
 
         /*  IField
             -----------------------------------------------------------------------------------------------*/
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -115,24 +114,23 @@ namespace Ext.Net
             }
             set
             {
-                if (this.SafeResourceManager == null)
-                {
-                    this.Init += delegate
-                    {
-                        this.Value = this.State["Value"];
-                    };
-
-                    this.State.Set("Value", value);
-                    
-                    return;
-                }
-
                 DateTime obj = (DateTime)this.EmptyValue;
-
-                CultureInfo culture = this.ResourceManager.CurrentLocale;
-
+                
                 if (value is string)
                 {
+                    if (this.SafeResourceManager == null)
+                    {
+                        this.Init += delegate
+                        {
+                            this.Value = this.State["Value"];
+                        };
+
+                        this.State.Set("Value", value);
+
+                        return;
+                    }
+                    
+                    CultureInfo culture = this.ResourceManager.CurrentLocale;
                     try
                     {
                         obj = DateTime.ParseExact((string)value, this.Format, culture);
@@ -224,6 +222,12 @@ namespace Ext.Net
                 {
                     result = (DateTime)this.EmptyValue != this.SelectedDate;
                     this.SelectedDate = (DateTime)this.EmptyValue;
+
+                    this.SuccessLoadPostData = false;
+                    if (this.RethrowLoadPostDataException)
+                    {
+                        throw;
+                    }
                 }
                 finally
                 {
@@ -607,7 +611,8 @@ namespace Ext.Net
         {
             get
             {
-                return DateTimeUtils.ConvertNetToPHP(this.SubmitFormat, this.HasResourceManager ? this.ResourceManager.CurrentLocale : CultureInfo.InvariantCulture);
+                return this.IsMVC ? DateTimeUtils.ConvertNetToPHP(this.SubmitFormat, System.Threading.Thread.CurrentThread.CurrentCulture)
+                    : DateTimeUtils.ConvertNetToPHP(this.SubmitFormat, this.HasResourceManager ? this.ResourceManager.CurrentLocale : CultureInfo.InvariantCulture);
             }
         }
 

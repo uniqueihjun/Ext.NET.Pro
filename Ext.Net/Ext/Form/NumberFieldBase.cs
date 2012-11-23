@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -11,7 +11,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Web.UI;
-
 using Ext.Net.Utilities;
 
 namespace Ext.Net
@@ -22,7 +21,7 @@ namespace Ext.Net
     [Meta]   
     [Description("Base class for Numeric field.")]
     public abstract partial class NumberFieldBase : SpinnerFieldBase
-    {
+    {        
         /// <summary>
         /// The fields null value.
         /// </summary>
@@ -176,7 +175,8 @@ namespace Ext.Net
         {
             add
             {
-                Events.AddHandler(EventNumberChanged, value);
+                this.CheckForceId();
+				Events.AddHandler(EventNumberChanged, value);
             }
             remove
             {
@@ -220,21 +220,35 @@ namespace Ext.Net
             this.HasLoadPostData = true;
 
             string val = postCollection[this.UniqueName];
-            bool raise = false;
-
-            double number = val.IsEmpty() ? Convert.ToDouble(this.EmptyValue) : this.CheckRange(val);
+            bool raise = false;           
 
             this.SuspendScripting();
             this.RawValue = val;
             this.ResumeScripting();
 
-            if (val != null && this.Number != number)
+            if (val != null)
             {
-                raise = true;
-                this.SuspendScripting();
                 try
                 {
-                    this.Number = number;
+                    this.SuspendScripting();
+                    double number = val.IsEmpty() ? Convert.ToDouble(this.EmptyValue) : this.CheckRange(val);
+                    if (this.Number != number)
+                    {
+                        raise = true;
+                        this.Number = number;
+                    }
+                }
+                catch
+                {
+                    double emptyNumber = Convert.ToDouble(this.EmptyValue);
+                    raise = emptyNumber != this.Number;
+                    this.Number = emptyNumber;
+
+                    this.SuccessLoadPostData = false;
+                    if (this.RethrowLoadPostDataException)
+                    {
+                        throw;
+                    }
                 }
                 finally
                 {

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -16,7 +16,7 @@ namespace Ext.Net
     /// 
     /// </summary>
     [Meta]
-    public partial class Node : BaseItem, IIcon
+    public partial class Node : BaseItem, IIcon, IClientConfig
     {
         /// <summary>
         /// 
@@ -226,7 +226,7 @@ namespace Ext.Net
         /// URL of the link used for the node (defaults to #)
         /// </summary>
         [Meta]
-        [ConfigOption]
+        [ConfigOption(JsonMode.Url)]
         [Category("3. TreeNode")]
         [DefaultValue("#")]
         [NotifyParentProperty(true)]
@@ -532,7 +532,7 @@ namespace Ext.Net
         /// 
         /// </summary>
         [Meta]
-        [ConfigOption(JsonMode.UnrollObject)]
+        [ConfigOption(JsonMode.Reflection)]
         [DefaultValue(null)]
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

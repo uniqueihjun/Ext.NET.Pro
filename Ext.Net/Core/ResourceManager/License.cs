@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Globalization;
 
 using Ext.Net.Utilities;
+using System.Web;
 
 namespace Ext.Net
 {
@@ -30,7 +31,7 @@ namespace Ext.Net
                     this.isValidLicenseKey = false;
 
                     string key = this.LicenseKey;
-
+                    
                     if (key.IsNotEmpty())
                     {
                         try
@@ -72,20 +73,28 @@ namespace Ext.Net
         /// 
         /// </summary>
         [Description("")]
-        protected virtual void CheckLicense()
+        protected void CheckLicense()
         {
-            if (!this.DesignMode && this.Page != null)
+            if (!this.DesignMode && HttpContext.Current != null)
             {
                 if (this.IsPro &&
                     !X.IsAjaxRequest &&
                     !RequestManager.IsMicrosoftAjaxRequest &&
-                    !this.Page.Request.IsLocal &&
+                    !HttpContext.Current.Request.IsLocal &&
                     !this.IsValidLicenseKey)
                 {
-                    this.RegisterClientStyleInclude("Ext.Net.Build.Ext.Net.extnet.unlicensed.css.un.css");
-                    this.RegisterClientScriptInclude("Ext.Net.Build.Ext.Net.extnet.unlicensed.un.js");
+                    this.ShowUnlicenseMessage();
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ShowUnlicenseMessage()
+        {
+            this.RegisterClientStyleInclude("Ext.Net.Build.Ext.Net.extnet.unlicensed.css.un.css");
+            this.RegisterClientScriptInclude("Ext.Net.Build.Ext.Net.extnet.unlicensed.un.js");
         }
     }
 }

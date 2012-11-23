@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,61 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Column.Builder<SummaryColumn, SummaryColumn.Builder>
+        new public abstract partial class Builder<TSummaryColumn, TBuilder> : Column.Builder<TSummaryColumn, TBuilder>
+            where TSummaryColumn : SummaryColumn
+            where TBuilder : Builder<TSummaryColumn, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TSummaryColumn component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder SummaryType(SummaryType summaryType)
+            {
+                this.ToComponent().SummaryType = summaryType;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder CustomSummaryType(string customSummaryType)
+            {
+                this.ToComponent().CustomSummaryType = customSummaryType;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder SummaryRenderer(Action<JFunction> action)
+            {
+                action(this.ToComponent().SummaryRenderer);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : SummaryColumn.Builder<SummaryColumn, SummaryColumn.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,44 +108,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual SummaryColumn.Builder SummaryType(SummaryType summaryType)
-            {
-                this.ToComponent().SummaryType = summaryType;
-                return this as SummaryColumn.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual SummaryColumn.Builder CustomSummaryType(string customSummaryType)
-            {
-                this.ToComponent().CustomSummaryType = customSummaryType;
-                return this as SummaryColumn.Builder;
-            }
-             
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of SummaryColumn.Builder</returns>
-            public virtual SummaryColumn.Builder SummaryRenderer(Action<JFunction> action)
-            {
-                action(this.ToComponent().SummaryRenderer);
-                return this as SummaryColumn.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -100,6 +116,14 @@ namespace Ext.Net
         public SummaryColumn.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.SummaryColumn(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -114,7 +138,11 @@ namespace Ext.Net
         /// </summary>
         public SummaryColumn.Builder SummaryColumn()
         {
-            return this.SummaryColumn(new SummaryColumn());
+#if MVC
+			return this.SummaryColumn(new SummaryColumn { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.SummaryColumn(new SummaryColumn());
+#endif			
         }
 
         /// <summary>
@@ -122,7 +150,10 @@ namespace Ext.Net
         /// </summary>
         public SummaryColumn.Builder SummaryColumn(SummaryColumn component)
         {
-            return new SummaryColumn.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new SummaryColumn.Builder(component);
         }
 
         /// <summary>
@@ -130,7 +161,11 @@ namespace Ext.Net
         /// </summary>
         public SummaryColumn.Builder SummaryColumn(SummaryColumn.Config config)
         {
-            return new SummaryColumn.Builder(new SummaryColumn(config));
+#if MVC
+			return new SummaryColumn.Builder(new SummaryColumn(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new SummaryColumn.Builder(new SummaryColumn(config));
+#endif			
         }
     }
 }

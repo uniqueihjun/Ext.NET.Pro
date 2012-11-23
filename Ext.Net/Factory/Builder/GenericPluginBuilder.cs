@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Plugin.Builder<GenericPlugin, GenericPlugin.Builder>
+        new public abstract partial class Builder<TGenericPlugin, TBuilder> : Plugin.Builder<TGenericPlugin, TBuilder>
+            where TGenericPlugin : GenericPlugin
+            where TBuilder : Builder<TGenericPlugin, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TGenericPlugin component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The JavaScript class name. Used to create a 'new' instance of the object.
+			/// </summary>
+            public virtual TBuilder InstanceName(string instanceName)
+            {
+                this.ToComponent().InstanceName = instanceName;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The file path to the required JavaScript file.
+			/// </summary>
+            public virtual TBuilder Path(string path)
+            {
+                this.ToComponent().Path = path;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : GenericPlugin.Builder<GenericPlugin, GenericPlugin.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The JavaScript class name. Used to create a 'new' instance of the object.
-			/// </summary>
-            public virtual GenericPlugin.Builder InstanceName(string instanceName)
-            {
-                this.ToComponent().InstanceName = instanceName;
-                return this as GenericPlugin.Builder;
-            }
-             
- 			/// <summary>
-			/// The file path to the required JavaScript file.
-			/// </summary>
-            public virtual GenericPlugin.Builder Path(string path)
-            {
-                this.ToComponent().Path = path;
-                return this as GenericPlugin.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public GenericPlugin.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.GenericPlugin(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public GenericPlugin.Builder GenericPlugin()
         {
-            return this.GenericPlugin(new GenericPlugin());
+#if MVC
+			return this.GenericPlugin(new GenericPlugin { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.GenericPlugin(new GenericPlugin());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public GenericPlugin.Builder GenericPlugin(GenericPlugin component)
         {
-            return new GenericPlugin.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new GenericPlugin.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public GenericPlugin.Builder GenericPlugin(GenericPlugin.Config config)
         {
-            return new GenericPlugin.Builder(new GenericPlugin(config));
+#if MVC
+			return new GenericPlugin.Builder(new GenericPlugin(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new GenericPlugin.Builder(new GenericPlugin(config));
+#endif			
         }
     }
 }

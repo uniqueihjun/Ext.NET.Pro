@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,54 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ToolbarBase.Builder<Toolbar, Toolbar.Builder>
+        new public abstract partial class Builder<TToolbar, TBuilder> : ToolbarBase.Builder<TToolbar, TBuilder>
+            where TToolbar : Toolbar
+            where TBuilder : Builder<TToolbar, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TToolbar component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<ToolbarListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<ToolbarDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : Toolbar.Builder<Toolbar, Toolbar.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,37 +101,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Toolbar.Builder</returns>
-            public virtual Toolbar.Builder Listeners(Action<ToolbarListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as Toolbar.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Toolbar.Builder</returns>
-            public virtual Toolbar.Builder DirectEvents(Action<ToolbarDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as Toolbar.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -93,6 +109,14 @@ namespace Ext.Net
         public Toolbar.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.Toolbar(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -107,7 +131,11 @@ namespace Ext.Net
         /// </summary>
         public Toolbar.Builder Toolbar()
         {
-            return this.Toolbar(new Toolbar());
+#if MVC
+			return this.Toolbar(new Toolbar { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.Toolbar(new Toolbar());
+#endif			
         }
 
         /// <summary>
@@ -115,7 +143,10 @@ namespace Ext.Net
         /// </summary>
         public Toolbar.Builder Toolbar(Toolbar component)
         {
-            return new Toolbar.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new Toolbar.Builder(component);
         }
 
         /// <summary>
@@ -123,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public Toolbar.Builder Toolbar(Toolbar.Config config)
         {
-            return new Toolbar.Builder(new Toolbar(config));
+#if MVC
+			return new Toolbar.Builder(new Toolbar(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new Toolbar.Builder(new Toolbar(config));
+#endif			
         }
     }
 }

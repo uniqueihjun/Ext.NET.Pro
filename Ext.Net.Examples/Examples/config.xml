@@ -58,6 +58,8 @@
     <folder name="Loaders\Data\Overview\" />
     <folder name="MessageBus\Basic\Simple\" />
     <folder name="MessageBus\Basic\Complex\" />
+    <folder name="Miscellaneous\Bin_HtmlBin\Overview\" />
+    <folder name="Miscellaneous\Bin_HtmlBin\UserControl\" />
   </new>
   <!--
   <new version="1.0">

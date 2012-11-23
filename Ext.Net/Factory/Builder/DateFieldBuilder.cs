@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,54 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : DateFieldBase.Builder<DateField, DateField.Builder>
+        new public abstract partial class Builder<TDateField, TBuilder> : DateFieldBase.Builder<TDateField, TBuilder>
+            where TDateField : DateField
+            where TBuilder : Builder<TDateField, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDateField component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<DateFieldListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<DateFieldDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DateField.Builder<DateField, DateField.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,37 +101,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DateField.Builder</returns>
-            public virtual DateField.Builder Listeners(Action<DateFieldListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as DateField.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DateField.Builder</returns>
-            public virtual DateField.Builder DirectEvents(Action<DateFieldDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as DateField.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -93,6 +109,14 @@ namespace Ext.Net
         public DateField.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DateField(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -107,7 +131,11 @@ namespace Ext.Net
         /// </summary>
         public DateField.Builder DateField()
         {
-            return this.DateField(new DateField());
+#if MVC
+			return this.DateField(new DateField { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DateField(new DateField());
+#endif			
         }
 
         /// <summary>
@@ -115,7 +143,10 @@ namespace Ext.Net
         /// </summary>
         public DateField.Builder DateField(DateField component)
         {
-            return new DateField.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DateField.Builder(component);
         }
 
         /// <summary>
@@ -123,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public DateField.Builder DateField(DateField.Config config)
         {
-            return new DateField.Builder(new DateField(config));
+#if MVC
+			return new DateField.Builder(new DateField(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DateField.Builder(new DateField(config));
+#endif			
         }
     }
 }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -38,6 +38,7 @@ namespace Ext.Net
                 ConfigOptionsCollection list = base.ConfigOptions;
                 
                 list.Add("allowBlank", new ConfigOption("allowBlank", null, true, this.AllowBlank ));
+                list.Add("allowOnlyWhitespace", new ConfigOption("allowOnlyWhitespace", null, true, this.AllowOnlyWhitespace ));
                 list.Add("blankText", new ConfigOption("blankText", null, "", this.BlankText ));
                 list.Add("disableKeyFilter", new ConfigOption("disableKeyFilter", null, false, this.DisableKeyFilter ));
                 list.Add("emptyCls", new ConfigOption("emptyCls", null, "", this.EmptyCls ));
@@ -46,8 +47,8 @@ namespace Ext.Net
                 list.Add("enforceMaxLength", new ConfigOption("enforceMaxLength", null, false, this.EnforceMaxLength ));
                 list.Add("grow", new ConfigOption("grow", null, false, this.Grow ));
                 list.Add("growAppend", new ConfigOption("growAppend", null, "W", this.GrowAppend ));
-                list.Add("growMax", new ConfigOption("growMax", null, Unit.Pixel(800), this.GrowMax ));
-                list.Add("growMin", new ConfigOption("growMin", null, Unit.Pixel(30), this.GrowMin ));
+                list.Add("growMax", new ConfigOption("growMax", null, 800, this.GrowMax ));
+                list.Add("growMin", new ConfigOption("growMin", null, 30, this.GrowMin ));
                 list.Add("maskRe", new ConfigOption("maskRe", new SerializationOptions(typeof(RegexJsonConverter)), "", this.MaskRe ));
                 list.Add("maxLength", new ConfigOption("maxLength", null, -1, this.MaxLength ));
                 list.Add("maxLengthText", new ConfigOption("maxLengthText", null, "", this.MaxLengthText ));
@@ -58,9 +59,6 @@ namespace Ext.Net
                 list.Add("selectOnFocus", new ConfigOption("selectOnFocus", null, false, this.SelectOnFocus ));
                 list.Add("size", new ConfigOption("size", null, 20, this.Size ));
                 list.Add("stripCharsRe", new ConfigOption("stripCharsRe", new SerializationOptions(typeof(RegexJsonConverter)), "", this.StripCharsRe ));
-                list.Add("validator", new ConfigOption("validator", new SerializationOptions(JsonMode.Raw), null, this.Validator ));
-                list.Add("vtype", new ConfigOption("vtype", null, "", this.Vtype ));
-                list.Add("vtypeText", new ConfigOption("vtypeText", null, "", this.VtypeText ));
                 list.Add("iconClsProxy", new ConfigOption("iconClsProxy", new SerializationOptions("iconCls"), "", this.IconClsProxy ));
 
                 return list;

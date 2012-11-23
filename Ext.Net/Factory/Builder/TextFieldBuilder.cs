@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,54 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : TextFieldBase.Builder<TextField, TextField.Builder>
+        new public abstract partial class Builder<TTextField, TBuilder> : TextFieldBase.Builder<TTextField, TBuilder>
+            where TTextField : TextField
+            where TBuilder : Builder<TTextField, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TTextField component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<TextFieldListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<TextFieldDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : TextField.Builder<TextField, TextField.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,37 +101,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TextField.Builder</returns>
-            public virtual TextField.Builder Listeners(Action<TextFieldListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as TextField.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TextField.Builder</returns>
-            public virtual TextField.Builder DirectEvents(Action<TextFieldDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as TextField.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -93,6 +109,14 @@ namespace Ext.Net
         public TextField.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.TextField(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -107,7 +131,11 @@ namespace Ext.Net
         /// </summary>
         public TextField.Builder TextField()
         {
-            return this.TextField(new TextField());
+#if MVC
+			return this.TextField(new TextField { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.TextField(new TextField());
+#endif			
         }
 
         /// <summary>
@@ -115,7 +143,10 @@ namespace Ext.Net
         /// </summary>
         public TextField.Builder TextField(TextField component)
         {
-            return new TextField.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new TextField.Builder(component);
         }
 
         /// <summary>
@@ -123,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public TextField.Builder TextField(TextField.Config config)
         {
-            return new TextField.Builder(new TextField(config));
+#if MVC
+			return new TextField.Builder(new TextField(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new TextField.Builder(new TextField(config));
+#endif			
         }
     }
 }

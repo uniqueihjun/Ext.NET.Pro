@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,41 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseControl.Builder<XScript, XScript.Builder>
+        new public abstract partial class Builder<TXScript, TBuilder> : BaseControl.Builder<TXScript, TBuilder>
+            where TXScript : XScript
+            where TBuilder : Builder<TXScript, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TXScript component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Script text
+			/// </summary>
+            public virtual TBuilder ScriptBlock(string scriptBlock)
+            {
+                this.ToComponent().ScriptBlock = scriptBlock;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : XScript.Builder<XScript, XScript.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,24 +88,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Script text
-			/// </summary>
-            public virtual XScript.Builder ScriptBlock(string scriptBlock)
-            {
-                this.ToComponent().ScriptBlock = scriptBlock;
-                return this as XScript.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -80,6 +96,14 @@ namespace Ext.Net
         public XScript.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.XScript(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -94,7 +118,11 @@ namespace Ext.Net
         /// </summary>
         public XScript.Builder XScript()
         {
-            return this.XScript(new XScript());
+#if MVC
+			return this.XScript(new XScript { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.XScript(new XScript());
+#endif			
         }
 
         /// <summary>
@@ -102,7 +130,10 @@ namespace Ext.Net
         /// </summary>
         public XScript.Builder XScript(XScript component)
         {
-            return new XScript.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new XScript.Builder(component);
         }
 
         /// <summary>
@@ -110,7 +141,11 @@ namespace Ext.Net
         /// </summary>
         public XScript.Builder XScript(XScript.Config config)
         {
-            return new XScript.Builder(new XScript(config));
+#if MVC
+			return new XScript.Builder(new XScript(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new XScript.Builder(new XScript(config));
+#endif			
         }
     }
 }

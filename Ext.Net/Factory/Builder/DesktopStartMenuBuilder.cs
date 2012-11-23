@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,72 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Panel.Builder<DesktopStartMenu, DesktopStartMenu.Builder>
+        new public abstract partial class Builder<TDesktopStartMenu, TBuilder> : Panel.Builder<TDesktopStartMenu, TBuilder>
+            where TDesktopStartMenu : DesktopStartMenu
+            where TBuilder : Builder<TDesktopStartMenu, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDesktopStartMenu component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder DefaultAlign(string defaultAlign)
+            {
+                this.ToComponent().DefaultAlign = defaultAlign;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder HideTools(bool hideTools)
+            {
+                this.ToComponent().HideTools = hideTools;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder MenuItems(Action<ItemsCollection<AbstractComponent>> action)
+            {
+                action(this.ToComponent().MenuItems);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder ToolConfig(Action<ToolbarCollection> action)
+            {
+                action(this.ToComponent().ToolConfig);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DesktopStartMenu.Builder<DesktopStartMenu, DesktopStartMenu.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,55 +119,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopStartMenu.Builder DefaultAlign(string defaultAlign)
-            {
-                this.ToComponent().DefaultAlign = defaultAlign;
-                return this as DesktopStartMenu.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopStartMenu.Builder HideTools(bool hideTools)
-            {
-                this.ToComponent().HideTools = hideTools;
-                return this as DesktopStartMenu.Builder;
-            }
-             
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DesktopStartMenu.Builder</returns>
-            public virtual DesktopStartMenu.Builder MenuItems(Action<ItemsCollection<AbstractComponent>> action)
-            {
-                action(this.ToComponent().MenuItems);
-                return this as DesktopStartMenu.Builder;
-            }
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DesktopStartMenu.Builder</returns>
-            public virtual DesktopStartMenu.Builder ToolConfig(Action<ToolbarCollection> action)
-            {
-                action(this.ToComponent().ToolConfig);
-                return this as DesktopStartMenu.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -111,6 +127,14 @@ namespace Ext.Net
         public DesktopStartMenu.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DesktopStartMenu(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -125,7 +149,11 @@ namespace Ext.Net
         /// </summary>
         public DesktopStartMenu.Builder DesktopStartMenu()
         {
-            return this.DesktopStartMenu(new DesktopStartMenu());
+#if MVC
+			return this.DesktopStartMenu(new DesktopStartMenu { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DesktopStartMenu(new DesktopStartMenu());
+#endif			
         }
 
         /// <summary>
@@ -133,7 +161,10 @@ namespace Ext.Net
         /// </summary>
         public DesktopStartMenu.Builder DesktopStartMenu(DesktopStartMenu component)
         {
-            return new DesktopStartMenu.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DesktopStartMenu.Builder(component);
         }
 
         /// <summary>
@@ -141,7 +172,11 @@ namespace Ext.Net
         /// </summary>
         public DesktopStartMenu.Builder DesktopStartMenu(DesktopStartMenu.Config config)
         {
-            return new DesktopStartMenu.Builder(new DesktopStartMenu(config));
+#if MVC
+			return new DesktopStartMenu.Builder(new DesktopStartMenu(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DesktopStartMenu.Builder(new DesktopStartMenu(config));
+#endif			
         }
     }
 }

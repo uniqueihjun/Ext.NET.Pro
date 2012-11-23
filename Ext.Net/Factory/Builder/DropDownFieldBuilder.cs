@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,54 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : DropDownFieldBase.Builder<DropDownField, DropDownField.Builder>
+        new public abstract partial class Builder<TDropDownField, TBuilder> : DropDownFieldBase.Builder<TDropDownField, TBuilder>
+            where TDropDownField : DropDownField
+            where TBuilder : Builder<TDropDownField, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDropDownField component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<PickerFieldListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<PickerFieldDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DropDownField.Builder<DropDownField, DropDownField.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,37 +101,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DropDownField.Builder</returns>
-            public virtual DropDownField.Builder Listeners(Action<PickerFieldListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as DropDownField.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DropDownField.Builder</returns>
-            public virtual DropDownField.Builder DirectEvents(Action<PickerFieldDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as DropDownField.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -93,6 +109,14 @@ namespace Ext.Net
         public DropDownField.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DropDownField(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -107,7 +131,11 @@ namespace Ext.Net
         /// </summary>
         public DropDownField.Builder DropDownField()
         {
-            return this.DropDownField(new DropDownField());
+#if MVC
+			return this.DropDownField(new DropDownField { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DropDownField(new DropDownField());
+#endif			
         }
 
         /// <summary>
@@ -115,7 +143,10 @@ namespace Ext.Net
         /// </summary>
         public DropDownField.Builder DropDownField(DropDownField component)
         {
-            return new DropDownField.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DropDownField.Builder(component);
         }
 
         /// <summary>
@@ -123,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public DropDownField.Builder DropDownField(DropDownField.Config config)
         {
-            return new DropDownField.Builder(new DropDownField(config));
+#if MVC
+			return new DropDownField.Builder(new DropDownField(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DropDownField.Builder(new DropDownField(config));
+#endif			
         }
     }
 }

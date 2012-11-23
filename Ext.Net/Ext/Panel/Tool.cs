@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -72,6 +72,7 @@ namespace Ext.Net
         /// <summary>
         /// The type of tool to create.
         /// </summary>
+        [Meta]
         [ConfigOption(JsonMode.ToLower)]
         [DefaultValue(ToolType.None)]
         [DirectEventUpdate(MethodName="SetType")]
@@ -92,6 +93,7 @@ namespace Ext.Net
         /// <summary>
         /// The custom type of tool to create.
         /// </summary>
+        [Meta]
         [ConfigOption("type")]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
@@ -111,6 +113,7 @@ namespace Ext.Net
         /// <summary>
         /// The raw JavaScript function to be called when this Listener fires.
         /// </summary>
+        [Meta]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
         [Description("The raw JavaScript function to be called when this Listener fires.")]
@@ -138,7 +141,7 @@ namespace Ext.Net
             {
                 if (this.Handler.IsNotEmpty())
                 {
-                    return new JFunction(TokenUtils.ReplaceRawToken(TokenUtils.ParseTokens(this.Handler, this)), "event", "toolEl", "panel", "tool").ToScript();
+                    return new JFunction(TokenUtils.ReplaceRawToken(TokenUtils.ParseTokens(this.Handler, this)), "event", "toolEl", "owner", "tool").ToScript();
                 }
 
                 return this.Fn;
@@ -148,9 +151,10 @@ namespace Ext.Net
         /// <summary>
         /// The function to call when clicked. Arguments passed are 'event', 'toolEl' and 'panel'.
         /// </summary>
+        [Meta]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
-        [Description("The function to call when clicked. Arguments passed are 'event', 'toolEl', 'panel' and 'tool'.")]
+        [Description("The function to call when clicked. Arguments passed are 'event', 'toolEl', 'owner' and 'tool'.")]
         public virtual string Handler
         {
             get
@@ -166,6 +170,7 @@ namespace Ext.Net
         /// <summary>
         /// The scope in which to call the handler.
         /// </summary>
+        [Meta]
         [ConfigOption(JsonMode.Raw)]
         [DefaultValue("this")]
         [NotifyParentProperty(true)]
@@ -209,6 +214,10 @@ namespace Ext.Net
         [ConfigOption("tooltip")]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
+        [ReadOnly(false)]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [Description("A tip string.")]
         new public virtual string ToolTip 
         {
@@ -311,6 +320,42 @@ namespace Ext.Net
         protected virtual void SetType(ToolTipType type)
         {
             this.Call("setType", type.ToString().ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Server-side DirectEvent handler. Method signature is (object sender, DirectEventArgs e).
+        /// </summary>
+        [Description("Server-side DirectEvent handler. Method signature is (object sender, DirectEventArgs e).")]
+        public event ComponentDirectEvent.DirectEventHandler DirectClick
+        {
+            add
+            {
+                this.DirectEvents.Click.Event += value;
+                this.CheckForceId();
+            }
+            remove
+            {
+                this.DirectEvents.Click.Event -= value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Meta]
+        [DefaultValue("")]
+        [Description("")]
+        public virtual string DirectClickUrl
+        {
+            get
+            {
+
+                return this.DirectEvents.Click.Url;
+            }
+            set
+            {
+                this.DirectEvents.Click.Url = value;
+            }
         }
     }
 

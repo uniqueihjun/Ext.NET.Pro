@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -12,7 +12,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Web;
 using System.Xml;
-
+using System.Linq;
 using Ext.Net.Utilities;
 using Newtonsoft.Json;
 
@@ -25,9 +25,11 @@ namespace Ext.Net
     public partial class StoreDataHandler
     {
         private string jsonData;
+        private StoreAction? action;
         private XmlDocument xmlData;
         private readonly HttpContext context;
-        private bool isBatch;
+        private bool? isBatch;
+        private StoreRequestParameters prms;
 
 		/// <summary>
 		/// 
@@ -35,21 +37,25 @@ namespace Ext.Net
 		[Description("")]
         public StoreDataHandler(HttpContext context)
         {
-            this.context = context;
+            this.context = context ?? HttpContext.Current;
+        }
+
+        public StoreDataHandler()
+        {
+            this.context = HttpContext.Current;
         }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[Description("")]
-        public StoreDataHandler(string jsonData)
+        public StoreDataHandler(string jsonData) : this()
         {
             if (jsonData == null)
             {
                 throw new ArgumentNullException("jsonData");
             }
-            this.jsonData = jsonData;
-            this.isBatch = this.jsonData.IsNotEmpty() && this.jsonData[0] == '{' && this.jsonData[this.jsonData.Length - 1] == '}';
+            this.jsonData = jsonData;            
         }
 
 		/// <summary>
@@ -60,12 +66,67 @@ namespace Ext.Net
         {
             get
             {
-                if (jsonData == null)
+                if (this.jsonData == null)
                 {
-                    jsonData = context.Request["data"];
+                    if (this.context.Request["data"] != null)
+                    {
+                        this.jsonData = this.context.Request["data"];
+                    }
+                    else
+                    {
+                        if (this.IsJsonRequest)
+                        {
+                            using (StreamReader sr = new StreamReader(context.Request.InputStream))
+                            {
+                                this.jsonData = sr.ReadToEnd();
+                            }
+                        }
+                    }
                 }
 
-                return jsonData;
+                return this.jsonData;
+            }
+        }
+
+        private bool IsJsonRequest
+        {
+            get
+            {
+                return context.Request.ContentType.Split(';').Any(t => t.Equals("application/json", StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public StoreAction Action
+        {
+            get
+            {
+                if (this.action == null)
+                {
+                    string _action = this.context.Request["action"];
+                    this.action = _action.IsNotEmpty() ? Store.Action(_action) : StoreAction.Read;
+                }
+
+                return this.action.Value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public StoreRequestParameters Parameters
+        {
+            get
+            {
+                if (this.prms == null)
+                {
+                    this.prms = new StoreRequestParameters(this.context);
+                }
+
+                return this.prms;
             }
         }
 
@@ -76,7 +137,14 @@ namespace Ext.Net
         {
             get
             {
-                return this.isBatch;
+                if (!this.isBatch.HasValue)
+                {
+                    string data = this.JsonData;
+
+                    this.isBatch = data.IsNotEmpty() && data[0] == '{' && data[data.Length - 1] == '}';
+                }
+
+                return this.isBatch.Value;
             }
         }
 
@@ -90,7 +158,7 @@ namespace Ext.Net
             {
                 if (xmlData == null)
                 {
-                    if (this.isBatch)
+                    if (this.IsBatch)
                     {
                         RecordsToXmlConverter converter = new RecordsToXmlConverter();
                         xmlData = (XmlDocument)JsonConvert.DeserializeObject(JsonData, typeof(XmlDocument), converter);

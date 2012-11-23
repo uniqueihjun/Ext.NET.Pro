@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TMenuBase, TBuilder> : AbstractPanel.Builder<TMenuBase, TBuilder>
+        new public abstract partial class Builder<TMenuBase, TBuilder> : AbstractPanel.Builder<TMenuBase, TBuilder>
             where TMenuBase : MenuBase
             where TBuilder : Builder<TMenuBase, TBuilder>
         {
@@ -85,11 +85,11 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// 
+			/// True to enable keyboard navigation for controlling the menu. This option should generally be disabled when form fields are being used inside the menu. Defaults to true.
 			/// </summary>
-            public virtual TBuilder DisableMenuNavigation(bool disableMenuNavigation)
+            public virtual TBuilder EnableKeyNav(bool enableKeyNav)
             {
-                this.ToComponent().DisableMenuNavigation = disableMenuNavigation;
+                this.ToComponent().EnableKeyNav = enableKeyNav;
                 return this as TBuilder;
             }
              

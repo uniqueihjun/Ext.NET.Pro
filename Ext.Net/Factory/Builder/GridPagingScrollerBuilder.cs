@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,77 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : GridScroller.Builder<GridPagingScroller, GridPagingScroller.Builder>
+        new public abstract partial class Builder<TGridPagingScroller, TBuilder> : GridScroller.Builder<TGridPagingScroller, TBuilder>
+            where TGridPagingScroller : GridPagingScroller
+            where TBuilder : Builder<TGridPagingScroller, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TGridPagingScroller component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// This is the time in milliseconds to buffer load requests when scrolling the PagingScrollbar. Defaults to: 200
+			/// </summary>
+            public virtual TBuilder ScrollToLoadBuffer(int scrollToLoadBuffer)
+            {
+                this.ToComponent().ScrollToLoadBuffer = scrollToLoadBuffer;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The zone which causes a refresh of the rendered viewport. As soon as the edge of the rendered grid is this number of rows from the edge of the viewport, the view is moved.
+			/// </summary>
+            public virtual TBuilder NumberFromEdge(int numberFromEdge)
+            {
+                this.ToComponent().NumberFromEdge = numberFromEdge;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The number of extra rows to render on the trailing side of scrolling outside the NumberFromEdge buffer as scrolling proceeds.
+			/// </summary>
+            public virtual TBuilder TrailingBufferZone(int trailingBufferZone)
+            {
+                this.ToComponent().TrailingBufferZone = trailingBufferZone;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The number of extra rows to render on the leading side of scrolling outside the NumberFromEdge buffer as scrolling proceeds.
+			/// </summary>
+            public virtual TBuilder LeadingBufferZone(int leadingBufferZone)
+            {
+                this.ToComponent().LeadingBufferZone = leadingBufferZone;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder VariableRowHeight(bool variableRowHeight)
+            {
+                this.ToComponent().VariableRowHeight = variableRowHeight;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : GridPagingScroller.Builder<GridPagingScroller, GridPagingScroller.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,60 +124,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// This is the time in milliseconds to buffer load requests when scrolling the PagingScrollbar. Defaults to: 200
-			/// </summary>
-            public virtual GridPagingScroller.Builder ScrollToLoadBuffer(int scrollToLoadBuffer)
-            {
-                this.ToComponent().ScrollToLoadBuffer = scrollToLoadBuffer;
-                return this as GridPagingScroller.Builder;
-            }
-             
- 			/// <summary>
-			/// The zone which causes a refresh of the rendered viewport. As soon as the edge of the rendered grid is this number of rows from the edge of the viewport, the view is moved.
-			/// </summary>
-            public virtual GridPagingScroller.Builder NumberFromEdge(int numberFromEdge)
-            {
-                this.ToComponent().NumberFromEdge = numberFromEdge;
-                return this as GridPagingScroller.Builder;
-            }
-             
- 			/// <summary>
-			/// The number of extra rows to render on the trailing side of scrolling outside the NumberFromEdge buffer as scrolling proceeds.
-			/// </summary>
-            public virtual GridPagingScroller.Builder TrailingBufferZone(int trailingBufferZone)
-            {
-                this.ToComponent().TrailingBufferZone = trailingBufferZone;
-                return this as GridPagingScroller.Builder;
-            }
-             
- 			/// <summary>
-			/// The number of extra rows to render on the leading side of scrolling outside the NumberFromEdge buffer as scrolling proceeds.
-			/// </summary>
-            public virtual GridPagingScroller.Builder LeadingBufferZone(int leadingBufferZone)
-            {
-                this.ToComponent().LeadingBufferZone = leadingBufferZone;
-                return this as GridPagingScroller.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual GridPagingScroller.Builder VariableRowHeight(bool variableRowHeight)
-            {
-                this.ToComponent().VariableRowHeight = variableRowHeight;
-                return this as GridPagingScroller.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -116,6 +132,14 @@ namespace Ext.Net
         public GridPagingScroller.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.GridPagingScroller(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -130,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public GridPagingScroller.Builder GridPagingScroller()
         {
-            return this.GridPagingScroller(new GridPagingScroller());
+#if MVC
+			return this.GridPagingScroller(new GridPagingScroller { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.GridPagingScroller(new GridPagingScroller());
+#endif			
         }
 
         /// <summary>
@@ -138,7 +166,10 @@ namespace Ext.Net
         /// </summary>
         public GridPagingScroller.Builder GridPagingScroller(GridPagingScroller component)
         {
-            return new GridPagingScroller.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new GridPagingScroller.Builder(component);
         }
 
         /// <summary>
@@ -146,7 +177,11 @@ namespace Ext.Net
         /// </summary>
         public GridPagingScroller.Builder GridPagingScroller(GridPagingScroller.Config config)
         {
-            return new GridPagingScroller.Builder(new GridPagingScroller(config));
+#if MVC
+			return new GridPagingScroller.Builder(new GridPagingScroller(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new GridPagingScroller.Builder(new GridPagingScroller(config));
+#endif			
         }
     }
 }

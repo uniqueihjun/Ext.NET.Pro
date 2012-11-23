@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -137,13 +137,13 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption]
         [Category("7. TextArea")]
-        [DefaultValue(typeof(Unit), "1000")]
+        [DefaultValue(1000)]
         [Description("The maximum height to allow when grow=true (defaults to 1000)")]
-        public override Unit GrowMax
+        public override int GrowMax
         {
             get
             {
-                return this.UnitPixelTypeCheck(State["GrowMax"], Unit.Pixel(1000), "GrowMax");
+                return this.State.Get<int>("GrowMax", 1000);
             }
             set
             {
@@ -156,13 +156,13 @@ namespace Ext.Net
         /// </summary>
         [ConfigOption]
         [Category("7. TextArea")]
-        [DefaultValue(typeof(Unit), "60")]
+        [DefaultValue(60)]
         [Description("The minimum height to allow when grow=true (defaults to 60)")]
-        public override Unit GrowMin
+        public override int GrowMin
         {
             get
             {
-                return this.UnitPixelTypeCheck(State["GrowMin"], Unit.Pixel(60), "GrowMin");
+                return this.State.Get<int>("GrowMin", 60);
             }
             set
             {
@@ -268,7 +268,8 @@ namespace Ext.Net
         {
             add
             {
-                this.DirectEvents.Change.Event += value;
+                this.CheckForceId();
+				this.DirectEvents.Change.Event += value;
             }
             remove
             {

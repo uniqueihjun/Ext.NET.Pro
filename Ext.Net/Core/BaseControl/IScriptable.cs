@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -198,6 +198,31 @@ namespace Ext.Net
 
             return this.directScript;
         }
+#if NET40
+        public string ToScript(RenderMode mode = RenderMode.Auto, string element = null, int? index = null, bool? selfRendering = null, bool forceResources = false, string method = null, bool forceLazy = false, bool clearContainer = false)
+        {
+            if (this.AlreadyRendered)
+            {
+                return this.directScript;
+            }
+
+            this.directScript = DefaultScriptBuilder.Create(this).Build(mode, element, index, selfRendering ?? this.Page == null, forceResources, method, forceLazy, clearContainer);
+
+            return this.directScript;
+        }
+#else
+        public string ToScript(RenderMode mode, string element, int? index, bool? selfRendering, bool forceResources, string method, bool forceLazy, bool clearContainer)
+        {
+            if (this.AlreadyRendered)
+            {
+                return this.directScript;
+            }
+
+            this.directScript = DefaultScriptBuilder.Create(this).Build(mode, element, index, selfRendering ?? this.Page == null, forceResources, method, forceLazy, clearContainer);
+
+            return this.directScript;
+        }
+#endif
 
         /// <summary>
         /// Adds the script to be be called on the client.
@@ -344,7 +369,8 @@ namespace Ext.Net
         [Description("")]
         protected virtual void CallTemplate(ScriptPosition position, string template, string name, params object[] args)
         {
-            if (((this.IDMode == Ext.Net.IDMode.Explicit || this.IDMode == Ext.Net.IDMode.Static) && !this.IsIdRequired) || this.IDMode == Ext.Net.IDMode.Ignore)
+            IDMode mode = this.IDMode;
+            if (((mode == Ext.Net.IDMode.Explicit || mode == Ext.Net.IDMode.Static) && !this.IsIdRequired) || mode == Ext.Net.IDMode.Ignore)
             {
                 throw new Exception("You have to set widget's ID to call its methods");
             }
@@ -393,17 +419,18 @@ namespace Ext.Net
                 return "";
             }
             
-            var pageHolder = new SelfRenderingPage();
+            SelfRenderingPage pageHolder = new SelfRenderingPage();
 
             if (!(this is ResourceManager))
             {
-                var newMgr = new ResourceManager();
+                ResourceManager newMgr = new ResourceManager();
+
                 newMgr.RenderScripts = ResourceLocationType.None;
                 newMgr.RenderStyles = ResourceLocationType.None;
                 newMgr.IDMode = IDMode.Explicit;
                 newMgr.IsSelfRender = true;            
                 newMgr.IsDynamic = true;
-                pageHolder.Controls.Add(newMgr);
+                pageHolder.Controls.Add(newMgr);                
             }
 
             this.IsSelfRender = true;            
@@ -413,7 +440,12 @@ namespace Ext.Net
 
             StringWriter output = new StringWriter();
             HttpContext.Current.Server.Execute(pageHolder, output, true);
+#if MVC            
+            this.IsSelfRender = this is Ext.Net.MVC.MvcResourceManager;
+#else
             this.IsSelfRender = false;
+#endif
+
 
             return output.ToString();
         }

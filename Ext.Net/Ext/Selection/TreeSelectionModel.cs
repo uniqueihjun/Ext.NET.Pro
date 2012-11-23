@@ -1,13 +1,15 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Web.UI;
+using System.Linq;
 
 namespace Ext.Net
 {
@@ -87,6 +89,31 @@ namespace Ext.Net
             protected internal set
             {
                 this.selectedNodes = value;
+            }
+        }
+
+        private SelectedRowCollection selectedRows;
+        /// <summary>
+        /// 
+        /// </summary>
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [ConfigOption("selectedData", JsonMode.AlwaysArray)]
+        [Description("")]
+        public override SelectedRowCollection SelectedRows
+        {
+            get
+            {
+                if (this.selectedRows == null)
+                {
+                    this.selectedRows = new SelectedRowCollection();
+
+                    if (this.SelectedNodes != null && this.SelectedNodes.Count > 0)
+                    {
+                        this.selectedRows.AddRange(this.SelectedNodes.ConvertAll<SelectedRow>(n => new SelectedRow(n.NodeID)));
+                    }
+                }
+
+                return this.selectedRows;
             }
         }
     }

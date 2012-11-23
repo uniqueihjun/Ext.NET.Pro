@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -45,6 +45,8 @@ namespace Ext.Net
                 list.Add("mouseOut", new ConfigOption("mouseOut", new SerializationOptions("mouseout", typeof(ListenerJsonConverter)), null, this.MouseOut ));
                 list.Add("mouseOver", new ConfigOption("mouseOver", new SerializationOptions("mouseover", typeof(ListenerJsonConverter)), null, this.MouseOver ));
                 list.Add("toggle", new ConfigOption("toggle", new SerializationOptions("toggle", typeof(ListenerJsonConverter)), null, this.Toggle ));
+                list.Add("textChange", new ConfigOption("textChange", new SerializationOptions("textchange", typeof(ListenerJsonConverter)), null, this.TextChange ));
+                list.Add("iconChange", new ConfigOption("iconChange", new SerializationOptions("iconchange", typeof(ListenerJsonConverter)), null, this.IconChange ));
 
                 return list;
             }

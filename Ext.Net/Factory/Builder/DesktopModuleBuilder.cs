@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,88 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<DesktopModule, DesktopModule.Builder>
+        new public abstract partial class Builder<TDesktopModule, TBuilder> : BaseItem.Builder<TDesktopModule, TBuilder>
+            where TDesktopModule : DesktopModule
+            where TBuilder : Builder<TDesktopModule, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDesktopModule component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder ModuleID(string moduleID)
+            {
+                this.ToComponent().ModuleID = moduleID;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Standard menu attribute consisting of a reference to a menu object, a menu id or a menu config blob.
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Window(Action<WindowCollection> action)
+            {
+                action(this.ToComponent().Window);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Launcher(MenuItem launcher)
+            {
+                this.ToComponent().Launcher = launcher;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Shortcut(DesktopShortcut shortcut)
+            {
+                this.ToComponent().Shortcut = shortcut;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder AutoRun(bool autoRun)
+            {
+                this.ToComponent().AutoRun = autoRun;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder AutoRunHandler(string autoRunHandler)
+            {
+                this.ToComponent().AutoRunHandler = autoRunHandler;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DesktopModule.Builder<DesktopModule, DesktopModule.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,71 +135,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopModule.Builder ModuleID(string moduleID)
-            {
-                this.ToComponent().ModuleID = moduleID;
-                return this as DesktopModule.Builder;
-            }
-             
- 			/// <summary>
-			/// Standard menu attribute consisting of a reference to a menu object, a menu id or a menu config blob.
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DesktopModule.Builder</returns>
-            public virtual DesktopModule.Builder Window(Action<WindowCollection> action)
-            {
-                action(this.ToComponent().Window);
-                return this as DesktopModule.Builder;
-            }
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopModule.Builder Launcher(MenuItem launcher)
-            {
-                this.ToComponent().Launcher = launcher;
-                return this as DesktopModule.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopModule.Builder Shortcut(DesktopShortcut shortcut)
-            {
-                this.ToComponent().Shortcut = shortcut;
-                return this as DesktopModule.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopModule.Builder AutoRun(bool autoRun)
-            {
-                this.ToComponent().AutoRun = autoRun;
-                return this as DesktopModule.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopModule.Builder AutoRunHandler(string autoRunHandler)
-            {
-                this.ToComponent().AutoRunHandler = autoRunHandler;
-                return this as DesktopModule.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -127,6 +143,14 @@ namespace Ext.Net
         public DesktopModule.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DesktopModule(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -141,7 +165,11 @@ namespace Ext.Net
         /// </summary>
         public DesktopModule.Builder DesktopModule()
         {
-            return this.DesktopModule(new DesktopModule());
+#if MVC
+			return this.DesktopModule(new DesktopModule { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DesktopModule(new DesktopModule());
+#endif			
         }
 
         /// <summary>
@@ -149,7 +177,10 @@ namespace Ext.Net
         /// </summary>
         public DesktopModule.Builder DesktopModule(DesktopModule component)
         {
-            return new DesktopModule.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DesktopModule.Builder(component);
         }
 
         /// <summary>
@@ -157,7 +188,11 @@ namespace Ext.Net
         /// </summary>
         public DesktopModule.Builder DesktopModule(DesktopModule.Config config)
         {
-            return new DesktopModule.Builder(new DesktopModule(config));
+#if MVC
+			return new DesktopModule.Builder(new DesktopModule(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DesktopModule.Builder(new DesktopModule(config));
+#endif			
         }
     }
 }

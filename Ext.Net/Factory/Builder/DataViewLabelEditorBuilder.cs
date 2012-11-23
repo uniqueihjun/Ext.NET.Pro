@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Plugin.Builder<DataViewLabelEditor, DataViewLabelEditor.Builder>
+        new public abstract partial class Builder<TDataViewLabelEditor, TBuilder> : Plugin.Builder<TDataViewLabelEditor, TBuilder>
+            where TDataViewLabelEditor : DataViewLabelEditor
+            where TBuilder : Builder<TDataViewLabelEditor, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDataViewLabelEditor component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder DataIndex(string dataIndex)
+            {
+                this.ToComponent().DataIndex = dataIndex;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// x-editable
+			/// </summary>
+            public virtual TBuilder LabelSelector(string labelSelector)
+            {
+                this.ToComponent().LabelSelector = labelSelector;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DataViewLabelEditor.Builder<DataViewLabelEditor, DataViewLabelEditor.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DataViewLabelEditor.Builder DataIndex(string dataIndex)
-            {
-                this.ToComponent().DataIndex = dataIndex;
-                return this as DataViewLabelEditor.Builder;
-            }
-             
- 			/// <summary>
-			/// x-editable
-			/// </summary>
-            public virtual DataViewLabelEditor.Builder LabelSelector(string labelSelector)
-            {
-                this.ToComponent().LabelSelector = labelSelector;
-                return this as DataViewLabelEditor.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public DataViewLabelEditor.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DataViewLabelEditor(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public DataViewLabelEditor.Builder DataViewLabelEditor()
         {
-            return this.DataViewLabelEditor(new DataViewLabelEditor());
+#if MVC
+			return this.DataViewLabelEditor(new DataViewLabelEditor { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DataViewLabelEditor(new DataViewLabelEditor());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public DataViewLabelEditor.Builder DataViewLabelEditor(DataViewLabelEditor component)
         {
-            return new DataViewLabelEditor.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DataViewLabelEditor.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public DataViewLabelEditor.Builder DataViewLabelEditor(DataViewLabelEditor.Config config)
         {
-            return new DataViewLabelEditor.Builder(new DataViewLabelEditor(config));
+#if MVC
+			return new DataViewLabelEditor.Builder(new DataViewLabelEditor(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DataViewLabelEditor.Builder(new DataViewLabelEditor(config));
+#endif			
         }
     }
 }

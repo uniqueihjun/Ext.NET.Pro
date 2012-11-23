@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,41 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : CartesianSeries.Builder<AreaSeries, AreaSeries.Builder>
+        new public abstract partial class Builder<TAreaSeries, TBuilder> : CartesianSeries.Builder<TAreaSeries, TBuilder>
+            where TAreaSeries : AreaSeries
+            where TBuilder : Builder<TAreaSeries, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TAreaSeries component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Style(SpriteAttributes style)
+            {
+                this.ToComponent().Style = style;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : AreaSeries.Builder<AreaSeries, AreaSeries.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,24 +88,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual AreaSeries.Builder Style(SpriteAttributes style)
-            {
-                this.ToComponent().Style = style;
-                return this as AreaSeries.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -80,6 +96,14 @@ namespace Ext.Net
         public AreaSeries.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.AreaSeries(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -94,7 +118,11 @@ namespace Ext.Net
         /// </summary>
         public AreaSeries.Builder AreaSeries()
         {
-            return this.AreaSeries(new AreaSeries());
+#if MVC
+			return this.AreaSeries(new AreaSeries { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.AreaSeries(new AreaSeries());
+#endif			
         }
 
         /// <summary>
@@ -102,7 +130,10 @@ namespace Ext.Net
         /// </summary>
         public AreaSeries.Builder AreaSeries(AreaSeries component)
         {
-            return new AreaSeries.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new AreaSeries.Builder(component);
         }
 
         /// <summary>
@@ -110,7 +141,11 @@ namespace Ext.Net
         /// </summary>
         public AreaSeries.Builder AreaSeries(AreaSeries.Config config)
         {
-            return new AreaSeries.Builder(new AreaSeries(config));
+#if MVC
+			return new AreaSeries.Builder(new AreaSeries(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new AreaSeries.Builder(new AreaSeries(config));
+#endif			
         }
     }
 }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Parameter.Builder<StoreParameter, StoreParameter.Builder>
+        new public abstract partial class Builder<TStoreParameter, TBuilder> : Parameter.Builder<TStoreParameter, TBuilder>
+            where TStoreParameter : StoreParameter
+            where TBuilder : Builder<TStoreParameter, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TStoreParameter component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder ApplyMode(ApplyMode applyMode)
+            {
+                this.ToComponent().ApplyMode = applyMode;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Action(StoreAction? action)
+            {
+                this.ToComponent().Action = action;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : StoreParameter.Builder<StoreParameter, StoreParameter.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual StoreParameter.Builder ApplyMode(ApplyMode applyMode)
-            {
-                this.ToComponent().ApplyMode = applyMode;
-                return this as StoreParameter.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual StoreParameter.Builder Action(StoreAction? action)
-            {
-                this.ToComponent().Action = action;
-                return this as StoreParameter.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public StoreParameter.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.StoreParameter(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public StoreParameter.Builder StoreParameter()
         {
-            return this.StoreParameter(new StoreParameter());
+#if MVC
+			return this.StoreParameter(new StoreParameter { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.StoreParameter(new StoreParameter());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public StoreParameter.Builder StoreParameter(StoreParameter component)
         {
-            return new StoreParameter.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new StoreParameter.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public StoreParameter.Builder StoreParameter(StoreParameter.Config config)
         {
-            return new StoreParameter.Builder(new StoreParameter(config));
+#if MVC
+			return new StoreParameter.Builder(new StoreParameter(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new StoreParameter.Builder(new StoreParameter(config));
+#endif			
         }
     }
 }

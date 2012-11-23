@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -18,9 +18,12 @@ namespace Ext.Net
 	/// <summary>
 	/// 
 	/// </summary>
-	[Description("")]
+    [Meta]
+    [Description("")]
     public partial class NumericFilter : GridFilter
     {
+        public NumericFilter() { }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -40,6 +43,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
+        [Meta]
         [ConfigOption]
         [Category("3. NumericFilter")]
         [DefaultValue("Enter Number...")]
@@ -61,8 +65,9 @@ namespace Ext.Net
         /// <summary>
         /// Predefined filter value
         /// </summary>
+        [Meta]
         [Category("3. NumericFilter")]
-        [DefaultValue("")]
+        [DefaultValue(null)]
         [Description("Predefined filter value")]
         public virtual float? GreaterThanValue
         {
@@ -79,8 +84,9 @@ namespace Ext.Net
         /// <summary>
         /// Predefined filter value
         /// </summary>
+        [Meta]
         [Category("3. NumericFilter")]
-        [DefaultValue("")]
+        [DefaultValue(null)]
         [Description("Predefined filter value")]
         public virtual float? LessThanValue
         {
@@ -97,8 +103,9 @@ namespace Ext.Net
         /// <summary>
         /// Predefined filter value
         /// </summary>
+        [Meta]
         [Category("3. NumericFilter")]
-        [DefaultValue("")]
+        [DefaultValue(null)]
         [Description("Predefined filter value")]
         public virtual float? EqualValue
         {
@@ -114,7 +121,7 @@ namespace Ext.Net
 
 		/// <summary>
 		/// 
-		/// </summary>
+		/// </summary>      
         [ConfigOption("value", JsonMode.Raw)]
         [DefaultValue("")]
 		[Description("")]

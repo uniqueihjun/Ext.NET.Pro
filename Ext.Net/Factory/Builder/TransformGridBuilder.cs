@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,41 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : GridPanel.Builder<TransformGrid, TransformGrid.Builder>
+        new public abstract partial class Builder<TTransformGrid, TBuilder> : GridPanel.Builder<TTransformGrid, TBuilder>
+            where TTransformGrid : TransformGrid
+            where TBuilder : Builder<TTransformGrid, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TTransformGrid component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The table element from which this grid will be created.
+			/// </summary>
+            public virtual TBuilder Table(string table)
+            {
+                this.ToComponent().Table = table;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : TransformGrid.Builder<TransformGrid, TransformGrid.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,24 +88,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The table element from which this grid will be created.
-			/// </summary>
-            public virtual TransformGrid.Builder Table(string table)
-            {
-                this.ToComponent().Table = table;
-                return this as TransformGrid.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -80,6 +96,14 @@ namespace Ext.Net
         public TransformGrid.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.TransformGrid(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -94,7 +118,11 @@ namespace Ext.Net
         /// </summary>
         public TransformGrid.Builder TransformGrid()
         {
-            return this.TransformGrid(new TransformGrid());
+#if MVC
+			return this.TransformGrid(new TransformGrid { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.TransformGrid(new TransformGrid());
+#endif			
         }
 
         /// <summary>
@@ -102,7 +130,10 @@ namespace Ext.Net
         /// </summary>
         public TransformGrid.Builder TransformGrid(TransformGrid component)
         {
-            return new TransformGrid.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new TransformGrid.Builder(component);
         }
 
         /// <summary>
@@ -110,7 +141,11 @@ namespace Ext.Net
         /// </summary>
         public TransformGrid.Builder TransformGrid(TransformGrid.Config config)
         {
-            return new TransformGrid.Builder(new TransformGrid(config));
+#if MVC
+			return new TransformGrid.Builder(new TransformGrid(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new TransformGrid.Builder(new TransformGrid(config));
+#endif			
         }
     }
 }

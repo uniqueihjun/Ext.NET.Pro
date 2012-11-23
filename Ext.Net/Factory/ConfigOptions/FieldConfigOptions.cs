@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -57,6 +57,7 @@ namespace Ext.Net
                 list.Add("hideLabel", new ConfigOption("hideLabel", null, false, this.HideLabel ));
                 list.Add("inputID", new ConfigOption("inputID", new SerializationOptions("inputId"), "", this.InputID ));
                 list.Add("inputType", new ConfigOption("inputType", new SerializationOptions(JsonMode.ToLower), InputType.Text, this.InputType ));
+                list.Add("inputWidth", new ConfigOption("inputWidth", null, 100, this.InputWidth ));
                 list.Add("invalidCls", new ConfigOption("invalidCls", null, "x-form-invalid", this.InvalidCls ));
                 list.Add("invalidText", new ConfigOption("invalidText", null, "", this.InvalidText ));
                 list.Add("labelAlign", new ConfigOption("labelAlign", new SerializationOptions(JsonMode.ToLower), LabelAlign.Left, this.LabelAlign ));
@@ -100,6 +101,12 @@ namespace Ext.Net
                 list.Add("getErrors", new ConfigOption("getErrors", new SerializationOptions(JsonMode.Raw), null, this.GetErrors ));
                 list.Add("valueProxy", new ConfigOption("valueProxy", new SerializationOptions("value"), null, this.ValueProxy ));
                 list.Add("rawValue", new ConfigOption("rawValue", null, null, this.RawValue ));
+                list.Add("validator", new ConfigOption("validator", new SerializationOptions(JsonMode.Raw), null, this.Validator ));
+                list.Add("validatorText", new ConfigOption("validatorText", null, "", this.ValidatorText ));
+                list.Add("standardVtype", new ConfigOption("standardVtype", new SerializationOptions("vtype", JsonMode.ToLower), ValidationType.None, this.StandardVtype ));
+                list.Add("vtype", new ConfigOption("vtype", null, "", this.Vtype ));
+                list.Add("vtypeText", new ConfigOption("vtypeText", null, "", this.VtypeText ));
+                list.Add("vTypeParams", new ConfigOption("vTypeParams", new SerializationOptions("vtypeParams", JsonMode.ArrayToObject), null, this.VTypeParams ));
                 list.Add("isRemoteValidation", new ConfigOption("isRemoteValidation", null, false, this.IsRemoteValidation ));
                 list.Add("remoteValidation", new ConfigOption("remoteValidation", new SerializationOptions("remoteValidationOptions", JsonMode.Object), null, this.RemoteValidation ));
 

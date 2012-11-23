@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,81 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ColumnBase.Builder<CheckColumn, CheckColumn.Builder>
+        new public abstract partial class Builder<TCheckColumn, TBuilder> : ColumnBase.Builder<TCheckColumn, TBuilder>
+            where TCheckColumn : CheckColumn
+            where TBuilder : Builder<TCheckColumn, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TCheckColumn component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Editable(bool editable)
+            {
+                this.ToComponent().Editable = editable;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder SingleSelect(bool singleSelect)
+            {
+                this.ToComponent().SingleSelect = singleSelect;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder StopSelection(bool stopSelection)
+            {
+                this.ToComponent().StopSelection = stopSelection;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<CheckColumnListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<CheckColumnDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : CheckColumn.Builder<CheckColumn, CheckColumn.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,64 +128,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CheckColumn.Builder Editable(bool editable)
-            {
-                this.ToComponent().Editable = editable;
-                return this as CheckColumn.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CheckColumn.Builder SingleSelect(bool singleSelect)
-            {
-                this.ToComponent().SingleSelect = singleSelect;
-                return this as CheckColumn.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CheckColumn.Builder StopSelection(bool stopSelection)
-            {
-                this.ToComponent().StopSelection = stopSelection;
-                return this as CheckColumn.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of CheckColumn.Builder</returns>
-            public virtual CheckColumn.Builder Listeners(Action<CheckColumnListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as CheckColumn.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of CheckColumn.Builder</returns>
-            public virtual CheckColumn.Builder DirectEvents(Action<CheckColumnDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as CheckColumn.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -120,6 +136,14 @@ namespace Ext.Net
         public CheckColumn.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.CheckColumn(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -134,7 +158,11 @@ namespace Ext.Net
         /// </summary>
         public CheckColumn.Builder CheckColumn()
         {
-            return this.CheckColumn(new CheckColumn());
+#if MVC
+			return this.CheckColumn(new CheckColumn { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.CheckColumn(new CheckColumn());
+#endif			
         }
 
         /// <summary>
@@ -142,7 +170,10 @@ namespace Ext.Net
         /// </summary>
         public CheckColumn.Builder CheckColumn(CheckColumn component)
         {
-            return new CheckColumn.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new CheckColumn.Builder(component);
         }
 
         /// <summary>
@@ -150,7 +181,11 @@ namespace Ext.Net
         /// </summary>
         public CheckColumn.Builder CheckColumn(CheckColumn.Config config)
         {
-            return new CheckColumn.Builder(new CheckColumn(config));
+#if MVC
+			return new CheckColumn.Builder(new CheckColumn(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new CheckColumn.Builder(new CheckColumn(config));
+#endif			
         }
     }
 }

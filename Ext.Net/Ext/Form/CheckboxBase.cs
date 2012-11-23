@@ -1,13 +1,14 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.ComponentModel;
 using System.Web.UI;
+using System;
 
 namespace Ext.Net
 {
@@ -186,7 +187,7 @@ namespace Ext.Net
         /// The position relative to the checkbox where the boxLabel should appear. Recognized values are 'before' and 'after'. Defaults to 'after'.
         /// </summary>
         [Meta]
-        [ConfigOption]
+        [ConfigOption(JsonMode.ToLower)]
         [Category("6. Checkbox")]
         [DefaultValue(BoxLabelAlign.After)]
         [Description("The position relative to the checkbox where the boxLabel should appear. Recognized values are 'before' and 'after'. Defaults to 'after'.")]
@@ -331,7 +332,7 @@ namespace Ext.Net
         ///     The new checked state of the checkbox.
         /// </summary>
         [Meta]
-        [ConfigOption(JsonMode.Raw)]
+        [ConfigOption(typeof(FunctionJsonConverter))]
         [Category("6. Checkbox")]
         [DefaultValue("")]
         [Description("A function called when the checked value changes (can be used instead of handling the change event).")]
@@ -411,7 +412,6 @@ namespace Ext.Net
                 this.State.Set("UncheckedValue", value);
             }
         }
-
 
         /*  Public Methods
             -----------------------------------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -40,7 +40,9 @@ namespace Ext.Net
                 list.Add("pin", new ConfigOption("pin", new SerializationOptions("pin", typeof(DirectEventJsonConverter)), null, this.Pin ));
                 list.Add("unpin", new ConfigOption("unpin", new SerializationOptions("unpin", typeof(DirectEventJsonConverter)), null, this.Unpin ));
                 list.Add("bind", new ConfigOption("bind", new SerializationOptions("bind", typeof(DirectEventJsonConverter)), null, this.Bind ));
-                list.Add("unbind", new ConfigOption("unbind", new SerializationOptions("unbind", typeof(ListenerJsonConverter)), null, this.Unbind ));
+                list.Add("unbind", new ConfigOption("unbind", new SerializationOptions("unbind", typeof(DirectEventJsonConverter)), null, this.Unbind ));
+                list.Add("validateEdit", new ConfigOption("validateEdit", new SerializationOptions("validateedit", typeof(DirectEventJsonConverter)), null, this.ValidateEdit ));
+                list.Add("edit", new ConfigOption("edit", new SerializationOptions("edit", typeof(DirectEventJsonConverter)), null, this.Edit ));
 
                 return list;
             }

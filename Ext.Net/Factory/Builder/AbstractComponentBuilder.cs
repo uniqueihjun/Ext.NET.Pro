@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TAbstractComponent, TBuilder> : Observable.Builder<TAbstractComponent, TBuilder>
+        new public abstract partial class Builder<TAbstractComponent, TBuilder> : Observable.Builder<TAbstractComponent, TBuilder>
             where TAbstractComponent : AbstractComponent
             where TBuilder : Builder<TAbstractComponent, TBuilder>
         {
@@ -446,6 +446,15 @@ namespace Ext.Net
             }
              
  			/// <summary>
+			/// In CSS terms, shrink-wrap width is analogous to an inline-block element as opposed to a block-level element. Some container layouts always shrink-wrap their children, effectively ignoring this property (e.g., Ext.layout.container.HBox, Ext.layout.container.VBox, Ext.layout.component.Dock). The Default is \"Height\".
+			/// </summary>
+            public virtual TBuilder ShrinkWrap(ShrinkWrap shrinkWrap)
+            {
+                this.ToComponent().ShrinkWrap = shrinkWrap;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
 			/// A custom style specification to be applied to this component's Element.
 			/// </summary>
             public virtual TBuilder StyleSpec(string styleSpec)
@@ -505,6 +514,33 @@ namespace Ext.Net
             public virtual TBuilder Width(Unit width)
             {
                 this.ToComponent().Width = width;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder PreInit(JFunction preInit)
+            {
+                this.ToComponent().PreInit = preInit;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder KeyMap(KeyMap keyMap)
+            {
+                this.ToComponent().KeyMap = keyMap;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder KeyNav(KeyNav keyNav)
+            {
+                this.ToComponent().KeyNav = keyNav;
                 return this as TBuilder;
             }
              
@@ -758,15 +794,6 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// True to use height:'auto', false to use fixed height (defaults to false).
-			/// </summary>
-            public virtual TBuilder AutoHeight(bool autoHeight)
-            {
-                this.ToComponent().AutoHeight = autoHeight;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
 			/// The page level x coordinate for this component if contained within a positioning container.
 			/// </summary>
             public virtual TBuilder PageX(Unit pageX)
@@ -870,6 +897,15 @@ namespace Ext.Net
             }
             
  			/// <summary>
+			/// Adds a CSS class to the component's label.
+			/// </summary>
+            public virtual TBuilder AddLabelCls(string labelCls)
+            {
+                this.ToComponent().AddLabelCls(labelCls);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
 			/// Destroys this component by purging any event listeners, removing the component's element from the DOM, removing the component from its Ext.Container (if applicable) and unregistering it from Ext.ComponentMgr. Destruction is generally handled automatically by the framework and this method should usually not need to be called directly.
 			/// </summary>
             public virtual TBuilder Destroy()
@@ -947,6 +983,15 @@ namespace Ext.Net
             public virtual TBuilder RemoveCls(string cls)
             {
                 this.ToComponent().RemoveCls(cls);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// Removes a CSS class from the component's label.
+			/// </summary>
+            public virtual TBuilder RemoveLabelCls(string labelCls)
+            {
+                this.ToComponent().RemoveLabelCls(labelCls);
                 return this as TBuilder;
             }
             

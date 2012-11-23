@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -820,6 +820,24 @@ namespace Ext.Net
 				}
 			}
 
+			private ShrinkWrap shrinkWrap = ShrinkWrap.Height;
+
+			/// <summary>
+			/// In CSS terms, shrink-wrap width is analogous to an inline-block element as opposed to a block-level element. Some container layouts always shrink-wrap their children, effectively ignoring this property (e.g., Ext.layout.container.HBox, Ext.layout.container.VBox, Ext.layout.component.Dock). The Default is \"Height\".
+			/// </summary>
+			[DefaultValue(ShrinkWrap.Height)]
+			public virtual ShrinkWrap ShrinkWrap 
+			{ 
+				get
+				{
+					return this.shrinkWrap;
+				}
+				set
+				{
+					this.shrinkWrap = value;
+				}
+			}
+
 			private string styleSpec = "";
 
 			/// <summary>
@@ -943,6 +961,60 @@ namespace Ext.Net
 				set
 				{
 					this.width = value;
+				}
+			}
+
+			private JFunction preInit = null;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual JFunction PreInit 
+			{ 
+				get
+				{
+					return this.preInit;
+				}
+				set
+				{
+					this.preInit = value;
+				}
+			}
+
+			private KeyMap keyMap = null;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual KeyMap KeyMap 
+			{ 
+				get
+				{
+					return this.keyMap;
+				}
+				set
+				{
+					this.keyMap = value;
+				}
+			}
+
+			private KeyNav keyNav = null;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual KeyNav KeyNav 
+			{ 
+				get
+				{
+					return this.keyNav;
+				}
+				set
+				{
+					this.keyNav = value;
 				}
 			}
 
@@ -1429,24 +1501,6 @@ namespace Ext.Net
 				set
 				{
 					this.selectable = value;
-				}
-			}
-
-			private bool autoHeight = false;
-
-			/// <summary>
-			/// True to use height:'auto', false to use fixed height (defaults to false).
-			/// </summary>
-			[DefaultValue(false)]
-			public virtual bool AutoHeight 
-			{ 
-				get
-				{
-					return this.autoHeight;
-				}
-				set
-				{
-					this.autoHeight = value;
 				}
 			}
 

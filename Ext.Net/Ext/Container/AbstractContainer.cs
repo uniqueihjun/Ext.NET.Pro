@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -263,7 +263,7 @@ namespace Ext.Net
                     return "";
                 }
 
-                var btn = ControlUtils.FindControl<ButtonBase>(this, this.DefaultButton, true);
+                ButtonBase btn = ControlUtils.FindControl<ButtonBase>(this, this.DefaultButton, true);
 
                 return btn != null ? btn.ConfigID : this.DefaultButton;
             }
@@ -726,7 +726,7 @@ namespace Ext.Net
         {
             get
             {
-                return this.Items;
+                return this.ItemsProxy;
             }
         }
 
@@ -752,16 +752,16 @@ namespace Ext.Net
                         return this.items;
                     }
 
-                    var contentItems = new ItemsCollection<AbstractComponent>();
+                    ItemsCollection<AbstractComponent> contentItems = new ItemsCollection<AbstractComponent>();
 
                     this.PopulateItems(contentControls, contentItems);
 
                     return contentItems;
                 }
 
-                var realItems = new ItemsCollection<AbstractComponent>();
+                ItemsCollection<AbstractComponent> realItems = new ItemsCollection<AbstractComponent>();
 
-                foreach (var cmp in this.items)
+                foreach (AbstractComponent cmp in this.items)
                 {
                     if (cmp is UserControlLoader)
                     {
@@ -795,17 +795,20 @@ namespace Ext.Net
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append("[");
-                    foreach (var item in this.IDSToRender)
+
+                    foreach (string item in this.IDSToRender)
                     {
                         sb.Append(Transformer.NET.Net.CreateToken(typeof(Transformer.NET.AnchorTag), new Dictionary<string, string>{                        
                                {"id", item}         
                             }));
                         sb.Append(",");
                     }
+                    
                     if (this.IDSToRender.Count > 0)
                     {
                         sb.Remove(sb.Length - 1, 1);
                     }
+                    
                     sb.Append("]");
 
                     return sb.ToString();
@@ -824,7 +827,7 @@ namespace Ext.Net
         {
             foreach (Control control in contentControls)
             {
-                var cmp = control as AbstractComponent;
+                AbstractComponent cmp = control as AbstractComponent;
 
                 if (cmp != null)
                 {
@@ -1083,7 +1086,7 @@ namespace Ext.Net
         [ConfigOption("layout")]
         [DefaultValue("")]
 		[Description("")]
-        protected virtual string LayoutProxy
+        protected internal virtual string LayoutProxy
         {
             get
             {

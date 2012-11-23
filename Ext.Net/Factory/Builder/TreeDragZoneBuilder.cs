@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,32 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : DragZone.Builder<TreeDragZone, TreeDragZone.Builder>
+        new public abstract partial class Builder<TTreeDragZone, TBuilder> : DragZone.Builder<TTreeDragZone, TBuilder>
+            where TTreeDragZone : TreeDragZone
+            where TBuilder : Builder<TTreeDragZone, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TTreeDragZone component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : TreeDragZone.Builder<TreeDragZone, TreeDragZone.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,15 +79,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -71,6 +87,14 @@ namespace Ext.Net
         public TreeDragZone.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.TreeDragZone(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -85,7 +109,11 @@ namespace Ext.Net
         /// </summary>
         public TreeDragZone.Builder TreeDragZone()
         {
-            return this.TreeDragZone(new TreeDragZone());
+#if MVC
+			return this.TreeDragZone(new TreeDragZone { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.TreeDragZone(new TreeDragZone());
+#endif			
         }
 
         /// <summary>
@@ -93,7 +121,10 @@ namespace Ext.Net
         /// </summary>
         public TreeDragZone.Builder TreeDragZone(TreeDragZone component)
         {
-            return new TreeDragZone.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new TreeDragZone.Builder(component);
         }
 
         /// <summary>
@@ -101,7 +132,11 @@ namespace Ext.Net
         /// </summary>
         public TreeDragZone.Builder TreeDragZone(TreeDragZone.Config config)
         {
-            return new TreeDragZone.Builder(new TreeDragZone(config));
+#if MVC
+			return new TreeDragZone.Builder(new TreeDragZone(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new TreeDragZone.Builder(new TreeDragZone(config));
+#endif			
         }
     }
 }

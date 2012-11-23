@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Plugin.Builder<DataViewAnimated, DataViewAnimated.Builder>
+        new public abstract partial class Builder<TDataViewAnimated, TBuilder> : Plugin.Builder<TDataViewAnimated, TBuilder>
+            where TDataViewAnimated : DataViewAnimated
+            where TBuilder : Builder<TDataViewAnimated, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDataViewAnimated component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Duration(int duration)
+            {
+                this.ToComponent().Duration = duration;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder IDProperty(string iDProperty)
+            {
+                this.ToComponent().IDProperty = iDProperty;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DataViewAnimated.Builder<DataViewAnimated, DataViewAnimated.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DataViewAnimated.Builder Duration(int duration)
-            {
-                this.ToComponent().Duration = duration;
-                return this as DataViewAnimated.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DataViewAnimated.Builder IDProperty(string iDProperty)
-            {
-                this.ToComponent().IDProperty = iDProperty;
-                return this as DataViewAnimated.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public DataViewAnimated.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DataViewAnimated(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public DataViewAnimated.Builder DataViewAnimated()
         {
-            return this.DataViewAnimated(new DataViewAnimated());
+#if MVC
+			return this.DataViewAnimated(new DataViewAnimated { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DataViewAnimated(new DataViewAnimated());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public DataViewAnimated.Builder DataViewAnimated(DataViewAnimated component)
         {
-            return new DataViewAnimated.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DataViewAnimated.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public DataViewAnimated.Builder DataViewAnimated(DataViewAnimated.Config config)
         {
-            return new DataViewAnimated.Builder(new DataViewAnimated(config));
+#if MVC
+			return new DataViewAnimated.Builder(new DataViewAnimated(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DataViewAnimated.Builder(new DataViewAnimated(config));
+#endif			
         }
     }
 }

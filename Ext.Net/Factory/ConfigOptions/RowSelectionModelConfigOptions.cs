@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -39,10 +39,11 @@ namespace Ext.Net
                 
                 list.Add("selType", new ConfigOption("selType", null, "", this.SelType ));
                 list.Add("enableKeyNav", new ConfigOption("enableKeyNav", null, true, this.EnableKeyNav ));
-                list.Add("ignoreRightMouseSelection", new ConfigOption("ignoreRightMouseSelection", null, true, this.IgnoreRightMouseSelection ));
+                list.Add("ignoreRightMouseSelection", new ConfigOption("ignoreRightMouseSelection", null, false, this.IgnoreRightMouseSelection ));
                 list.Add("listeners", new ConfigOption("listeners", new SerializationOptions("listeners", JsonMode.Object), null, this.Listeners ));
                 list.Add("directEvents", new ConfigOption("directEvents", new SerializationOptions("directEvents", JsonMode.Object), null, this.DirectEvents ));
                 list.Add("selectedRows", new ConfigOption("selectedRows", new SerializationOptions("selectedData", JsonMode.AlwaysArray), null, this.SelectedRows ));
+                list.Add("hiddenName", new ConfigOption("hiddenName", null, null, this.HiddenName ));
 
                 return list;
             }

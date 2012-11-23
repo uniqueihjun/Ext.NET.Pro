@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -18,7 +18,16 @@ namespace Ext.Net
 	[Description("")]
     public partial class ItemsCollection<T> : List<T>
     {
-	    /// <summary>
+	    public ItemsCollection()
+        {
+        }
+
+        public ItemsCollection(bool singleItemMode)
+        {
+            this.SingleItemMode = singleItemMode;
+        }
+        
+        /// <summary>
         /// 
         /// </summary>
         [Browsable(false)]
@@ -174,7 +183,7 @@ namespace Ext.Net
             }
         }
 
-        private void CheckItem(T item)
+        protected virtual void CheckItem(T item)
         {
             if (this.SingleItemMode && this.Count > 0)
             {
@@ -188,13 +197,13 @@ namespace Ext.Net
 		/// 
 		/// </summary>
 		[Description("")]
-        public bool SingleItemMode
+        public virtual bool SingleItemMode
         {
             get
             {
                 return this.singleItemMode;
             }
-            internal set
+            protected internal set
             {
                 this.singleItemMode = value;
             }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -166,8 +166,11 @@ namespace Ext.Net
                 }
 
                 this.selfRenderDetecting = true;
-                var rm = this.SafeResourceManager;
+
+                ResourceManager rm = this.SafeResourceManager;
+                
                 this.selfRenderDetecting = false;
+                
                 return rm != null ? rm.IsSelfRender : false;
             }
         }
@@ -200,8 +203,6 @@ namespace Ext.Net
             }
         }
 
-        private bool deferInitScriptGeneration;
-
         /// <summary>
         /// 
         /// </summary>
@@ -210,11 +211,7 @@ namespace Ext.Net
         {
             get
             {
-                return this.deferInitScriptGeneration;
-            }
-            set
-            {
-                this.deferInitScriptGeneration = value;
+                return this.Page != null && this.Page.Items["Ext.Net.DeferInitScriptGeneration"] != null;
             }
         }
 
@@ -242,6 +239,7 @@ namespace Ext.Net
         /// </summary>
         [Category("1. XControl")]
         [Description("")]
+        [DefaultValue(false)]
         public virtual bool ContentUpdated
         {
             get
@@ -392,21 +390,20 @@ namespace Ext.Net
 
             this.EnsureChildControls();
 
-            if (this.DesignMode)
-            {
-                this.RegisterBeforeAfterScript();
-            }
-            else
+            if (!this.DesignMode)
             {
                 if (this.Page != null)
                 {
                     this.Page.PreLoad += PagePreLoad;
                     this.Page.LoadComplete += PageLoadComplete;
                 }
-            }
+            }            
 
             this.AllowCallbackScriptMonitoring = true;
+            this.OnMvcInit();
         }
+
+        partial void OnMvcInit();
 
         /// <summary>
         /// 
@@ -750,6 +747,27 @@ namespace Ext.Net
                 this.RenderScript(this.ToScript(mode, element, index, selfRendering));
             }
         }
+#if NET40
+        public virtual void Render(RenderMode mode = RenderMode.Auto, string element = null, int? index = null, bool? selfRendering = null, bool forceResources = false, string method = null, bool forceLazy = false, bool clearContainer = false)
+        {
+            if (!this.AlreadyRendered)
+            {
+                this.Visible = true;
+
+                this.RenderScript(this.ToScript(mode, element, index, selfRendering, forceResources, method, forceLazy, clearContainer));
+            }
+        }
+#else
+        public virtual void Render(RenderMode mode, string element, int? index, bool? selfRendering, bool forceResources, string method, bool forceLazy, bool clearContainer)
+        {
+            if (!this.AlreadyRendered)
+            {
+                this.Visible = true;
+
+                this.RenderScript(this.ToScript(mode, element, index, selfRendering, forceResources, method, forceLazy, clearContainer));
+            }
+        }
+#endif
 
         /// <summary>
         /// 
@@ -987,7 +1005,7 @@ namespace Ext.Net
                 }
             }
 
-            if (this.IsLast)
+            if (this.IsLast && (this is ResourceManager || !(this.IsSelfRender || this.IsPageSelfRender)))
             {
                 if (!RequestManager.IsAjaxRequest)
                 {
@@ -1014,9 +1032,11 @@ namespace Ext.Net
             }
 
             StringBuilder sb = new StringBuilder(256);
+
             if (!this.HasContent() && this is IContent)
             {
-                var iContent = (IContent)this;
+                IContent iContent = (IContent)this;
+
                 if (iContent.ContentControls.Count == 0)
                 {
                     iContent.ContentContainer.Visible = false;
@@ -1116,15 +1136,16 @@ namespace Ext.Net
             }
 
             string temp = value.ToString();
+            string rawMarker = TokenUtils.Settings.RawMarker;
 
             if (temp.StartsWith("<string>"))
             {
-                return temp.Substring(temp.StartsWith("<string><raw>") ? 13 : 8);
+                return temp.Substring(temp.StartsWith("<string>" + rawMarker) ? (8 + rawMarker.Length) : 8);
             }
 
-            if (temp.StartsWith("<raw>"))
+            if (temp.StartsWith(rawMarker))
             {
-                return temp.Substring(5);
+                return temp.Substring(rawMarker.Length);
             }
 
             return JSON.Serialize(temp);
@@ -1157,6 +1178,11 @@ namespace Ext.Net
         public virtual void ResumeScripting()
         {
             this.ResumeScripting(true);
+        }
+
+        public virtual void Destroy()
+        {
+            this.AddScript("Ext.net.ResourceMgr.destroyCmp(\"{0}\");", this.ClientID);
         }
 
         private bool registerAllResources;

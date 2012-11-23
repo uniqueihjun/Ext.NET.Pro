@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,43 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Store.Builder<CalendarStore, CalendarStore.Builder>
+        new public abstract partial class Builder<TCalendarStore, TBuilder> : Store.Builder<TCalendarStore, TBuilder>
+            where TCalendarStore : CalendarStore
+            where TBuilder : Builder<TCalendarStore, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TCalendarStore component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Calendars(Action<CalendarModelCollection> action)
+            {
+                action(this.ToComponent().Calendars);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : CalendarStore.Builder<CalendarStore, CalendarStore.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,26 +90,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of CalendarStore.Builder</returns>
-            public virtual CalendarStore.Builder Calendars(Action<CalendarModelCollection> action)
-            {
-                action(this.ToComponent().Calendars);
-                return this as CalendarStore.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -82,6 +98,14 @@ namespace Ext.Net
         public CalendarStore.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.CalendarStore(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -96,7 +120,11 @@ namespace Ext.Net
         /// </summary>
         public CalendarStore.Builder CalendarStore()
         {
-            return this.CalendarStore(new CalendarStore());
+#if MVC
+			return this.CalendarStore(new CalendarStore { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.CalendarStore(new CalendarStore());
+#endif			
         }
 
         /// <summary>
@@ -104,7 +132,10 @@ namespace Ext.Net
         /// </summary>
         public CalendarStore.Builder CalendarStore(CalendarStore component)
         {
-            return new CalendarStore.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new CalendarStore.Builder(component);
         }
 
         /// <summary>
@@ -112,7 +143,11 @@ namespace Ext.Net
         /// </summary>
         public CalendarStore.Builder CalendarStore(CalendarStore.Config config)
         {
-            return new CalendarStore.Builder(new CalendarStore(config));
+#if MVC
+			return new CalendarStore.Builder(new CalendarStore(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new CalendarStore.Builder(new CalendarStore(config));
+#endif			
         }
     }
 }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -74,6 +74,27 @@ namespace Ext.Net
             get
             {
                 return this.itemclick ?? (this.itemclick = new ComponentListener());
+            }
+        }
+
+        private ComponentListener itemdblclick;
+
+        /// <summary>
+        /// Fires when the user interacts with a marker.
+        /// Parameters
+        /// item : Sprite
+        /// </summary>
+        [ListenerArgument(0, "item")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [ConfigOption("itemdblclick", typeof(ListenerJsonConverter))]
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [NotifyParentProperty(true)]
+        [Description("Fires when the user interacts with a marker.")]
+        public virtual ComponentListener ItemDblClick
+        {
+            get
+            {
+                return this.itemdblclick ?? (this.itemdblclick = new ComponentListener());
             }
         }
 

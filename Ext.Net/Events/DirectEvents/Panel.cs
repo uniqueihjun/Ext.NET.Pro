@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -267,6 +267,48 @@ namespace Ext.Net
             get
             {
                 return this.iconChange ?? (this.iconChange = new ComponentDirectEvent(this));
+            }
+        }
+
+        private ComponentDirectEvent _float;
+
+        /// <summary>
+        /// Fires after a collapsed Panel has been "floated" by clicking on it's header. Only applicable when the Panel is an item in a Border Layout.
+        /// Parameters
+        /// item : Ext.panel.Panel        
+        /// </summary>
+        [ListenerArgument(0, "item", typeof(Panel), "this")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [ConfigOption("float", typeof(DirectEventJsonConverter))]
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [NotifyParentProperty(true)]
+        [Description("Fires after a collapsed Panel has been \"floated\" by clicking on it's header. Only applicable when the Panel is an item in a Border Layout.")]
+        public virtual ComponentDirectEvent Float
+        {
+            get
+            {
+                return this._float ?? (this._float = new ComponentDirectEvent(this));
+            }
+        }
+
+        private ComponentDirectEvent unfloat;
+
+        /// <summary>
+        /// Fires after a "floated" Panel has returned to it's collapsed state as a result of the mouse leaving the Panel. Only applicable when the Panel is an item in a Border Layout.
+        /// Parameters
+        /// item : Ext.panel.Panel        
+        /// </summary>
+        [ListenerArgument(0, "item", typeof(Panel), "this")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [ConfigOption("unfloat", typeof(DirectEventJsonConverter))]
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [NotifyParentProperty(true)]
+        [Description("Fires after a \"floated\" Panel has returned to it's collapsed state as a result of the mouse leaving the Panel. Only applicable when the Panel is an item in a Border Layout.")]
+        public virtual ComponentDirectEvent Unfloat
+        {
+            get
+            {
+                return this.unfloat ?? (this.unfloat = new ComponentDirectEvent(this));
             }
         }
     }

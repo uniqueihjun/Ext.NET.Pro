@@ -1,13 +1,14 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace Ext.Net
 {
@@ -15,9 +16,10 @@ namespace Ext.Net
 	/// 
 	/// </summary>
 	[Description("")]
-    public class SubmittedNode
+    public partial class SubmittedNode
     {
         private string nodeID;
+        private string clientID;
         private string text;
         private string path;
         private JsonObject attributes;
@@ -34,6 +36,23 @@ namespace Ext.Net
             this.text = text;
             this.attributes = attributes;
             this.children = children;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        [JsonConstructor]
+        public SubmittedNode(string path, string text, string nodeID, string clientID, JsonObject attributes, List<SubmittedNode> children)
+            : this(path, text, nodeID, attributes, children)
+        {
+            this.clientID = clientID;
+        }
+
+        public TreePanelBase Tree 
+        { 
+            get; 
+            set; 
         }
 
 		/// <summary>
@@ -59,7 +78,22 @@ namespace Ext.Net
 		[Description("")]
         public string NodeID
         {
-            get { return nodeID; }
+            get 
+            { 
+                return this.nodeID; 
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public string ClientID
+        {
+            get 
+            { 
+                return this.clientID; 
+            }
         }
 
 		/// <summary>
@@ -68,7 +102,10 @@ namespace Ext.Net
 		[Description("")]
         public string Text
         {
-            get { return text; }
+            get 
+            { 
+                return this.text; 
+            }
         }
 
 		/// <summary>
@@ -77,7 +114,10 @@ namespace Ext.Net
 		[Description("")]
         public string Path
         {
-            get { return path; }
+            get 
+            { 
+                return this.path; 
+            }
         }
 
 		/// <summary>
@@ -90,14 +130,14 @@ namespace Ext.Net
             {
                 if (this.Attributes.Count > 0)
                 {
-                    foreach (KeyValuePair<string, object> attribute in this.Attributes)
+                    if (this.Attributes.ContainsKey("checked"))
                     {
-                        if (attribute.Key == "checked")
-                        {
-                            return (bool)attribute.Value;
-                        }
+                        object value = this.Attributes["checked"];
+
+                        return value != null ? (bool)value : false;
                     }
                 }
+
                 return false;
             }
         }
@@ -117,6 +157,16 @@ namespace Ext.Net
 
                 return this.attributes;
             }
+        }
+
+        public NodeProxy ToProxyNode()
+        {
+            return this.Tree.GetNodeById(this.NodeID ?? this.ClientID);
+        }
+
+        public NodeProxy ToProxyNode(TreePanelBase tree)
+        {
+            return (tree ?? this.Tree).GetNodeById(this.NodeID ?? this.ClientID);
         }
     }
 }

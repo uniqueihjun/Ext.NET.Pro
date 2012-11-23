@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -21,12 +21,18 @@ namespace Ext.Net
     /// <summary>
     /// A TabPanel with grouping support.
     /// </summary>
+    [Meta]
     [Designer(typeof(EmptyDesigner))]
     [ToolboxBitmap(typeof(GroupTabPanel), "Build.ToolboxIcons.GroupTabPanel.bmp")]
     [ToolboxData("<{0}:GroupTabPanel runat=\"server\" Title=\"GroupTabPanel\"><Items></Items></{0}:GroupTabPanel>")]
     [Description("")]
     public partial class GroupTabPanel : AbstractContainer, IXPostBackDataHandler
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public GroupTabPanel() { }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -74,6 +80,7 @@ namespace Ext.Net
         /// <summary>
         /// Deferred Render
         /// </summary>
+        [Meta]
         [ConfigOption]
         [Category("7. GroupTabPanel")]
         [DefaultValue(false)]
@@ -94,6 +101,7 @@ namespace Ext.Net
         /// <summary>
         /// Active group
         /// </summary>
+        [Meta]
         [Category("7. GroupTabPanel")]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
@@ -158,6 +166,7 @@ namespace Ext.Net
         /// <summary>
         /// Active tab
         /// </summary>
+        [Meta]
         [Category("7. GroupTabPanel")]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
@@ -265,6 +274,7 @@ namespace Ext.Net
         /// <summary>
         /// Client-side JavaScript Event Handlers
         /// </summary>
+        [Meta]
         [ConfigOption("listeners", JsonMode.Object)]
         [Category("2. Observable")]
         [NotifyParentProperty(true)]
@@ -289,6 +299,7 @@ namespace Ext.Net
         /// <summary>
         /// Server-side Ajax Event Handlers
         /// </summary>
+        [Meta]
         [ConfigOption("directEvents", JsonMode.Object)]
         [Category("2. Observable")]
         [NotifyParentProperty(true)]
@@ -319,7 +330,8 @@ namespace Ext.Net
         {
             add
             {
-                this.Events.AddHandler(EventGroupChanged, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventGroupChanged, value);
             }
             remove
             {
@@ -352,7 +364,8 @@ namespace Ext.Net
         {
             add
             {
-                this.Events.AddHandler(EventTabChanged, value);
+                this.CheckForceId();
+				this.Events.AddHandler(EventTabChanged, value);
             }
             remove
             {

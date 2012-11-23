@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,59 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractWriter.Builder<JsonWriter, JsonWriter.Builder>
+        new public abstract partial class Builder<TJsonWriter, TBuilder> : AbstractWriter.Builder<TJsonWriter, TBuilder>
+            where TJsonWriter : JsonWriter
+            where TBuilder : Builder<TJsonWriter, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TJsonWriter component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The HTTP parameter name by which JSON encoded records will be passed to the server if the encode option is `true`.
+			/// </summary>
+            public virtual TBuilder Root(string root)
+            {
+                this.ToComponent().Root = root;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Configure `true` to send record data (all record fields if writeAllFields is `true`) as a JSON encoded HTTP parameter named by the root configuration.
+			/// </summary>
+            public virtual TBuilder Encode(bool encode)
+            {
+                this.ToComponent().Encode = encode;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// False to ensure that records are always wrapped in an array, even if there is only one record being sent. When there is more than one record, they will always be encoded into an array.
+			/// </summary>
+            public virtual TBuilder AllowSingle(bool allowSingle)
+            {
+                this.ToComponent().AllowSingle = allowSingle;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : JsonWriter.Builder<JsonWriter, JsonWriter.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,42 +106,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The key under which the records in this Writer will be placed. Defaults to undefined.
-			/// </summary>
-            public virtual JsonWriter.Builder Root(string root)
-            {
-                this.ToComponent().Root = root;
-                return this as JsonWriter.Builder;
-            }
-             
- 			/// <summary>
-			/// True to use Ext.encode() on the data before sending. Defaults to false.
-			/// </summary>
-            public virtual JsonWriter.Builder Encode(bool encode)
-            {
-                this.ToComponent().Encode = encode;
-                return this as JsonWriter.Builder;
-            }
-             
- 			/// <summary>
-			/// False to ensure that records are always wrapped in an array, even if there is only one record being sent. When there is more than one record, they will always be encoded into an array.
-			/// </summary>
-            public virtual JsonWriter.Builder AllowSingle(bool allowSingle)
-            {
-                this.ToComponent().AllowSingle = allowSingle;
-                return this as JsonWriter.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -98,6 +114,14 @@ namespace Ext.Net
         public JsonWriter.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.JsonWriter(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -112,7 +136,11 @@ namespace Ext.Net
         /// </summary>
         public JsonWriter.Builder JsonWriter()
         {
-            return this.JsonWriter(new JsonWriter());
+#if MVC
+			return this.JsonWriter(new JsonWriter { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.JsonWriter(new JsonWriter());
+#endif			
         }
 
         /// <summary>
@@ -120,7 +148,10 @@ namespace Ext.Net
         /// </summary>
         public JsonWriter.Builder JsonWriter(JsonWriter component)
         {
-            return new JsonWriter.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new JsonWriter.Builder(component);
         }
 
         /// <summary>
@@ -128,7 +159,11 @@ namespace Ext.Net
         /// </summary>
         public JsonWriter.Builder JsonWriter(JsonWriter.Config config)
         {
-            return new JsonWriter.Builder(new JsonWriter(config));
+#if MVC
+			return new JsonWriter.Builder(new JsonWriter(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new JsonWriter.Builder(new JsonWriter(config));
+#endif			
         }
     }
 }

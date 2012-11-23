@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,59 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<DrawBackground, DrawBackground.Builder>
+        new public abstract partial class Builder<TDrawBackground, TBuilder> : BaseItem.Builder<TDrawBackground, TBuilder>
+            where TDrawBackground : DrawBackground
+            where TBuilder : Builder<TDrawBackground, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDrawBackground component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The fill color
+			/// </summary>
+            public virtual TBuilder Fill(string fill)
+            {
+                this.ToComponent().Fill = fill;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The background image
+			/// </summary>
+            public virtual TBuilder Image(string image)
+            {
+                this.ToComponent().Image = image;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Gradient(Gradient gradient)
+            {
+                this.ToComponent().Gradient = gradient;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DrawBackground.Builder<DrawBackground, DrawBackground.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,42 +106,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The fill color
-			/// </summary>
-            public virtual DrawBackground.Builder Fill(string fill)
-            {
-                this.ToComponent().Fill = fill;
-                return this as DrawBackground.Builder;
-            }
-             
- 			/// <summary>
-			/// The background image
-			/// </summary>
-            public virtual DrawBackground.Builder Image(string image)
-            {
-                this.ToComponent().Image = image;
-                return this as DrawBackground.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DrawBackground.Builder Gradient(Gradient gradient)
-            {
-                this.ToComponent().Gradient = gradient;
-                return this as DrawBackground.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -98,6 +114,14 @@ namespace Ext.Net
         public DrawBackground.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DrawBackground(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -112,7 +136,11 @@ namespace Ext.Net
         /// </summary>
         public DrawBackground.Builder DrawBackground()
         {
-            return this.DrawBackground(new DrawBackground());
+#if MVC
+			return this.DrawBackground(new DrawBackground { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DrawBackground(new DrawBackground());
+#endif			
         }
 
         /// <summary>
@@ -120,7 +148,10 @@ namespace Ext.Net
         /// </summary>
         public DrawBackground.Builder DrawBackground(DrawBackground component)
         {
-            return new DrawBackground.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DrawBackground.Builder(component);
         }
 
         /// <summary>
@@ -128,7 +159,11 @@ namespace Ext.Net
         /// </summary>
         public DrawBackground.Builder DrawBackground(DrawBackground.Config config)
         {
-            return new DrawBackground.Builder(new DrawBackground(config));
+#if MVC
+			return new DrawBackground.Builder(new DrawBackground(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DrawBackground.Builder(new DrawBackground(config));
+#endif			
         }
     }
 }

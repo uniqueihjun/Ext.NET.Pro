@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -40,6 +40,7 @@ namespace Ext.Net
                 list.Add("commandName", new ConfigOption("commandName", new SerializationOptions("command"), "", this.CommandName ));
                 list.Add("cls", new ConfigOption("cls", null, "", this.Cls ));
                 list.Add("hidden", new ConfigOption("hidden", null, false, this.Hidden ));
+                list.Add("disabled", new ConfigOption("disabled", null, false, this.Disabled ));
                 list.Add("iconCls", new ConfigOption("iconCls", null, "", this.IconCls ));
                 list.Add("text", new ConfigOption("text", null, "", this.Text ));
                 list.Add("style", new ConfigOption("style", null, "", this.Style ));

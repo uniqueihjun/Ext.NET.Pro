@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,101 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Toolbar.Builder<DesktopTaskBar, DesktopTaskBar.Builder>
+        new public abstract partial class Builder<TDesktopTaskBar, TBuilder> : Toolbar.Builder<TDesktopTaskBar, TBuilder>
+            where TDesktopTaskBar : DesktopTaskBar
+            where TBuilder : Builder<TDesktopTaskBar, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TDesktopTaskBar component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder QuickStart(Action<ToolbarCollection> action)
+            {
+                action(this.ToComponent().QuickStart);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Tray(Action<ToolbarCollection> action)
+            {
+                action(this.ToComponent().Tray);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder HideQuickStart(bool hideQuickStart)
+            {
+                this.ToComponent().HideQuickStart = hideQuickStart;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder HideTray(bool hideTray)
+            {
+                this.ToComponent().HideTray = hideTray;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder QuickStartWidth(int quickStartWidth)
+            {
+                this.ToComponent().QuickStartWidth = quickStartWidth;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder TrayWidth(int trayWidth)
+            {
+                this.ToComponent().TrayWidth = trayWidth;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder TrayClock(Action<TrayClock> action)
+            {
+                action(this.ToComponent().TrayClock);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : DesktopTaskBar.Builder<DesktopTaskBar, DesktopTaskBar.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,84 +148,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DesktopTaskBar.Builder</returns>
-            public virtual DesktopTaskBar.Builder QuickStart(Action<ToolbarCollection> action)
-            {
-                action(this.ToComponent().QuickStart);
-                return this as DesktopTaskBar.Builder;
-            }
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DesktopTaskBar.Builder</returns>
-            public virtual DesktopTaskBar.Builder Tray(Action<ToolbarCollection> action)
-            {
-                action(this.ToComponent().Tray);
-                return this as DesktopTaskBar.Builder;
-            }
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopTaskBar.Builder HideQuickStart(bool hideQuickStart)
-            {
-                this.ToComponent().HideQuickStart = hideQuickStart;
-                return this as DesktopTaskBar.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopTaskBar.Builder HideTray(bool hideTray)
-            {
-                this.ToComponent().HideTray = hideTray;
-                return this as DesktopTaskBar.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopTaskBar.Builder QuickStartWidth(int quickStartWidth)
-            {
-                this.ToComponent().QuickStartWidth = quickStartWidth;
-                return this as DesktopTaskBar.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual DesktopTaskBar.Builder TrayWidth(int trayWidth)
-            {
-                this.ToComponent().TrayWidth = trayWidth;
-                return this as DesktopTaskBar.Builder;
-            }
-             
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of DesktopTaskBar.Builder</returns>
-            public virtual DesktopTaskBar.Builder TrayClock(Action<TrayClock> action)
-            {
-                action(this.ToComponent().TrayClock);
-                return this as DesktopTaskBar.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -140,6 +156,14 @@ namespace Ext.Net
         public DesktopTaskBar.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.DesktopTaskBar(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -154,7 +178,11 @@ namespace Ext.Net
         /// </summary>
         public DesktopTaskBar.Builder DesktopTaskBar()
         {
-            return this.DesktopTaskBar(new DesktopTaskBar());
+#if MVC
+			return this.DesktopTaskBar(new DesktopTaskBar { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.DesktopTaskBar(new DesktopTaskBar());
+#endif			
         }
 
         /// <summary>
@@ -162,7 +190,10 @@ namespace Ext.Net
         /// </summary>
         public DesktopTaskBar.Builder DesktopTaskBar(DesktopTaskBar component)
         {
-            return new DesktopTaskBar.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new DesktopTaskBar.Builder(component);
         }
 
         /// <summary>
@@ -170,7 +201,11 @@ namespace Ext.Net
         /// </summary>
         public DesktopTaskBar.Builder DesktopTaskBar(DesktopTaskBar.Config config)
         {
-            return new DesktopTaskBar.Builder(new DesktopTaskBar(config));
+#if MVC
+			return new DesktopTaskBar.Builder(new DesktopTaskBar(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new DesktopTaskBar.Builder(new DesktopTaskBar(config));
+#endif			
         }
     }
 }

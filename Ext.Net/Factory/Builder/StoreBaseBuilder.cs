@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TStoreBase, TBuilder> : AbstractStore.Builder<TStoreBase, TBuilder>
+        new public abstract partial class Builder<TStoreBase, TBuilder> : AbstractStore.Builder<TStoreBase, TBuilder>
             where TStoreBase : StoreBase
             where TBuilder : Builder<TStoreBase, TBuilder>
         {
@@ -72,6 +72,15 @@ namespace Ext.Net
             public virtual TBuilder ClearRemovedOnLoad(bool clearRemovedOnLoad)
             {
                 this.ToComponent().ClearRemovedOnLoad = clearRemovedOnLoad;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Optional array of Model instances or data objects to load locally. See \"Inline data\" above for details.
+			/// </summary>
+            public virtual TBuilder Data(object data)
+            {
+                this.ToComponent().Data = data;
                 return this as TBuilder;
             }
              

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -62,7 +62,25 @@ namespace Ext.Net
 			
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
-			        
+			
+			private ComponentLoader loader = null;
+
+			/// <summary>
+			/// A configuration object or an instance of a Ext.ComponentLoader to load remote content.
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual ComponentLoader Loader 
+			{ 
+				get
+				{
+					return this.loader;
+				}
+				set
+				{
+					this.loader = value;
+				}
+			}
+        
 			private XTemplate template = null;
 
 			/// <summary>
@@ -171,6 +189,24 @@ namespace Ext.Net
 				}
 			}
 
+			private int scrollOffset = 0;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(0)]
+			public virtual int ScrollOffset 
+			{ 
+				get
+				{
+					return this.scrollOffset;
+				}
+				set
+				{
+					this.scrollOffset = value;
+				}
+			}
+
 			private bool expandOnEnter = true;
 
 			/// <summary>
@@ -207,13 +243,31 @@ namespace Ext.Net
 				}
 			}
 
-			private bool singleExpand = false;
+			private bool invalidateComponentsOnRefresh = false;
 
 			/// <summary>
 			/// 
 			/// </summary>
 			[DefaultValue(false)]
-			public virtual bool SingleExpand 
+			public virtual bool InvalidateComponentsOnRefresh 
+			{ 
+				get
+				{
+					return this.invalidateComponentsOnRefresh;
+				}
+				set
+				{
+					this.invalidateComponentsOnRefresh = value;
+				}
+			}
+
+			private bool? singleExpand = null;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual bool? SingleExpand 
 			{ 
 				get
 				{
@@ -222,6 +276,24 @@ namespace Ext.Net
 				set
 				{
 					this.singleExpand = value;
+				}
+			}
+
+			private Renderer renderer = null;
+
+			/// <summary>
+			/// A renderer is an 'interceptor' method which can be used transform data (value, appearance, etc.) before it is rendered.
+			/// </summary>
+			[DefaultValue(null)]
+			public virtual Renderer Renderer 
+			{ 
+				get
+				{
+					return this.renderer;
+				}
+				set
+				{
+					this.renderer = value;
 				}
 			}
         

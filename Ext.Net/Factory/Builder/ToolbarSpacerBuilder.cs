@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,32 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ToolbarItem.Builder<ToolbarSpacer, ToolbarSpacer.Builder>
+        new public abstract partial class Builder<TToolbarSpacer, TBuilder> : ToolbarItem.Builder<TToolbarSpacer, TBuilder>
+            where TToolbarSpacer : ToolbarSpacer
+            where TBuilder : Builder<TToolbarSpacer, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TToolbarSpacer component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : ToolbarSpacer.Builder<ToolbarSpacer, ToolbarSpacer.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,15 +79,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -71,6 +87,14 @@ namespace Ext.Net
         public ToolbarSpacer.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.ToolbarSpacer(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -85,7 +109,11 @@ namespace Ext.Net
         /// </summary>
         public ToolbarSpacer.Builder ToolbarSpacer()
         {
-            return this.ToolbarSpacer(new ToolbarSpacer());
+#if MVC
+			return this.ToolbarSpacer(new ToolbarSpacer { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.ToolbarSpacer(new ToolbarSpacer());
+#endif			
         }
 
         /// <summary>
@@ -93,7 +121,10 @@ namespace Ext.Net
         /// </summary>
         public ToolbarSpacer.Builder ToolbarSpacer(ToolbarSpacer component)
         {
-            return new ToolbarSpacer.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new ToolbarSpacer.Builder(component);
         }
 
         /// <summary>
@@ -101,7 +132,11 @@ namespace Ext.Net
         /// </summary>
         public ToolbarSpacer.Builder ToolbarSpacer(ToolbarSpacer.Config config)
         {
-            return new ToolbarSpacer.Builder(new ToolbarSpacer(config));
+#if MVC
+			return new ToolbarSpacer.Builder(new ToolbarSpacer(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new ToolbarSpacer.Builder(new ToolbarSpacer(config));
+#endif			
         }
     }
 }

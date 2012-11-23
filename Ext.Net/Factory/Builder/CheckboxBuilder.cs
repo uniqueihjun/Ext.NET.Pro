@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,63 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : CheckboxBase.Builder<Checkbox, Checkbox.Builder>
+        new public abstract partial class Builder<TCheckbox, TBuilder> : CheckboxBase.Builder<TCheckbox, TBuilder>
+            where TCheckbox : Checkbox
+            where TBuilder : Builder<TCheckbox, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TCheckbox component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<CheckboxListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<CheckboxDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder DirectCheckUrl(string directCheckUrl)
+            {
+                this.ToComponent().DirectCheckUrl = directCheckUrl;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : Checkbox.Builder<Checkbox, Checkbox.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,37 +110,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Checkbox.Builder</returns>
-            public virtual Checkbox.Builder Listeners(Action<CheckboxListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as Checkbox.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Checkbox.Builder</returns>
-            public virtual Checkbox.Builder DirectEvents(Action<CheckboxDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as Checkbox.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -93,6 +118,14 @@ namespace Ext.Net
         public Checkbox.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.Checkbox(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -107,7 +140,11 @@ namespace Ext.Net
         /// </summary>
         public Checkbox.Builder Checkbox()
         {
-            return this.Checkbox(new Checkbox());
+#if MVC
+			return this.Checkbox(new Checkbox { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.Checkbox(new Checkbox());
+#endif			
         }
 
         /// <summary>
@@ -115,7 +152,10 @@ namespace Ext.Net
         /// </summary>
         public Checkbox.Builder Checkbox(Checkbox component)
         {
-            return new Checkbox.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new Checkbox.Builder(component);
         }
 
         /// <summary>
@@ -123,7 +163,11 @@ namespace Ext.Net
         /// </summary>
         public Checkbox.Builder Checkbox(Checkbox.Config config)
         {
-            return new Checkbox.Builder(new Checkbox(config));
+#if MVC
+			return new Checkbox.Builder(new Checkbox(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new Checkbox.Builder(new Checkbox(config));
+#endif			
         }
     }
 }

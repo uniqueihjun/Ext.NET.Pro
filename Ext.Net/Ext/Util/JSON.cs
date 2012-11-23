@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Formatting = Newtonsoft.Json.Formatting;
+using System.Web.UI;
 
 namespace Ext.Net
 {
@@ -35,6 +36,16 @@ namespace Ext.Net
         [Description("Serializes the specified object to a Json object.")]
         public static string Serialize(object obj, List<JsonConverter> converters, bool quoteName, IContractResolver resolver)
         {
+            if (obj is IClientConfig)
+            {
+                return new ClientConfig().Serialize(obj);
+            }
+
+            if (obj is ICustomConfigSerialization)
+            {
+                return ((ICustomConfigSerialization)obj).ToScript(obj as Control);
+            }
+            
             return JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings { 
                 ContractResolver = resolver,
                 Converters = converters,             
@@ -109,7 +120,7 @@ namespace Ext.Net
             get
             {
                 List<JsonConverter> converters = new List<JsonConverter>();
-                converters.Add(new EnumJsonConverter());
+                converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 converters.Add(new GuidJsonConverter());
                 converters.Add(new JFunctionJsonConverter());
                 converters.Add(new JRawValueJsonConverter());

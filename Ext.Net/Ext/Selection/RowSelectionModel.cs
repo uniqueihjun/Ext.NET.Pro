@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -79,17 +79,17 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// True to ignore selections that are made when using the right mouse button if there are records that are already selected. If no records are selected, selection will continue as normal. Defaults to: true
+        /// True to ignore selections that are made when using the right mouse button if there are records that are already selected. If no records are selected, selection will continue as normal. Defaults to: false.
         /// </summary>
         [Meta]
         [ConfigOption]
-        [DefaultValue(true)]
-        [Description("True to ignore selections that are made when using the right mouse button if there are records that are already selected. If no records are selected, selection will continue as normal. Defaults to: true")]
+        [DefaultValue(false)]
+        [Description("True to ignore selections that are made when using the right mouse button if there are records that are already selected. If no records are selected, selection will continue as normal. Defaults to: false.")]
         public virtual bool IgnoreRightMouseSelection
         {
             get
             {
-                return this.State.Get<bool>("IgnoreRightMouseSelection", true);
+                return this.State.Get<bool>("IgnoreRightMouseSelection", false);
             }
             set
             {
@@ -156,7 +156,7 @@ namespace Ext.Net
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [ConfigOption("selectedData", JsonMode.AlwaysArray)]        
         [Description("")]
-        public SelectedRowCollection SelectedRows
+        public virtual SelectedRowCollection SelectedRows
         {
             get
             {
@@ -304,6 +304,25 @@ namespace Ext.Net
         }
 
         /// <summary>
+        /// HiddenField name which submits selected rows
+        /// </summary>
+        [Meta]
+        [ConfigOption]
+        [DefaultValue(null)]
+        [Description("HiddenField name which submits selected rows")]
+        public virtual string HiddenName
+        {
+            get
+            {
+                return this.State.Get<string>("HiddenName", null);
+            }
+            set
+            {
+                this.State.Set("HiddenName", value);
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="postDataKey"></param>
@@ -311,7 +330,7 @@ namespace Ext.Net
         /// <returns></returns>
         protected virtual bool LoadPostData(string postDataKey, NameValueCollection postCollection)
         {
-            string val = postCollection[this.ConfigID];
+            string val = postCollection[this.HiddenName ?? this.ConfigID];
 
             if (val != null)
             {

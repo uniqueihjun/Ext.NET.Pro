@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,77 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<CRUDUrls, CRUDUrls.Builder>
+        new public abstract partial class Builder<TCRUDUrls, TBuilder> : BaseItem.Builder<TCRUDUrls, TBuilder>
+            where TCRUDUrls : CRUDUrls
+            where TBuilder : Builder<TCRUDUrls, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TCRUDUrls component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Sync(string sync)
+            {
+                this.ToComponent().Sync = sync;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Create(string create)
+            {
+                this.ToComponent().Create = create;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Read(string read)
+            {
+                this.ToComponent().Read = read;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Update(string update)
+            {
+                this.ToComponent().Update = update;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Destroy(string destroy)
+            {
+                this.ToComponent().Destroy = destroy;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : CRUDUrls.Builder<CRUDUrls, CRUDUrls.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,60 +124,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CRUDUrls.Builder Sync(string sync)
-            {
-                this.ToComponent().Sync = sync;
-                return this as CRUDUrls.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CRUDUrls.Builder Create(string create)
-            {
-                this.ToComponent().Create = create;
-                return this as CRUDUrls.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CRUDUrls.Builder Read(string read)
-            {
-                this.ToComponent().Read = read;
-                return this as CRUDUrls.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CRUDUrls.Builder Update(string update)
-            {
-                this.ToComponent().Update = update;
-                return this as CRUDUrls.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CRUDUrls.Builder Destroy(string destroy)
-            {
-                this.ToComponent().Destroy = destroy;
-                return this as CRUDUrls.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -116,6 +132,14 @@ namespace Ext.Net
         public CRUDUrls.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.CRUDUrls(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -130,7 +154,11 @@ namespace Ext.Net
         /// </summary>
         public CRUDUrls.Builder CRUDUrls()
         {
-            return this.CRUDUrls(new CRUDUrls());
+#if MVC
+			return this.CRUDUrls(new CRUDUrls { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.CRUDUrls(new CRUDUrls());
+#endif			
         }
 
         /// <summary>
@@ -138,7 +166,10 @@ namespace Ext.Net
         /// </summary>
         public CRUDUrls.Builder CRUDUrls(CRUDUrls component)
         {
-            return new CRUDUrls.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new CRUDUrls.Builder(component);
         }
 
         /// <summary>
@@ -146,7 +177,11 @@ namespace Ext.Net
         /// </summary>
         public CRUDUrls.Builder CRUDUrls(CRUDUrls.Config config)
         {
-            return new CRUDUrls.Builder(new CRUDUrls(config));
+#if MVC
+			return new CRUDUrls.Builder(new CRUDUrls(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new CRUDUrls.Builder(new CRUDUrls(config));
+#endif			
         }
     }
 }

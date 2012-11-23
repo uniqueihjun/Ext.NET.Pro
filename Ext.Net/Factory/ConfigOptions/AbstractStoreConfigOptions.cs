@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -46,6 +46,7 @@ namespace Ext.Net
                 list.Add("syncParametersProxy", new ConfigOption("syncParametersProxy", new SerializationOptions("writeParameters", JsonMode.Raw), "", this.SyncParametersProxy ));
                 list.Add("autoSync", new ConfigOption("autoSync", null, false, this.AutoSync ));
                 list.Add("proxy", new ConfigOption("proxy", new SerializationOptions("proxy>Primary"), null, this.Proxy ));
+                list.Add("serverProxy", new ConfigOption("serverProxy", new SerializationOptions("serverProxy>Primary"), null, this.ServerProxy ));
                 list.Add("batchUpdateMode", new ConfigOption("batchUpdateMode", new SerializationOptions(JsonMode.ToLower), BatchUpdateMode.Operation, this.BatchUpdateMode ));
                 list.Add("filterOnLoad", new ConfigOption("filterOnLoad", null, true, this.FilterOnLoad ));
                 list.Add("filters", new ConfigOption("filters", new SerializationOptions(JsonMode.AlwaysArray), null, this.Filters ));

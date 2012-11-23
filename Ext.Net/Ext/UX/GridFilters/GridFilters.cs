@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -238,9 +238,9 @@ namespace Ext.Net
         /// <summary>
         /// An Array of filters config objects. Refer to each filter type class for configuration details specific to each filter type. Filters for Strings, Numeric Ranges, Date Ranges, Lists, and Boolean are the standard filters available.
         /// </summary>
+        [Meta]
         [ConfigOption("filters", JsonMode.AlwaysArray)]
         [Category("Config Options")]
-        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [Description("An Array of filters config objects.")]
         public virtual GridFilterCollection Filters
@@ -359,6 +359,24 @@ namespace Ext.Net
                             }
                         }
                     }
+
+                    if (filter.GetType() == typeof(ListFilter))
+                    {
+                        Menu menu = (filter as ListFilter).MenuConfig;
+
+                        if (menu != null)
+                        {
+                            if (!grid.Controls.Contains(menu))
+                            {
+                                grid.Controls.Add(menu);
+                            }
+
+                            if (!grid.LazyItems.Contains(menu))
+                            {
+                                grid.LazyItems.Add(menu);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -394,6 +412,24 @@ namespace Ext.Net
                     if (this.FeatureOwner.LazyItems.Contains(item))
                     {
                         this.FeatureOwner.LazyItems.Remove(item);
+                    }
+                }
+            }
+
+            if (filter.GetType() == typeof(ListFilter))
+            {
+                Menu menu = (filter as ListFilter).MenuConfig;
+
+                if (menu != null)
+                {
+                    if (!this.FeatureOwner.Controls.Contains(menu))
+                    {
+                        this.FeatureOwner.Controls.Add(menu);
+                    }
+
+                    if (!this.FeatureOwner.LazyItems.Contains(menu))
+                    {
+                        this.FeatureOwner.LazyItems.Add(menu);
                     }
                 }
             }

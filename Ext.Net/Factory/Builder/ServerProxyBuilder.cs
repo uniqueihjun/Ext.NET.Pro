@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TServerProxy, TBuilder> : AbstractProxy.Builder<TServerProxy, TBuilder>
+        new public abstract partial class Builder<TServerProxy, TBuilder> : AbstractProxy.Builder<TServerProxy, TBuilder>
             where TServerProxy : ServerProxy
             where TBuilder : Builder<TServerProxy, TBuilder>
         {
@@ -98,6 +98,24 @@ namespace Ext.Net
             }
              
  			/// <summary>
+			/// The name of the direction parameter to send in a request. This is only used when simpleGroupMode is set to true. Defaults to 'groupDir'.
+			/// </summary>
+            public virtual TBuilder GroupDirectionParam(string groupDirectionParam)
+            {
+                this.ToComponent().GroupDirectionParam = groupDirectionParam;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The name of the parameter which carries the id of the entity being operated upon. Defaults to: \"id\"
+			/// </summary>
+            public virtual TBuilder IDParam(string iDParam)
+            {
+                this.ToComponent().IDParam = iDParam;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
 			/// The name of the 'limit' parameter to send in a request. Defaults to 'limit'. Set this to undefined if you don't want to send a limit parameter
 			/// </summary>
             public virtual TBuilder LimitParam(string limitParam)
@@ -112,6 +130,15 @@ namespace Ext.Net
             public virtual TBuilder NoCache(bool noCache)
             {
                 this.ToComponent().NoCache = noCache;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder AppendAction(bool appendAction)
+            {
+                this.ToComponent().AppendAction = appendAction;
                 return this as TBuilder;
             }
              
@@ -141,6 +168,15 @@ namespace Ext.Net
             public virtual TBuilder SimpleSortMode(bool simpleSortMode)
             {
                 this.ToComponent().SimpleSortMode = simpleSortMode;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Enabling simpleGroupMode in conjunction with remoteGroup will only send one group property and a direction when a remote group is requested. The groupDirectionParam and groupParam will be sent with the property name and either 'ASC' or 'DESC'. Defaults to: false
+			/// </summary>
+            public virtual TBuilder SimpleGroupMode(bool simpleGroupMode)
+            {
+                this.ToComponent().SimpleGroupMode = simpleGroupMode;
                 return this as TBuilder;
             }
              

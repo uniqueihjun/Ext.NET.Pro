@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -225,12 +225,12 @@ namespace Ext.Net
 				}
 			}
 
-			private string disabledDaysText = "";
+			private string disabledDaysText = "Disabled";
 
 			/// <summary>
 			/// The tooltip to display when the date falls on a disabled day. Defaults to: \"Disabled\"
 			/// </summary>
-			[DefaultValue("")]
+			[DefaultValue("Disabled")]
 			public virtual string DisabledDaysText 
 			{ 
 				get
@@ -762,6 +762,24 @@ namespace Ext.Net
 				set
 				{
 					this.value = value;
+				}
+			}
+
+			private string directSelectUrl = "";
+
+			/// <summary>
+			/// 
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string DirectSelectUrl 
+			{ 
+				get
+				{
+					return this.directSelectUrl;
+				}
+				set
+				{
+					this.directSelectUrl = value;
 				}
 			}
 

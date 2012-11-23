@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -1382,71 +1382,6 @@ namespace Ext.Net
         public virtual Element ApplyStyles(JFunction styles)
         {
             this.Call("applyStyles", styles);
-            return this;
-        }
-
-        /// <summary>
-        /// Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.
-        /// </summary>
-        /// <param name="animate">Animate the transition (defaults to false)</param>
-        /// <param name="duration">Length of the animation in seconds (defaults to .35)</param>
-        /// <param name="onComplete">Function to call when animation completes</param>
-        /// <param name="easing">Easing method to use (defaults to easeOut)</param>
-        /// <returns>This element</returns>
-        [Description("Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.")]
-        public virtual Element AutoHeight(bool animate, double duration, JFunction onComplete, Easing easing)
-        {
-            this.Call("autoHeight", animate, duration, onComplete, easing.ToString().ToLowerCamelCase());
-            return this;
-        }
-
-        /// <summary>
-        /// Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.
-        /// </summary>
-        /// <param name="animate">Animate the transition (defaults to false)</param>
-        /// <param name="duration">Length of the animation in seconds (defaults to .35)</param>
-        /// <param name="onComplete">Function to call when animation completes</param>
-        /// <returns>This element</returns>
-        [Description("Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.")]
-        public virtual Element AutoHeight(bool animate, double duration, JFunction onComplete)
-        {
-            this.Call("autoHeight", animate, duration, onComplete);
-            return this;
-        }
-
-        /// <summary>
-        /// Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.
-        /// </summary>
-        /// <param name="animate">Animate the transition (defaults to false)</param>
-        /// <param name="duration">Length of the animation in seconds (defaults to .35)</param>
-        /// <returns>This element</returns>
-        [Description("Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.")]
-        public virtual Element AutoHeight(bool animate, double duration)
-        {
-            this.Call("autoHeight", animate, duration);
-            return this;
-        }
-
-        /// <summary>
-        /// Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.
-        /// </summary>
-        /// <param name="animate">Animate the transition (defaults to false)</param>
-        /// <returns>This element</returns>
-        [Description("Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.")]
-        public virtual Element AutoHeight(bool animate)
-        {
-            this.Call("autoHeight", animate);
-            return this;
-        }
-
-        /// <summary>
-        /// Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.
-        /// </summary>
-        /// <returns>This element</returns>
-        [Description("Measures the element's content height and updates height to match. Note: this function uses setTimeout so the new height may not be available immediately.")]
-        public virtual Element AutoHeight()
-        {
-            this.Call("autoHeight");
             return this;
         }
 

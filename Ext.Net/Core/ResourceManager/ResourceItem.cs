@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -74,6 +74,12 @@ namespace Ext.Net
             {
                 this.path = value;
             }
+        }
+
+        public bool IgnoreResourceMode
+        {
+            get;
+            set;
         }
     }
 
@@ -227,6 +233,119 @@ namespace Ext.Net
             {
                 this.pathDebug = value;
             }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class ClientResourceItem
+    {
+        private Type type;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TypeConverter(typeof(NetTypeConverter))]
+        public Type Type
+        {
+            get
+            {                
+                return this.type;
+            }
+            set
+            {
+                this.type = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string PathEmbedded
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public string Path
+        {
+            get;
+            set;
+        }
+
+        public ClientResourceItem()
+        {
+        }
+        
+        public ClientResourceItem(string url)
+        {
+            this.Path = url;
+        }
+
+        public ClientResourceItem(string url, bool isCss)
+        {
+            this.Path = url;
+            this.IsCss = isCss;
+        }
+
+        public ClientResourceItem(Type type, string resourceName)
+        {
+            this.PathEmbedded = resourceName;
+            this.Type = type;
+        }
+
+        public ClientResourceItem(Type type, string resourceName, bool isCss)
+        {
+            this.PathEmbedded = resourceName;
+            this.Type = type;
+            this.IsCss = isCss;
+        }
+
+        public bool IsCss
+        {
+            get;
+            private set;
+        }
+
+        public override bool Equals(object obj)
+        {
+            ClientResourceItem r = obj as ClientResourceItem;
+            if ((object)r == null)
+            {
+                return false;
+            }
+
+            return (this.Path.IsNotEmpty() && this.Path == r.Path) || (this.PathEmbedded.IsNotEmpty() && this.PathEmbedded == r.PathEmbedded);
+        }
+
+        public bool Equals(ClientResourceItem obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            return (this.Path.IsNotEmpty() && this.Path == obj.Path) || (this.PathEmbedded.IsNotEmpty() && this.PathEmbedded == obj.PathEmbedded);
+        }
+
+        public override int GetHashCode()
+        {
+            if (this.Path.IsNotEmpty())
+            {
+                return base.GetHashCode() ^ this.Path.GetHashCode();
+            }
+
+            if (this.PathEmbedded.IsNotEmpty())
+            {
+                return base.GetHashCode() ^ this.PathEmbedded.GetHashCode();
+            }
+            
+            return base.GetHashCode();
         }
     }
 }

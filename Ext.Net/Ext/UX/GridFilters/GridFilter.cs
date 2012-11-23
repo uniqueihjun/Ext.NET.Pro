@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -14,12 +14,14 @@ namespace Ext.Net
 	/// <summary>
 	/// 
 	/// </summary>
+    [Meta]
 	[Description("")]
     public abstract partial class GridFilter : BaseItem
     {
         /// <summary>
         /// Indicates the initial status of the filter (defaults to false).
         /// </summary>
+        [Meta]
         [ConfigOption]
         [Category("2. GridFilter")]
         [DefaultValue(false)]
@@ -39,6 +41,7 @@ namespace Ext.Net
         /// <summary>
         /// The Store data index of the field this filter represents. The dataIndex does not actually have to exist in the store.
         /// </summary>
+        [Meta]
         [ConfigOption]
         [Category("2. GridFilter")]
         [DefaultValue("")]
@@ -119,6 +122,7 @@ namespace Ext.Net
         /// <summary>
         ///  Number of milliseconds to wait after user interaction to fire an update. Only supported by filters: 'list', 'numeric', and 'string'. Defaults to 500.
         /// </summary>
+        [Meta]
         [ConfigOption]
         [Category("Config Options")]
         [DefaultValue(500)]
@@ -142,9 +146,9 @@ namespace Ext.Net
         /// Template method to be implemented by all subclasses that is to
         /// get and return the value of the filter.
         /// </summary>
+        [Meta]
         [ConfigOption(JsonMode.Raw)]
         [Category("2. GridFilter")]
-        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Template method to be implemented by all subclasses that is to get and return the value of the filter.")]
@@ -167,9 +171,9 @@ namespace Ext.Net
         /// Template method to be implemented by all subclasses that is to
         /// set the value of the filter and fire the 'update' event.
         /// </summary>
+        [Meta]
         [ConfigOption("setValue", JsonMode.Raw)]
         [Category("2. GridFilter")]
-        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Template method to be implemented by all subclasses that is to set the value of the filter and fire the 'update' event.")]
@@ -196,9 +200,9 @@ namespace Ext.Net
         /// Template method to be implemented by all subclasses that is to
         /// get and return serialized filter data for transmission to the server.
         /// </summary>
+        [Meta]
         [ConfigOption(JsonMode.Raw)]
         [Category("2. GridFilter")]
-        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Template method to be implemented by all subclasses that is to get and return serialized filter data for transmission to the server.")]
@@ -221,9 +225,9 @@ namespace Ext.Net
         /// Template method to be implemented by all subclasses that is to
         /// validates the provided Ext.data.Record against the filters configuration.
         /// </summary>
+        [Meta]
         [ConfigOption(JsonMode.Raw)]
         [Category("2. GridFilter")]
-        [DefaultValue(null)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Description("Template method to be implemented by all subclasses that is to validates the provided Ext.data.Record against the filters configuration.")]

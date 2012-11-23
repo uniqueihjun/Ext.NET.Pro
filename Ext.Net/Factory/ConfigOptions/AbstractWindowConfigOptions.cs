@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -56,9 +56,9 @@ namespace Ext.Net
                 list.Add("modal", new ConfigOption("modal", null, false, this.Modal ));
                 list.Add("onEsc", new ConfigOption("onEsc", new SerializationOptions(JsonMode.Raw), "Ext.emptyFn", this.OnEsc ));
                 list.Add("plain", new ConfigOption("plain", null, false, this.Plain ));
+                list.Add("ghost", new ConfigOption("ghost", null, true, this.Ghost ));
                 list.Add("resizableProxy", new ConfigOption("resizableProxy", new SerializationOptions("resizable"), true, this.ResizableProxy ));
                 list.Add("width", new ConfigOption("width", null, Unit.Empty, this.Width ));
-                list.Add("height", new ConfigOption("height", null, Unit.Empty, this.Height ));
                 list.Add("autoRender", new ConfigOption("autoRender", null, true, this.AutoRender ));
                 list.Add("renderToProxy", new ConfigOption("renderToProxy", new SerializationOptions("renderTo"), "", this.RenderToProxy ));
 

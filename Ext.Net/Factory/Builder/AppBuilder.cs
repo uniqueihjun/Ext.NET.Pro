@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,52 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : ControllerBase.Builder<App, App.Builder>
+        new public abstract partial class Builder<TApp, TBuilder> : XControllerBase.Builder<TApp, TBuilder>
+            where TApp : App
+            where TBuilder : Builder<TApp, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TApp component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Launch(Action<ItemsCollection<Observable>> action)
+            {
+                action(this.ToComponent().Launch);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// The name of your application. This will also be the namespace for your views, controllers models and stores. Don't use spaces or special characters in the name.
+			/// </summary>
+            public virtual TBuilder Name(string name)
+            {
+                this.ToComponent().Name = name;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : App.Builder<App, App.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,35 +99,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of App.Builder</returns>
-            public virtual App.Builder Launch(Action<ItemsCollection<Observable>> action)
-            {
-                action(this.ToComponent().Launch);
-                return this as App.Builder;
-            }
-			 
- 			/// <summary>
-			/// The name of your application. This will also be the namespace for your views, controllers models and stores. Don't use spaces or special characters in the name.
-			/// </summary>
-            public virtual App.Builder Name(string name)
-            {
-                this.ToComponent().Name = name;
-                return this as App.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -91,6 +107,14 @@ namespace Ext.Net
         public App.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.App(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -105,7 +129,11 @@ namespace Ext.Net
         /// </summary>
         public App.Builder App()
         {
-            return this.App(new App());
+#if MVC
+			return this.App(new App { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.App(new App());
+#endif			
         }
 
         /// <summary>
@@ -113,7 +141,10 @@ namespace Ext.Net
         /// </summary>
         public App.Builder App(App component)
         {
-            return new App.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new App.Builder(component);
         }
 
         /// <summary>
@@ -121,7 +152,11 @@ namespace Ext.Net
         /// </summary>
         public App.Builder App(App.Config config)
         {
-            return new App.Builder(new App(config));
+#if MVC
+			return new App.Builder(new App(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new App.Builder(new App(config));
+#endif			
         }
     }
 }

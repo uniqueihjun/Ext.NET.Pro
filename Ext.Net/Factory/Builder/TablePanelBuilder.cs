@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TTablePanel, TBuilder> : AbstractPanel.Builder<TTablePanel, TBuilder>
+        new public abstract partial class Builder<TTablePanel, TBuilder> : AbstractPanel.Builder<TTablePanel, TBuilder>
             where TTablePanel : TablePanel
             where TBuilder : Builder<TTablePanel, TBuilder>
         {
@@ -174,11 +174,11 @@ namespace Ext.Net
             }
              
  			/// <summary>
-			/// True to constrain column dragging so that a column cannot be dragged in or out of it's current group. Only relevant while enableColumnMove is enabled. Defaults to: false
+			/// True to constrain column dragging so that a column cannot be dragged in or out of it's current group. Only relevant while enableColumnMove is enabled.
 			/// </summary>
-            public virtual TBuilder RestrictColumnReorder(bool restrictColumnReorder)
+            public virtual TBuilder SealedColumns(bool sealedColumns)
             {
-                this.ToComponent().RestrictColumnReorder = restrictColumnReorder;
+                this.ToComponent().SealedColumns = sealedColumns;
                 return this as TBuilder;
             }
              
@@ -383,6 +383,15 @@ namespace Ext.Net
             public virtual TBuilder Reconfigure(IEnumerable<ColumnBase> columns)
             {
                 this.ToComponent().Reconfigure(columns);
+                return this as TBuilder;
+            }
+            
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Refresh()
+            {
+                this.ToComponent().Refresh();
                 return this as TBuilder;
             }
             

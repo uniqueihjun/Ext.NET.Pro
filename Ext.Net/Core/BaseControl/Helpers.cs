@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -27,6 +27,23 @@ namespace Ext.Net
 	/// </summary>
     public partial class BaseControl : IScriptable
     {
+#if !MVC
+        /// <summary>
+        /// 
+        /// </summary>
+        [Browsable(false)]
+        [DefaultValue(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Description("")]
+        public virtual bool IsMVC
+        {
+            get
+            {
+                return false;
+            }
+        }
+#endif
+        
         private static ClientScriptItem uxScriptItem;
 
         /// <summary>
@@ -73,6 +90,11 @@ namespace Ext.Net
 
         /*  Design and Debug
             -----------------------------------------------------------------------------------------------*/
+
+        protected virtual void CheckForceId()
+        {
+            this.ForceIdRendering = !this.IsDynamic && !this.IsMVC;
+        }
 
         /// <summary>
         /// 
@@ -279,8 +301,11 @@ namespace Ext.Net
                 {
                     return url;
                 }
-
+#if MVC                
                 return System.Web.Mvc.UrlHelper.GenerateContentUrl(url, new HttpContextWrapper(HttpContext.Current));
+#else
+                return VirtualPathUtility.ToAbsolute(url);
+#endif
             }
 
             return this.ResolveUrl(url);
@@ -363,12 +388,14 @@ namespace Ext.Net
                 }
 
                 var sectionsObj = HttpContext.Current.Items["Ext.Net.Sections"];
+
                 if (sectionsObj == null)
                 {
                     return false;
                 }
 
                 var stack = (Stack<List<string>>)sectionsObj;
+
                 return stack.Count > 0 && stack.Peek() != null;
             }
         }
@@ -383,10 +410,13 @@ namespace Ext.Net
                 }
 
                 var sectionsObj = HttpContext.Current.Items["Ext.Net.Sections"];
+                
                 if (sectionsObj == null)
                 {
                     var newStack = new Stack<List<string>>();
+                
                     HttpContext.Current.Items["Ext.Net.Sections"] = newStack;
+                    
                     return newStack;
                 }
 
@@ -451,21 +481,6 @@ namespace Ext.Net
 		/// 
 		/// </summary>
         [Browsable(false)]
-        [DefaultValue(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		[Description("")]
-        public virtual bool IsMVC
-        {
-            get
-            {
-                return ReflectionUtils.IsTypeOf(this.Page, "System.Web.Mvc.ViewPage");
-            }
-        }
-
-		/// <summary>
-		/// 
-		/// </summary>
-        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		[Description("")]
         public virtual bool IsInForm
@@ -481,7 +496,7 @@ namespace Ext.Net
             get
             {
                 string formId = null;
-                var rm = ResourceManager.GetInstance();
+                ResourceManager rm = ResourceManager.GetInstance();
 
                 if (rm != null && rm.FormID.IsNotEmpty())
                 {
@@ -491,15 +506,17 @@ namespace Ext.Net
                 {
                     formId = this.ParentForm.ClientID;
                 }
+#if MVC
                 else
                 {
                     var cfg = Ext.Net.MVC.MvcResourceManager.SharedConfig;
+
                     if (cfg != null && cfg.FormID.IsNotEmpty())
                     {
                         formId = cfg.FormID;
                     }
                 }
-
+#endif
                 return formId;
             }
         }

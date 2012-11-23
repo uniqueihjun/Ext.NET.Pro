@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -38,15 +38,13 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// The key under which the records in this Writer will be placed. Defaults to undefined.
-        /// Example generated request, using root: 'records':
-        /// {'records': [{name: 'my record'}, {name: 'another record'}]}
+        /// The HTTP parameter name by which JSON encoded records will be passed to the server if the encode option is `true`.
         /// </summary>
         [Meta]
         [ConfigOption]
         [DefaultValue("")]
         [NotifyParentProperty(true)]
-        [Description("The key under which the records in this Writer will be placed. Defaults to undefined.")]
+        [Description("The HTTP parameter name by which JSON encoded records will be passed to the server if the encode option is `true`.")]
         public virtual string Root
         {
             get
@@ -60,7 +58,7 @@ namespace Ext.Net
         }
 
         /// <summary>
-        /// True to use Ext.encode() on the data before sending. Defaults to false.
+        /// Configure `true` to send record data (all record fields if writeAllFields is `true`) as a JSON encoded HTTP parameter named by the root configuration.
         /// The encode option should only be set to true when a root is defined, because the values will be
         /// sent as part of the request parameters as opposed to a raw post. The root will be the name of the parameter
         /// sent to the server.
@@ -68,7 +66,7 @@ namespace Ext.Net
         [Meta]
         [ConfigOption]
         [DefaultValue(false)]
-        [Description("True to use Ext.encode() on the data before sending. Defaults to false.")]
+        [Description("Configure `true` to send record data (all record fields if writeAllFields is `true`) as a JSON encoded HTTP parameter named by the root configuration.")]
         public virtual bool Encode
         {
             get

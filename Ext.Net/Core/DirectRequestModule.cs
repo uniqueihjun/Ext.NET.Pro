@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -13,6 +13,7 @@ using System.Net;
 using System.Web;
 
 using Ext.Net.Utilities;
+using System.Reflection;
 
 namespace Ext.Net
 {
@@ -147,11 +148,21 @@ namespace Ext.Net
                     responseObject.Script = ResourceManager.GetInstanceScript();
                 }
             }
+            catch (TargetInvocationException e)
+            {
+                if (HandlerMethods.RethrowException(HttpContext.Current))
+                {
+                    throw;
+                }
+
+                responseObject.Success = false;
+                responseObject.ErrorMessage = IsDebugging ? e.InnerException.ToString() : e.InnerException.Message;
+            }
             catch (Exception e)
             {
                 if (HandlerMethods.RethrowException(HttpContext.Current))
                 {
-                    throw e;
+                    throw;
                 }
 
                 responseObject.Success = false;

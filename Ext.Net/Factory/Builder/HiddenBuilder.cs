@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,63 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : Field.Builder<Hidden, Hidden.Builder>
+        new public abstract partial class Builder<THidden, TBuilder> : Field.Builder<THidden, TBuilder>
+            where THidden : Hidden
+            where TBuilder : Builder<THidden, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(THidden component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// The Text value to initialize this field with.
+			/// </summary>
+            public virtual TBuilder Text(string text)
+            {
+                this.ToComponent().Text = text;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Client-side JavaScript Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder Listeners(Action<FieldListeners> action)
+            {
+                action(this.ToComponent().Listeners);
+                return this as TBuilder;
+            }
+			 
+ 			/// <summary>
+			/// Server-side Ajax Event Handlers
+ 			/// </summary>
+ 			/// <param name="action">The action delegate</param>
+ 			/// <returns>An instance of TBuilder</returns>
+            public virtual TBuilder DirectEvents(Action<FieldDirectEvents> action)
+            {
+                action(this.ToComponent().DirectEvents);
+                return this as TBuilder;
+            }
+			
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : Hidden.Builder<Hidden, Hidden.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,46 +110,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// The Text value to initialize this field with.
-			/// </summary>
-            public virtual Hidden.Builder Text(string text)
-            {
-                this.ToComponent().Text = text;
-                return this as Hidden.Builder;
-            }
-             
- 			/// <summary>
-			/// Client-side JavaScript Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Hidden.Builder</returns>
-            public virtual Hidden.Builder Listeners(Action<FieldListeners> action)
-            {
-                action(this.ToComponent().Listeners);
-                return this as Hidden.Builder;
-            }
-			 
- 			/// <summary>
-			/// Server-side Ajax Event Handlers
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of Hidden.Builder</returns>
-            public virtual Hidden.Builder DirectEvents(Action<FieldDirectEvents> action)
-            {
-                action(this.ToComponent().DirectEvents);
-                return this as Hidden.Builder;
-            }
-			
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -102,6 +118,14 @@ namespace Ext.Net
         public Hidden.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.Hidden(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -116,7 +140,11 @@ namespace Ext.Net
         /// </summary>
         public Hidden.Builder Hidden()
         {
-            return this.Hidden(new Hidden());
+#if MVC
+			return this.Hidden(new Hidden { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.Hidden(new Hidden());
+#endif			
         }
 
         /// <summary>
@@ -124,7 +152,10 @@ namespace Ext.Net
         /// </summary>
         public Hidden.Builder Hidden(Hidden component)
         {
-            return new Hidden.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new Hidden.Builder(component);
         }
 
         /// <summary>
@@ -132,7 +163,11 @@ namespace Ext.Net
         /// </summary>
         public Hidden.Builder Hidden(Hidden.Config config)
         {
-            return new Hidden.Builder(new Hidden(config));
+#if MVC
+			return new Hidden.Builder(new Hidden(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new Hidden.Builder(new Hidden(config));
+#endif			
         }
     }
 }

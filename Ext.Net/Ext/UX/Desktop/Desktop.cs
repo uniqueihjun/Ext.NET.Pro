@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/using System;
@@ -30,6 +30,33 @@ namespace Ext.Net
         [Description("")]
         public Desktop() { }
 
+        private const string CACHE = "Ext.Net.DesktopModuleProxyCache";
+        internal static List<DesktopModuleProxy> DesktopModuleProxyCache
+        {
+            get
+            {
+                if (HttpContext.Current != null)
+                {
+                    if (HttpContext.Current.Items[Desktop.CACHE] == null)
+                    {
+                        HttpContext.Current.Items[Desktop.CACHE] = new List<DesktopModuleProxy>();
+                    }
+
+                    return (List<DesktopModuleProxy>)HttpContext.Current.Items[Desktop.CACHE];
+                }
+
+                return new List<DesktopModuleProxy>();
+            }
+        }
+
+        internal static void ClearCache()
+        {
+            if (HttpContext.Current != null)
+            {
+                HttpContext.Current.Items[Desktop.CACHE] = null;
+            }
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -93,6 +120,13 @@ namespace Ext.Net
                 {
                     HttpContext.Current.Items[typeof(Desktop)] = this;
                 }
+
+                foreach (var proxy in Desktop.DesktopModuleProxyCache)
+                {
+                    proxy.AddToDesktop(this);
+                }
+
+                Desktop.ClearCache();
             }
         }
 

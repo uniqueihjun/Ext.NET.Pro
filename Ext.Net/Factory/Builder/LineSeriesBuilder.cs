@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,86 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : CartesianSeries.Builder<LineSeries, LineSeries.Builder>
+        new public abstract partial class Builder<TLineSeries, TBuilder> : CartesianSeries.Builder<TLineSeries, TBuilder>
+            where TLineSeries : LineSeries
+            where TBuilder : Builder<TLineSeries, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TLineSeries component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// If true, the area below the line will be filled in using the eefill and opacity config properties. Defaults to false.
+			/// </summary>
+            public virtual TBuilder Fill(bool fill)
+            {
+                this.ToComponent().Fill = fill;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Whether markers should be displayed at the data points along the line. If true, then the markerConfig config item will determine the markers' styling. Defaults to: true
+			/// </summary>
+            public virtual TBuilder ShowMarkers(bool showMarkers)
+            {
+                this.ToComponent().ShowMarkers = showMarkers;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder MarkerConfig(SpriteAttributes markerConfig)
+            {
+                this.ToComponent().MarkerConfig = markerConfig;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// The offset distance from the cursor position to the line series to trigger events (then used for highlighting series, etc). Defaults to: 20
+			/// </summary>
+            public virtual TBuilder SelectionTolerance(int selectionTolerance)
+            {
+                this.ToComponent().SelectionTolerance = selectionTolerance;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// If set to a non-zero number, the line will be smoothed/rounded around its points; otherwise straight line segments will be drawn.
+			/// </summary>
+            public virtual TBuilder Smooth(int smooth)
+            {
+                this.ToComponent().Smooth = smooth;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Style(SpriteAttributes style)
+            {
+                this.ToComponent().Style = style;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : LineSeries.Builder<LineSeries, LineSeries.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,69 +133,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// If true, the area below the line will be filled in using the eefill and opacity config properties. Defaults to false.
-			/// </summary>
-            public virtual LineSeries.Builder Fill(bool fill)
-            {
-                this.ToComponent().Fill = fill;
-                return this as LineSeries.Builder;
-            }
-             
- 			/// <summary>
-			/// Whether markers should be displayed at the data points along the line. If true, then the markerConfig config item will determine the markers' styling. Defaults to: true
-			/// </summary>
-            public virtual LineSeries.Builder ShowMarkers(bool showMarkers)
-            {
-                this.ToComponent().ShowMarkers = showMarkers;
-                return this as LineSeries.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual LineSeries.Builder MarkerConfig(SpriteAttributes markerConfig)
-            {
-                this.ToComponent().MarkerConfig = markerConfig;
-                return this as LineSeries.Builder;
-            }
-             
- 			/// <summary>
-			/// The offset distance from the cursor position to the line series to trigger events (then used for highlighting series, etc). Defaults to: 20
-			/// </summary>
-            public virtual LineSeries.Builder SelectionTolerance(int selectionTolerance)
-            {
-                this.ToComponent().SelectionTolerance = selectionTolerance;
-                return this as LineSeries.Builder;
-            }
-             
- 			/// <summary>
-			/// If set to a non-zero number, the line will be smoothed/rounded around its points; otherwise straight line segments will be drawn.
-			/// </summary>
-            public virtual LineSeries.Builder Smooth(int smooth)
-            {
-                this.ToComponent().Smooth = smooth;
-                return this as LineSeries.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual LineSeries.Builder Style(SpriteAttributes style)
-            {
-                this.ToComponent().Style = style;
-                return this as LineSeries.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -125,6 +141,14 @@ namespace Ext.Net
         public LineSeries.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.LineSeries(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -139,7 +163,11 @@ namespace Ext.Net
         /// </summary>
         public LineSeries.Builder LineSeries()
         {
-            return this.LineSeries(new LineSeries());
+#if MVC
+			return this.LineSeries(new LineSeries { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.LineSeries(new LineSeries());
+#endif			
         }
 
         /// <summary>
@@ -147,7 +175,10 @@ namespace Ext.Net
         /// </summary>
         public LineSeries.Builder LineSeries(LineSeries component)
         {
-            return new LineSeries.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new LineSeries.Builder(component);
         }
 
         /// <summary>
@@ -155,7 +186,11 @@ namespace Ext.Net
         /// </summary>
         public LineSeries.Builder LineSeries(LineSeries.Config config)
         {
-            return new LineSeries.Builder(new LineSeries(config));
+#if MVC
+			return new LineSeries.Builder(new LineSeries(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new LineSeries.Builder(new LineSeries(config));
+#endif			
         }
     }
 }

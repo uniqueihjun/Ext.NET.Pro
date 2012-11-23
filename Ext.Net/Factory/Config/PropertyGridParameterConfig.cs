@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -62,11 +62,47 @@ namespace Ext.Net
 			
 			/*  ConfigOptions
 				-----------------------------------------------------------------------------------------------*/
-			        
+			
+			private string displayName = "";
+
+			/// <summary>
+			/// A custom name to appear as label for this field. If specified, the display name will be shown in the name column instead of the property name.
+			/// </summary>
+			[DefaultValue("")]
+			public virtual string DisplayName 
+			{ 
+				get
+				{
+					return this.displayName;
+				}
+				set
+				{
+					this.displayName = value;
+				}
+			}
+
+			private PropertyGridEditorType editorType = PropertyGridEditorType.Auto;
+
+			/// <summary>
+			/// Used to explicitly specify the editor type for a particular value. By default, the type is automatically inferred from the value. See inferTypes.
+			/// </summary>
+			[DefaultValue(PropertyGridEditorType.Auto)]
+			public virtual PropertyGridEditorType EditorType 
+			{ 
+				get
+				{
+					return this.editorType;
+				}
+				set
+				{
+					this.editorType = value;
+				}
+			}
+        
 			private EditorCollection editor = null;
 
 			/// <summary>
-			/// (optional) The Ext.form.Field to use when editing values in this column if editing is supported by the grid.
+			/// Allows the grid to support additional types of editable fields. By default, the grid supports strongly-typed editing of strings, dates, numbers and booleans using built-in form editors, but any custom type can be supported and associated with a custom input control by specifying a custom editor.
 			/// </summary>
 			public EditorCollection Editor
 			{
@@ -99,24 +135,6 @@ namespace Ext.Net
 				}
 			}
 			
-			private string displayName = "";
-
-			/// <summary>
-			/// 
-			/// </summary>
-			[DefaultValue("")]
-			public virtual string DisplayName 
-			{ 
-				get
-				{
-					return this.displayName;
-				}
-				set
-				{
-					this.displayName = value;
-				}
-			}
-
         }
     }
 }

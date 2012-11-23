@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -46,7 +46,12 @@ namespace Ext.Net
                     return this.directEventUrl;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return "";
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.DirectEventUrl";
 
@@ -107,6 +112,11 @@ namespace Ext.Net
                     return (ViewStateMode)this.ajaxViewStateMode;
                 }
 
+                if (this.DesignMode)
+                {
+                    return Ext.Net.ViewStateMode.Inherit;
+                }
+
                 if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.AjaxViewStateMode";
@@ -156,7 +166,12 @@ namespace Ext.Net
                     return (ClientProxy)this.directMethodProxy;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return ClientProxy.Default;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.DirectMethodProxy";
 
@@ -202,7 +217,12 @@ namespace Ext.Net
                     return (IDMode)this.idMode;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return IDMode.Explicit;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.IDMode";
 
@@ -248,7 +268,12 @@ namespace Ext.Net
                     return (bool)this.gzip;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return true;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.GZip";
                     object obj = HttpContext.Current.Application[token];
@@ -289,7 +314,12 @@ namespace Ext.Net
                     return (bool)this.cleanResourceUrl;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return true;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.CleanResourceUrl";
 
@@ -332,7 +362,12 @@ namespace Ext.Net
                     return (InitScriptMode)this.initScriptMode;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return Ext.Net.InitScriptMode.Inline;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.InitScriptMode";
 
@@ -378,7 +413,12 @@ namespace Ext.Net
                     return (ResourceLocationType)this.renderScripts;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return ResourceLocationType.Embedded;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.RenderScripts";
 
@@ -420,7 +460,12 @@ namespace Ext.Net
                     return (ResourceLocationType)this.renderStyles;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return ResourceLocationType.Embedded;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.RenderStyles";
 
@@ -462,7 +507,12 @@ namespace Ext.Net
                     return (string)this.resourcePath;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return "~/Ext.Net/";
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.ResourcePath";
 
@@ -507,7 +557,7 @@ namespace Ext.Net
         {
             get
             {
-                return "http://speed.ext.net/ext.net/2.0.0";
+                return "http://speed.ext.net/ext.net/2.1.0";
             }
         }
 #endif
@@ -529,7 +579,12 @@ namespace Ext.Net
                     return (ScriptMode)this.scriptMode;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return Ext.Net.ScriptMode.Release;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.ScriptMode";
 
@@ -575,7 +630,12 @@ namespace Ext.Net
                     return (bool)this.sourceFormatting;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return false;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.SourceFormatting";
 
@@ -610,39 +670,19 @@ namespace Ext.Net
         {
             ResourceLocationType type = this.RenderStyles;
 
-            if (theme == Theme.Default)
+            string themeName = theme == Ext.Net.Theme.Default ? "" : ("-" + theme.ToString().ToLowerInvariant());
+            switch (type)
             {
-                switch (type)
-                {
-                    case ResourceLocationType.Embedded:
-                        return this.GetWebResourceUrl(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all-embedded.css");
-                    case ResourceLocationType.File:
-                        return this.ConvertToFilePath(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all.css");
+                case ResourceLocationType.Embedded:
+                    return this.GetWebResourceUrl(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all" + themeName + "-embedded.css");
+                case ResourceLocationType.File:
+                    return this.ConvertToFilePath(ResourceManager.ASSEMBLYSLUG + ".extjs.resources.css.ext-all" + themeName + ".css");
 #if ISPRO
-                    case ResourceLocationType.CDN:
-                        return ResourceManager.CDNPath.ConcatWith("/extjs/resources/css/ext-all.css");
+                case ResourceLocationType.CDN:
+                    return ResourceManager.CDNPath.ConcatWith("/extjs/resources/css/ext-all" + themeName + ".css");
 #endif
-                }
             }
             
-            foreach (ClientStyleItem item in this.GetStyles())
-            {
-                if (item.Theme.Equals(theme))
-                {
-                    switch (type)
-                    {
-                        case ResourceLocationType.Embedded:
-                            return this.GetWebResourceUrl(item.Type, item.PathEmbedded);
-                        case ResourceLocationType.File:
-                            return this.ResourcePathInternal.ConcatWith(item.Path);
-#if ISPRO                        
-                        case ResourceLocationType.CDN:
-                            return ResourceManager.CDNPath.ConcatWith(item.Path);
-#endif
-                    }
-                }
-            }
-
             return "";
         }
 
@@ -654,7 +694,8 @@ namespace Ext.Net
         public void SetTheme(Theme theme)
         {
             this.Theme = theme;
-            base.AddScript("Ext.net.ResourceMgr.setTheme(\"{0}\");", this.GetThemeUrl(theme));
+            string themeName = theme == Ext.Net.Theme.Default ? "blue" : theme.ToString().ToLowerInvariant();
+            base.AddScript("Ext.net.ResourceMgr.setTheme(\"{0}\", \"{1}\");", this.GetThemeUrl(theme), themeName);
         }
 
         private object theme = null;
@@ -674,7 +715,12 @@ namespace Ext.Net
                     return (Theme)this.theme;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return Ext.Net.Theme.Default;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.Theme";
 
@@ -716,13 +762,18 @@ namespace Ext.Net
                     return (StateProvider)this.stateProvider;
                 }
 
+                if (this.DesignMode)
+                {
+                    return Ext.Net.StateProvider.PostBack;
+                }
+
                 if (this.IsMVC && (this.stateProvider == null || (StateProvider)this.stateProvider == StateProvider.PostBack))
                 {
                     this.stateProvider = StateProvider.None;
                     return (StateProvider)this.stateProvider;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.StateProvider";
 
@@ -772,7 +823,12 @@ namespace Ext.Net
                     return (bool)this.quickTips;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return true;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.QuickTips";
 
@@ -814,7 +870,12 @@ namespace Ext.Net
                     return this.locale;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return "";
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.Locale";
 
@@ -836,7 +897,7 @@ namespace Ext.Net
 
                 if (cfgLocale.IsEmpty())
                 {
-                    cfgLocale = (this.Page != null) ? System.Threading.Thread.CurrentThread.CurrentUICulture.ToString() : "";
+                    cfgLocale = (this.Page != null) ? System.Threading.Thread.CurrentThread.CurrentCulture.ToString() : "";
                 }
 
                 return cfgLocale;
@@ -864,7 +925,12 @@ namespace Ext.Net
                     return this.directMethodNamespace;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return ".direct";
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.DirectMethodNamespace";
 
@@ -937,7 +1003,12 @@ namespace Ext.Net
                     return (bool)this.disableViewState;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return true;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.DisableViewState";
 
@@ -953,8 +1024,11 @@ namespace Ext.Net
                         return (bool)obj;
                     }
                 }
-
+#if NET40
                 return FormsAuthentication.IsEnabled ? false : GlobalConfig.Settings.DisableViewState;
+#else
+                return GlobalConfig.Settings.DisableViewState;
+#endif
             }
             set
             {
@@ -979,7 +1053,12 @@ namespace Ext.Net
                     return (bool)this.rethrowAjaxExceptions;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return false;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.RethrowAjaxExceptions";
                     object obj = HttpContext.Current.Application[token];
@@ -1020,7 +1099,12 @@ namespace Ext.Net
                     return (bool)this.showWarningOnAjaxFailure;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return true;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.ShowWarningOnAjaxFailure";
                     object obj = HttpContext.Current.Application[token];
@@ -1061,7 +1145,12 @@ namespace Ext.Net
                     return (LazyMode)this.lazyMode;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return Ext.Net.LazyMode.Inherit;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.LazyMode";
 
@@ -1107,7 +1196,12 @@ namespace Ext.Net
                     return (bool)this.submitDisabled;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return true;
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.SubmitDisabled";
                     object obj = HttpContext.Current.Application[token];
@@ -1156,7 +1250,12 @@ namespace Ext.Net
                     return this._namespace;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return "App";
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.Namespace";
 
@@ -1174,7 +1273,7 @@ namespace Ext.Net
                     }
                 }
 
-                var app = App.GetInstance();
+                var app = Ext.Net.App.GetInstance();
                 if (app != null && app.State.Get<string>("Name", "").IsNotEmpty())
                 {
                     this._namespace = app.Name;
@@ -1214,6 +1313,7 @@ namespace Ext.Net
         /// 
         /// </summary>
         [Description("")]
+        [DefaultValue("")]
         public virtual string LicenseKey
         {
             get
@@ -1223,7 +1323,12 @@ namespace Ext.Net
                     return this.licenseKey;
                 }
 
-                if (!this.DesignMode && HttpContext.Current != null)
+                if (this.DesignMode)
+                {
+                    return "";
+                }
+
+                if (HttpContext.Current != null)
                 {
                     string token = "Ext.Net.LicenseKey";
 

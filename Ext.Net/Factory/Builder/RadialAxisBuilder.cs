@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : AbstractAxis.Builder<RadialAxis, RadialAxis.Builder>
+        new public abstract partial class Builder<TRadialAxis, TBuilder> : AbstractAxis.Builder<TRadialAxis, TBuilder>
+            where TRadialAxis : RadialAxis
+            where TBuilder : Builder<TRadialAxis, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TRadialAxis component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Steps(int steps)
+            {
+                this.ToComponent().Steps = steps;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Maximum(int maximum)
+            {
+                this.ToComponent().Maximum = maximum;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : RadialAxis.Builder<RadialAxis, RadialAxis.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual RadialAxis.Builder Steps(int steps)
-            {
-                this.ToComponent().Steps = steps;
-                return this as RadialAxis.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual RadialAxis.Builder Maximum(int maximum)
-            {
-                this.ToComponent().Maximum = maximum;
-                return this as RadialAxis.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public RadialAxis.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.RadialAxis(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public RadialAxis.Builder RadialAxis()
         {
-            return this.RadialAxis(new RadialAxis());
+#if MVC
+			return this.RadialAxis(new RadialAxis { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.RadialAxis(new RadialAxis());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public RadialAxis.Builder RadialAxis(RadialAxis component)
         {
-            return new RadialAxis.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new RadialAxis.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public RadialAxis.Builder RadialAxis(RadialAxis.Config config)
         {
-            return new RadialAxis.Builder(new RadialAxis(config));
+#if MVC
+			return new RadialAxis.Builder(new RadialAxis(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new RadialAxis.Builder(new RadialAxis(config));
+#endif			
         }
     }
 }

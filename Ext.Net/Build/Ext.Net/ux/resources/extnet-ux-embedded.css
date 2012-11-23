@@ -8,7 +8,9 @@
  */
 
 .ux-rangemenu-icon {
-    margin-top: 0;
+    display: block;
+    height: 16px;
+    background: no-repeat 5px center;
 }
 
 .ux-rangemenu-gt {
@@ -70,15 +72,27 @@
     background-image: url("<%=WebResource("Ext.Net.Build.Ext.Net.ux.resources.images.tabmenu.tab-menu.gif")%>");
 }
 
+.x-ie6 .x-tab-strip-withmenu a.x-tab-strip-menu,
+.x-ie7 .x-tab-strip-withmenu a.x-tab-strip-menu,
+.x-ie8 .x-tab-strip-withmenu a.x-tab-strip-menu {
+    top: 4px;
+}
+
 .x-theme-gray .x-tab-strip-withmenu a.x-tab-strip-menu
 {
     background-image: url("<%=WebResource("Ext.Net.Build.Ext.Net.ux.resources.images.tabmenu.gray-tab-menu.gif")%>");
 }
 
-
 .x-tab-closable a.x-tab-strip-menu
 {
     right: 15px;
+}
+
+.x-ie6 .x-tab-closable a.x-tab-strip-menu,
+.x-ie7 .x-tab-closable a.x-tab-strip-menu,
+.x-ie8 .x-tab-closable a.x-tab-strip-menu 
+{
+    right: 17px;
 }
 
 a.x-tab-strip-menu:hover
@@ -368,33 +382,6 @@ a.x-tab-strip-menu:hover
 }
 .x-status-error-list li a:hover {
     text-decoration: underline;
-}
-.x-panel-ghost {
-    z-index: 1;
-}
-.x-border-layout-ct {
-    background: #DFE8F6;
-}
-.x-portal-body {
-    padding: 0 0 0 8px;
-}
-.x-portal .x-portal-column {
-    
-    padding: 8px 8px 0 0;
-}
-.x-portal .x-panel-dd-spacer {
-    border: 2px dashed #99bbe8;
-    background: #f6f6f6;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    margin-bottom: 10px;
-}
-.x-portlet {
-    margin-bottom:10px;
-    padding: 1px;
-}
-.x-portlet .x-panel-body {
-    background: #fff;
 }
 .x-tab-tabmenu-right {
     background: transparent url("<%=WebResource("Ext.Net.Build.Ext.Net.ux.resources.images.tabscrollermenu.tab-scroller-menu.gif")%>") no-repeat 0 0;

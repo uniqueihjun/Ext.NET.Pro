@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Web.UI;
-
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Ext.Net
@@ -244,7 +244,8 @@ namespace Ext.Net
             {
                 if (this.Columns.Count > 0)
                 {
-                    var columns = new ItemsCollection<AbstractComponent>();
+                    ItemsCollection<AbstractComponent> columns = new ItemsCollection<AbstractComponent>();
+
                     foreach (ColumnBase column in this.Columns)
                     {
                         columns.Add(column);
@@ -374,6 +375,11 @@ namespace Ext.Net
             }
         }
 
+        public ColumnBase GetColumnByDataIndex(string dataIndex)
+        {
+            return this.Columns.FirstOrDefault(c => c.DataIndex == dataIndex);
+        }
+
         #region Члены ICustomConfigSerialization
 
         /// <summary>
@@ -385,9 +391,9 @@ namespace Ext.Net
         {
             if (this.RenderColumnsOnly)
             {
-                var sb = new StringBuilder();
-                var sw = new StringWriter(sb);
-                var writer = new JsonTextWriter(sw);
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                JsonTextWriter writer = new JsonTextWriter(sw);
 
                 ItemCollectionJsonConverter converter = new ItemCollectionJsonConverter();
                 converter.Name = "columns";

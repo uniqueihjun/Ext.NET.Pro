@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -97,31 +97,28 @@ namespace Ext.Net
             }
         }
 
-        private ComponentListener afterDrop;
+        private ComponentListener drop;
 
         /// <summary>
         /// 
         /// </summary>
-        [ListenerArgument(0, "view", typeof(object))]
-        [ListenerArgument(1, "node", typeof(object))]
-        [ListenerArgument(2, "dd", typeof(object))]
-        [ListenerArgument(3, "e", typeof(object))]
-        [ListenerArgument(4, "data", typeof(object))]
+        [ListenerArgument(0, "item", typeof(object))]
+        [ListenerArgument(1, "records", typeof(object))]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [ConfigOption("afterdrop", typeof(ListenerJsonConverter))]
+        [ConfigOption("drop", typeof(ListenerJsonConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [NotifyParentProperty(true)]
         [Description("")]
-        public virtual ComponentListener AfterDrop
+        public virtual ComponentListener Drop
         {
             get
             {
-                if (this.afterDrop == null)
+                if (this.drop == null)
                 {
-                    this.afterDrop = new ComponentListener();
+                    this.drop = new ComponentListener();
                 }
 
-                return this.afterDrop;
+                return this.drop;
             }
         }
     }

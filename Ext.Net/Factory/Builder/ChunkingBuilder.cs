@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : GridFeature.Builder<Chunking, Chunking.Builder>
+        new public abstract partial class Builder<TChunking, TBuilder> : GridFeature.Builder<TChunking, TBuilder>
+            where TChunking : Chunking
+            where TBuilder : Builder<TChunking, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TChunking component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder ChunkSize(int chunkSize)
+            {
+                this.ToComponent().ChunkSize = chunkSize;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder RowHeight(int rowHeight)
+            {
+                this.ToComponent().RowHeight = rowHeight;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : Chunking.Builder<Chunking, Chunking.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual Chunking.Builder ChunkSize(int chunkSize)
-            {
-                this.ToComponent().ChunkSize = chunkSize;
-                return this as Chunking.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual Chunking.Builder RowHeight(int rowHeight)
-            {
-                this.ToComponent().RowHeight = rowHeight;
-                return this as Chunking.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public Chunking.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.Chunking(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public Chunking.Builder Chunking()
         {
-            return this.Chunking(new Chunking());
+#if MVC
+			return this.Chunking(new Chunking { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.Chunking(new Chunking());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public Chunking.Builder Chunking(Chunking component)
         {
-            return new Chunking.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new Chunking.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public Chunking.Builder Chunking(Chunking.Config config)
         {
-            return new Chunking.Builder(new Chunking(config));
+#if MVC
+			return new Chunking.Builder(new Chunking(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new Chunking.Builder(new Chunking(config));
+#endif			
         }
     }
 }

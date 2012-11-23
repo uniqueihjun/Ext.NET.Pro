@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,7 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract partial class Builder<TTextFieldBase, TBuilder> : Field.Builder<TTextFieldBase, TBuilder>
+        new public abstract partial class Builder<TTextFieldBase, TBuilder> : Field.Builder<TTextFieldBase, TBuilder>
             where TTextFieldBase : TextFieldBase
             where TBuilder : Builder<TTextFieldBase, TBuilder>
         {
@@ -63,6 +63,15 @@ namespace Ext.Net
             public virtual TBuilder AllowBlank(bool allowBlank)
             {
                 this.ToComponent().AllowBlank = allowBlank;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Specify false to automatically trim the value before validating the whether the value is blank. Setting this to false automatically sets AllowBlank to false.
+			/// </summary>
+            public virtual TBuilder AllowOnlyWhitespace(bool allowOnlyWhitespace)
+            {
+                this.ToComponent().AllowOnlyWhitespace = allowOnlyWhitespace;
                 return this as TBuilder;
             }
              
@@ -141,7 +150,7 @@ namespace Ext.Net
  			/// <summary>
 			/// The maximum width to allow when grow = true (defaults to 800).
 			/// </summary>
-            public virtual TBuilder GrowMax(Unit growMax)
+            public virtual TBuilder GrowMax(int growMax)
             {
                 this.ToComponent().GrowMax = growMax;
                 return this as TBuilder;
@@ -150,7 +159,7 @@ namespace Ext.Net
  			/// <summary>
 			/// The minimum width to allow when grow = true (defaults to 30).
 			/// </summary>
-            public virtual TBuilder GrowMin(Unit growMin)
+            public virtual TBuilder GrowMin(int growMin)
             {
                 this.ToComponent().GrowMin = growMin;
                 return this as TBuilder;
@@ -243,35 +252,6 @@ namespace Ext.Net
             public virtual TBuilder StripCharsRe(string stripCharsRe)
             {
                 this.ToComponent().StripCharsRe = stripCharsRe;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// A custom validation function to be called during field validation (getErrors) (defaults to undefined). If specified, this function will be called first, allowing the developer to override the default validation process.
- 			/// </summary>
- 			/// <param name="action">The action delegate</param>
- 			/// <returns>An instance of TBuilder</returns>
-            public virtual TBuilder Validator(Action<JFunction> action)
-            {
-                action(this.ToComponent().Validator);
-                return this as TBuilder;
-            }
-			 
- 			/// <summary>
-			/// A validation type name as defined in Ext.form.VTypes (defaults to null).
-			/// </summary>
-            public virtual TBuilder Vtype(string vtype)
-            {
-                this.ToComponent().Vtype = vtype;
-                return this as TBuilder;
-            }
-             
- 			/// <summary>
-			/// A custom error message to display in place of the default message provided for the vtype currently set for this field (defaults to ''). Only applies if vtype is set, else ignored.
-			/// </summary>
-            public virtual TBuilder VtypeText(string vtypeText)
-            {
-                this.ToComponent().VtypeText = vtypeText;
                 return this as TBuilder;
             }
              

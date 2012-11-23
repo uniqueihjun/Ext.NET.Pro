@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -155,11 +155,11 @@ namespace Ext.Net
         [ConfigOption]
         [DefaultValue(null)]
         [Description("The maximum value drawn by the axis. If not set explicitly, the axis maximum will be calculated automatically.")]
-        public virtual int? Maximum
+        public virtual double? Maximum
         {
             get
             {
-                return this.State.Get<int?>("Maximum", null);
+                return this.State.Get<double?>("Maximum", null);
             }
             set
             {
@@ -174,11 +174,11 @@ namespace Ext.Net
         [ConfigOption]
         [DefaultValue(null)]
         [Description("The minimum value drawn by the axis. If not set explicitly, the axis minimum will be calculated automatically.")]
-        public virtual int? Minimum
+        public virtual double? Minimum
         {
             get
             {
-                return this.State.Get<int?>("Minimum", null);
+                return this.State.Get<double?>("Minimum", null);
             }
             set
             {
@@ -192,8 +192,8 @@ namespace Ext.Net
         /// <param name="minimum"></param>
         public virtual void SetMinimum(int minimum)
         {
-            var chart = this.Chart;
-            var index = chart.Axes.IndexOf(this);
+            Chart chart = this.Chart;
+            int index = chart.Axes.IndexOf(this);
             chart.AddScript("{0}.axes.get({1}).minimum={2};", chart.ClientID, index, minimum);
         }
 
@@ -203,8 +203,8 @@ namespace Ext.Net
         /// <param name="maximum"></param>
         public virtual void SetMaximum(int maximum)
         {
-            var chart = this.Chart;
-            var index = chart.Axes.IndexOf(this);
+            Chart chart = this.Chart;
+            int index = chart.Axes.IndexOf(this);
             chart.AddScript("{0}.axes.get({1}).maximum={2};", chart.ClientID, index, maximum);
         }
     }

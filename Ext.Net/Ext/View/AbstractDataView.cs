@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -59,6 +59,26 @@ namespace Ext.Net
             }
 
             base.OnBeforeClientInitHandler();
+        }
+
+        /// <summary>
+        /// Allow users to deselect a record in a DataView, List or Grid. Only applicable when the SelectionModel's mode is 'SINGLE'. Defaults to false. 
+        /// </summary>
+        [Meta]
+        [ConfigOption]
+        [DefaultValue(false)]
+        [NotifyParentProperty(true)]
+        [Description("Allow users to deselect a record in a DataView, List or Grid. Only applicable when the SelectionModel's mode is 'SINGLE'. Defaults to false. ")]
+        public virtual bool AllowDeselect
+        {
+            get
+            {
+                return this.State.Get<bool>("AllowDeselect", false);
+            }
+            set
+            {
+                this.State.Set("AllowDeselect", value);
+            }
         }
 
         /// <summary>

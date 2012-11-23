@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -118,7 +118,7 @@ namespace Ext.Net
 
                 if (this.ghostTpl != null && this.PluginOwner != null)
                 {
-                    this.ghostTpl.EnableViewState = false;
+                    this.ghostTpl.EnableViewState = this.DesignMode;
                     this.PluginOwner.Controls.Add(this.ghostTpl);
                     this.PluginOwner.LazyItems.Add(this.ghostTpl);
                 }
@@ -174,7 +174,7 @@ namespace Ext.Net
 
             if (this.GhostTpl != null && this.PluginOwner != null)
             {
-                this.GhostTpl.EnableViewState = false;
+                this.GhostTpl.EnableViewState = this.DesignMode;
                 this.PluginOwner.Controls.Add(this.GhostTpl);
                 this.PluginOwner.LazyItems.Add(this.GhostTpl);
             }

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -192,21 +192,47 @@ namespace Ext.Net
             }
         }
 
-        private ParameterCollection storeConfig;
+        private Store storeConfig;
 
         /// <summary>
-        /// Optional configuration object that will be passed to the generated Store. Defaults to undefined.
+        ///  Optional configuration object that will be passed to the generated Store. Defaults to undefined.
         /// </summary>
         [Meta]
-        [ConfigOption(JsonMode.ArrayToObject)]
         [NotifyParentProperty(true)]
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [Description("Optional configuration object that will be passed to the generated Store. Defaults to undefined.")]
-        public virtual ParameterCollection StoreConfig
+        public virtual Store StoreConfig
         {
             get
             {
-                return this.storeConfig ?? (this.storeConfig = new ParameterCollection());
+                return this.storeConfig;
+            }
+            set
+            {
+                this.storeConfig = value;
+            }
+        }
+
+        [ConfigOption("storeConfig", JsonMode.Raw)]
+        [DefaultValue(null)]
+        protected virtual string StoreConfigProxy
+        {
+            get
+            {
+                if (this.StoreConfig == null)
+                {
+                    return null;
+                }
+
+                this.StoreConfig.IDMode = IDMode.Ignore;
+
+
+                if (this.StoreConfig.IsAutoLoadUndefined)
+                {
+                    this.StoreConfig.AutoLoad = false;
+                }
+
+                return this.StoreConfig.ToConfig();
             }
         }
     }

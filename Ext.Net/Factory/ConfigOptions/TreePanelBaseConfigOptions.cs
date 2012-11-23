@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -39,6 +39,8 @@ namespace Ext.Net
                 
                 list.Add("store", new ConfigOption("store", new SerializationOptions("store>Primary", 1), null, this.Store ));
                 list.Add("fields", new ConfigOption("fields", new SerializationOptions(JsonMode.AlwaysArray), null, this.Fields ));
+                list.Add("selectedHiddenName", new ConfigOption("selectedHiddenName", null, null, this.SelectedHiddenName ));
+                list.Add("checkedHiddenName", new ConfigOption("checkedHiddenName", null, null, this.CheckedHiddenName ));
                 list.Add("modelName", new ConfigOption("modelName", new SerializationOptions("model"), null, this.ModelName ));
                 list.Add("model", new ConfigOption("model", new SerializationOptions("model>Primary", 2), null, this.Model ));
                 list.Add("view", new ConfigOption("view", new SerializationOptions("viewConfig>View"), null, this.View ));
@@ -57,6 +59,7 @@ namespace Ext.Net
                 list.Add("remoteJson", new ConfigOption("remoteJson", null, false, this.RemoteJson ));
                 list.Add("localActions", new ConfigOption("localActions", new SerializationOptions(typeof(StringArrayJsonConverter)), null, this.LocalActions ));
                 list.Add("noLeafIcon", new ConfigOption("noLeafIcon", null, false, this.NoLeafIcon ));
+                list.Add("submitUrl", new ConfigOption("submitUrl", new SerializationOptions(JsonMode.Url), "", this.SubmitUrl ));
 
                 return list;
             }

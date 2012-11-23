@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -36,30 +36,6 @@ namespace Ext.Net
                 }
 
                 return this.documentReady;
-            }
-        }
-
-        private ComponentListener textResize;
-
-        /// <summary>
-        /// Fires when the user changes the active text size. Handler gets called with 2 params, the old size and the new size.
-        /// </summary>
-        [ListenerArgument(0, "oldSize", typeof(int), "Old text size")]
-        [ListenerArgument(1, "newSize", typeof(int), "New text size")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [PersistenceMode(PersistenceMode.InnerProperty)]
-        [NotifyParentProperty(true)]
-        [Description("Fires when the user changes the active text size. Handler gets called with 2 params, the old size and the new size.")]
-        public virtual ComponentListener TextResize
-        {
-            get
-            {
-                if (this.textResize == null)
-                {
-                    this.textResize = new ComponentListener();
-                }
-
-                return this.textResize;
             }
         }
 
@@ -118,7 +94,6 @@ namespace Ext.Net
         /// </summary>
         [ListenerArgument(0, "e", typeof(object), "The browser scroll event object")]
         [ListenerArgument(1, "document", typeof(object), "The browser document object")]
-        [ListenerArgument(2, "config", typeof(object), "The event configuration object passed to listener")]
         [ConfigOption("scroll", typeof(ListenerJsonConverter))]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [PersistenceMode(PersistenceMode.InnerProperty)]

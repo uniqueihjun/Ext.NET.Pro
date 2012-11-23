@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BaseItem.Builder<SelectedListItem, SelectedListItem.Builder>
+        new public abstract partial class Builder<TSelectedListItem, TBuilder> : BaseItem.Builder<TSelectedListItem, TBuilder>
+            where TSelectedListItem : SelectedListItem
+            where TBuilder : Builder<TSelectedListItem, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TSelectedListItem component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Value(string value)
+            {
+                this.ToComponent().Value = value;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Index(int index)
+            {
+                this.ToComponent().Index = index;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : SelectedListItem.Builder<SelectedListItem, SelectedListItem.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual SelectedListItem.Builder Value(string value)
-            {
-                this.ToComponent().Value = value;
-                return this as SelectedListItem.Builder;
-            }
-             
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual SelectedListItem.Builder Index(int index)
-            {
-                this.ToComponent().Index = index;
-                return this as SelectedListItem.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public SelectedListItem.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.SelectedListItem(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public SelectedListItem.Builder SelectedListItem()
         {
-            return this.SelectedListItem(new SelectedListItem());
+#if MVC
+			return this.SelectedListItem(new SelectedListItem { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.SelectedListItem(new SelectedListItem());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public SelectedListItem.Builder SelectedListItem(SelectedListItem component)
         {
-            return new SelectedListItem.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new SelectedListItem.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public SelectedListItem.Builder SelectedListItem(SelectedListItem.Config config)
         {
-            return new SelectedListItem.Builder(new SelectedListItem(config));
+#if MVC
+			return new SelectedListItem.Builder(new SelectedListItem(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new SelectedListItem.Builder(new SelectedListItem(config));
+#endif			
         }
     }
 }

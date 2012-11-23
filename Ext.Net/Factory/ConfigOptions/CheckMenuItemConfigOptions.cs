@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -44,7 +44,7 @@ namespace Ext.Net
                 list.Add("groupCls", new ConfigOption("groupCls", null, "", this.GroupCls ));
                 list.Add("hideOnClick", new ConfigOption("hideOnClick", null, false, this.HideOnClick ));
                 list.Add("uncheckedCls", new ConfigOption("uncheckedCls", null, "", this.UncheckedCls ));
-                list.Add("checkHandler", new ConfigOption("checkHandler", new SerializationOptions(JsonMode.Raw), "", this.CheckHandler ));
+                list.Add("checkHandler", new ConfigOption("checkHandler", new SerializationOptions(typeof(FunctionJsonConverter)), "", this.CheckHandler ));
                 list.Add("listeners", new ConfigOption("listeners", new SerializationOptions("listeners", JsonMode.Object), null, this.Listeners ));
                 list.Add("directEvents", new ConfigOption("directEvents", new SerializationOptions("directEvents", JsonMode.Object), null, this.DirectEvents ));
 

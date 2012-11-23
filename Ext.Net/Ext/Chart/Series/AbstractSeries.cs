@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -181,7 +181,8 @@ namespace Ext.Net
 
         protected internal virtual void InitTips(bool add)
         {
-            var chart = this.Owner as Chart;
+            Chart chart = this.Owner as Chart;
+            
             if (chart == null || this.tips == null)
             {
                 return;
@@ -321,7 +322,7 @@ namespace Ext.Net
                 throw new Exception("You have to set series ID to call its methods");
             }
 
-            var chart = this.Owner as Chart;
+            Chart chart = this.Owner as Chart;
 
             if (chart == null)
             {
@@ -329,7 +330,8 @@ namespace Ext.Net
             }
 
             StringBuilder sb = new StringBuilder();
-            var comma = false;
+            
+            bool comma = false;
 
             if (args != null && args.Length > 0)
             {
@@ -344,7 +346,7 @@ namespace Ext.Net
                 }
             }
 
-            var template = "{0}.series.get(\"{1}\").{2}({3});";
+            string template = "{0}.series.get(\"{1}\").{2}({3});";
 
             string script = template.FormatWith(chart.ClientID, this.SeriesID, name, sb.ToString());
 

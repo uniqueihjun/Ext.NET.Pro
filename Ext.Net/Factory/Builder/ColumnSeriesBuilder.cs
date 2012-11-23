@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,50 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : BarSeries.Builder<ColumnSeries, ColumnSeries.Builder>
+        new public abstract partial class Builder<TColumnSeries, TBuilder> : BarSeries.Builder<TColumnSeries, TBuilder>
+            where TColumnSeries : ColumnSeries
+            where TBuilder : Builder<TColumnSeries, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TColumnSeries component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// Padding between the left/right axes and the bars. Defaults to: 10
+			/// </summary>
+            public virtual TBuilder XPadding(int xPadding)
+            {
+                this.ToComponent().XPadding = xPadding;
+                return this as TBuilder;
+            }
+             
+ 			/// <summary>
+			/// Padding between the top/bottom axes and the bars. Defaults to: 0
+			/// </summary>
+            public virtual TBuilder YPadding(int yPadding)
+            {
+                this.ToComponent().YPadding = yPadding;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : ColumnSeries.Builder<ColumnSeries, ColumnSeries.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,33 +97,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// Padding between the left/right axes and the bars. Defaults to: 10
-			/// </summary>
-            public virtual ColumnSeries.Builder XPadding(int xPadding)
-            {
-                this.ToComponent().XPadding = xPadding;
-                return this as ColumnSeries.Builder;
-            }
-             
- 			/// <summary>
-			/// Padding between the top/bottom axes and the bars. Defaults to: 0
-			/// </summary>
-            public virtual ColumnSeries.Builder YPadding(int yPadding)
-            {
-                this.ToComponent().YPadding = yPadding;
-                return this as ColumnSeries.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -89,6 +105,14 @@ namespace Ext.Net
         public ColumnSeries.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.ColumnSeries(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -103,7 +127,11 @@ namespace Ext.Net
         /// </summary>
         public ColumnSeries.Builder ColumnSeries()
         {
-            return this.ColumnSeries(new ColumnSeries());
+#if MVC
+			return this.ColumnSeries(new ColumnSeries { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.ColumnSeries(new ColumnSeries());
+#endif			
         }
 
         /// <summary>
@@ -111,7 +139,10 @@ namespace Ext.Net
         /// </summary>
         public ColumnSeries.Builder ColumnSeries(ColumnSeries component)
         {
-            return new ColumnSeries.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new ColumnSeries.Builder(component);
         }
 
         /// <summary>
@@ -119,7 +150,11 @@ namespace Ext.Net
         /// </summary>
         public ColumnSeries.Builder ColumnSeries(ColumnSeries.Config config)
         {
-            return new ColumnSeries.Builder(new ColumnSeries(config));
+#if MVC
+			return new ColumnSeries.Builder(new ColumnSeries(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new ColumnSeries.Builder(new ColumnSeries(config));
+#endif			
         }
     }
 }

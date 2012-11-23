@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/using System.Collections.Generic;
@@ -58,17 +58,6 @@ namespace Ext.Net
         /// </summary>
         [DefaultValue(null)]
         [Newtonsoft.Json.JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public virtual int? ColorId 
-        { 
-            get; 
-            set; 
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [DefaultValue(null)]
-        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public virtual bool? IsHidden
         {
             get;
@@ -88,7 +77,6 @@ namespace Ext.Net
             mappings["CalendarId"] = "id";            
             mappings["Title"] = "title";
             mappings["Description"] = "desc";
-            mappings["ColorId"] = "color";
             mappings["IsHidden"] = "hidden";
         }
 

@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -48,7 +48,7 @@ namespace Ext.Net
                 list.Add("focusCls", new ConfigOption("focusCls", null, "focus", this.FocusCls ));
                 list.Add("flat", new ConfigOption("flat", null, false, this.Flat ));
                 list.Add("handleMouseEvents", new ConfigOption("handleMouseEvents", null, true, this.HandleMouseEvents ));
-                list.Add("handler", new ConfigOption("handler", new SerializationOptions(JsonMode.Raw), "", this.Handler ));
+                list.Add("handler", new ConfigOption("handler", new SerializationOptions(typeof(FunctionJsonConverter)), "", this.Handler ));
                 list.Add("href", new ConfigOption("href", new SerializationOptions(JsonMode.Url), "", this.Href ));
                 list.Add("hrefTarget", new ConfigOption("hrefTarget", null, "_blank", this.HrefTarget ));
                 list.Add("iconAlign", new ConfigOption("iconAlign", new SerializationOptions(JsonMode.ToLower), IconAlign.Left, this.IconAlign ));
@@ -69,7 +69,7 @@ namespace Ext.Net
                 list.Add("tabIndex", new ConfigOption("tabIndex", null, (short)0, this.TabIndex ));
                 list.Add("text", new ConfigOption("text", null, "", this.Text ));
                 list.Add("textAlign", new ConfigOption("textAlign", new SerializationOptions(JsonMode.ToLower), ButtonTextAlign.Center, this.TextAlign ));
-                list.Add("toggleHandler", new ConfigOption("toggleHandler", new SerializationOptions(JsonMode.Raw), "", this.ToggleHandler ));
+                list.Add("toggleHandler", new ConfigOption("toggleHandler", new SerializationOptions(typeof(FunctionJsonConverter)), "", this.ToggleHandler ));
                 list.Add("toggleGroup", new ConfigOption("toggleGroup", null, "", this.ToggleGroup ));
                 list.Add("toolTip", new ConfigOption("toolTip", new SerializationOptions("tooltip"), "", this.ToolTip ));
                 list.Add("qTipCfg", new ConfigOption("qTipCfg", new SerializationOptions("tooltip", JsonMode.Object), null, this.QTipCfg ));

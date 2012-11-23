@@ -1,7 +1,7 @@
 /********
- * @version   : 2.0.0 - Ext.NET Pro License
+ * @version   : 2.1.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-24
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -23,7 +23,41 @@ namespace Ext.Net
         /// <summary>
         /// 
         /// </summary>
-        public partial class Builder : GridCommandBase.Builder<CommandSpacer, CommandSpacer.Builder>
+        new public abstract partial class Builder<TCommandSpacer, TBuilder> : GridCommandBase.Builder<TCommandSpacer, TBuilder>
+            where TCommandSpacer : CommandSpacer
+            where TBuilder : Builder<TCommandSpacer, TBuilder>
+        {
+            /*  Ctor
+                -----------------------------------------------------------------------------------------------*/
+
+			/// <summary>
+			/// 
+			/// </summary>
+            public Builder(TCommandSpacer component) : base(component) { }
+
+
+			/*  ConfigOptions
+				-----------------------------------------------------------------------------------------------*/
+			 
+ 			/// <summary>
+			/// 
+			/// </summary>
+            public virtual TBuilder Width(Unit width)
+            {
+                this.ToComponent().Width = width;
+                return this as TBuilder;
+            }
+            
+
+			/*  Methods
+				-----------------------------------------------------------------------------------------------*/
+			
+        }
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public partial class Builder : CommandSpacer.Builder<CommandSpacer, CommandSpacer.Builder>
         {
             /*  Ctor
                 -----------------------------------------------------------------------------------------------*/
@@ -54,24 +88,6 @@ namespace Ext.Net
             {
                 return component.ToBuilder();
             }
-            
-            
-			/*  ConfigOptions
-				-----------------------------------------------------------------------------------------------*/
-			 
- 			/// <summary>
-			/// 
-			/// </summary>
-            public virtual CommandSpacer.Builder Width(Unit width)
-            {
-                this.ToComponent().Width = width;
-                return this as CommandSpacer.Builder;
-            }
-            
-
-			/*  Methods
-				-----------------------------------------------------------------------------------------------*/
-			
         }
 
         /// <summary>
@@ -80,6 +96,14 @@ namespace Ext.Net
         public CommandSpacer.Builder ToBuilder()
 		{
 			return Ext.Net.X.Builder.CommandSpacer(this);
+		}
+		
+		/// <summary>
+        /// 
+        /// </summary>
+        public override IControlBuilder ToNativeBuilder()
+		{
+			return (IControlBuilder)this.ToBuilder();
 		}
     }
     
@@ -94,7 +118,11 @@ namespace Ext.Net
         /// </summary>
         public CommandSpacer.Builder CommandSpacer()
         {
-            return this.CommandSpacer(new CommandSpacer());
+#if MVC
+			return this.CommandSpacer(new CommandSpacer { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return this.CommandSpacer(new CommandSpacer());
+#endif			
         }
 
         /// <summary>
@@ -102,7 +130,10 @@ namespace Ext.Net
         /// </summary>
         public CommandSpacer.Builder CommandSpacer(CommandSpacer component)
         {
-            return new CommandSpacer.Builder(component);
+#if MVC
+			component.ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null;
+#endif			
+			return new CommandSpacer.Builder(component);
         }
 
         /// <summary>
@@ -110,7 +141,11 @@ namespace Ext.Net
         /// </summary>
         public CommandSpacer.Builder CommandSpacer(CommandSpacer.Config config)
         {
-            return new CommandSpacer.Builder(new CommandSpacer(config));
+#if MVC
+			return new CommandSpacer.Builder(new CommandSpacer(config) { ViewContext = this.HtmlHelper != null ? this.HtmlHelper.ViewContext : null });
+#else
+			return new CommandSpacer.Builder(new CommandSpacer(config));
+#endif			
         }
     }
 }
