@@ -1,7 +1,7 @@
 /********
- * @version   : 1.5.0 - Ext.NET Pro License
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -92,7 +92,7 @@ namespace Ext.Net
         /// <param name="secure">Specify true to indicate that the cookie should only be accessible via SSL on a page using the HTTPS protocol. Defaults to false. Note that this will only work if the page calling this code uses the HTTPS protocol, otherwise the cookie will be created with default options.</param>
         public static void Set(string name, object value, DateTime expires, string path, string domain, bool secure)
         {
-            new Cookies().Call("set", name, value, new JRawValue(Ext.Net.Utilities.DateTimeUtils.DateNetToJs(expires)), path, domain, secure);
+            new Cookies().Call("set", name, value, new JRawValue(JSON.Serialize(expires, JSON.AltConverters)), path, domain, secure);
         }
     }
 }

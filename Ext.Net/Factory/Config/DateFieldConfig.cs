@@ -1,7 +1,7 @@
 /********
- * @version   : 1.5.0 - Ext.NET Pro License
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -95,25 +95,25 @@ namespace Ext.Net
 					this.selectedValue = value;
 				}
 			}
-        
-			private object emptyValue = null;
+
+			private object emptyValue = new DateTime(0001, 01, 01);
 
 			/// <summary>
 			/// The fields null value.
 			/// </summary>
-			public object EmptyValue
-			{
+			[DefaultValue(typeof(DateTime), "0001-01-01")]
+			public override object EmptyValue 
+			{ 
 				get
 				{
-					if (this.emptyValue == null)
-					{
-						this.emptyValue = new object();
-					}
-			
 					return this.emptyValue;
 				}
+				set
+				{
+					this.emptyValue = value;
+				}
 			}
-			        
+        
 			private DateFieldListeners listeners = null;
 
 			/// <summary>

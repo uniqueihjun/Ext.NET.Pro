@@ -1,18 +1,18 @@
 /********
- * @version   : 1.5.0 - Ext.NET Pro License
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
 
 using System;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 
 using Ext.Net.Utilities;
 using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Globalization;
 
 namespace Ext.Net
 {
@@ -98,7 +98,7 @@ namespace Ext.Net
             //clear time
             this.Date = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, 0,0,0,0);
 
-            return Ext.Net.Utilities.DateTimeUtils.DateNetToJs(this.Date);
+            return JSON.Serialize(this.Date, JSON.AltConverters);
         }
     }
 

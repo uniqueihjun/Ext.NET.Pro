@@ -1,10 +1,10 @@
-﻿/********
- * @version   : 1.5.0 - Ext.NET Pro License
+﻿/*
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2009-06-30
- * @copyright : Copyright (c) 2010, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
- * @license   : See license.txt and http://www.ext.net/license/. 
- ********/
+ * @date      : 2012-11-21
+ * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
+ * @license   : See license.txt and http://www.ext.net/license/.
+ */
  
  Ext.net.TabMenu = Ext.extend(Object, {
     init : function (tabPanel) {

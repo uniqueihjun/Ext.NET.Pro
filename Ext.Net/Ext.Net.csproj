@@ -2782,7 +2782,6 @@
     <Content Include="Build\Ext.Net\Licenses\SilkCompanionIcon.txt" />
     <Content Include="Build\Ext.Net\ux\extensions\calendar\build.bat" />
     <Content Include="Build\Ext.Net\ux\extensions\calendar\calendar-all.jsb" />
-    <None Include="Build\NuGet\Ext.NET.1.4.0.nupkg" />
     <None Include="Build\NuGet\Web.config.transform">
       <SubType>Designer</SubType>
     </None>

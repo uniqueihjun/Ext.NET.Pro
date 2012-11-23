@@ -1,10 +1,9 @@
 /*
- * @version   : 1.0.0 - Professional Edition (Ext.Net Professional License)
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2006-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
- * @license   : See license.txt and http://www.ext.net/license/. 
- * @website   : http://www.ext.net/
+ * @license   : See license.txt and http://www.ext.net/license/.
  */
 
 

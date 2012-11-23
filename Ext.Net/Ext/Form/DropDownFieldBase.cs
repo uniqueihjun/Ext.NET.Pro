@@ -1,7 +1,7 @@
 /********
- * @version   : 1.5.0 - Ext.NET Pro License
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -34,6 +34,7 @@ namespace Ext.Net
             bool baseLoadPost = base.LoadPostData(postDataKey, postCollection);
 
             string val = postCollection[this.UniqueName + "_Value"];
+            val = val != null && val.Equals(this.EmptyText) ? "" : val;
 
             this.SuspendScripting();
             this.RawValue = val;
@@ -263,6 +264,34 @@ namespace Ext.Net
                 }
 
                 return this.syncValue;
+            }
+        }
+
+        private JFunction getListParent;
+
+        /// <summary>
+        /// Returns the element used to house this ComboBox's pop-up list. Defaults to the document body.
+        /// A custom implementation may be provided as a configuration option if the floating list needs to be rendered to a different Element. 
+        /// An example might be rendering the list inside a Menu so that clicking the list does not hide the Menu:
+        /// 
+        /// <GetListParent Handler="return this.el.up('.x-menu');" />
+        /// </summary>
+        [ConfigOption(JsonMode.Raw)]
+        [Category("8. DropDownField")]
+        [DefaultValue(null)]
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [Description("Returns the element used to house this ComboBox's pop-up list. Defaults to the document body.")]
+        public virtual JFunction GetListParent
+        {
+            get
+            {
+                if (this.getListParent == null)
+                {
+                    this.getListParent = new JFunction();
+                }
+
+                return this.getListParent;
             }
         }
 

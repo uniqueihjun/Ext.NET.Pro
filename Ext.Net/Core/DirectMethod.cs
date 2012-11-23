@@ -1,7 +1,7 @@
 /********
- * @version   : 1.5.0 - Ext.NET Pro License
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/. 
  ********/
@@ -164,14 +164,28 @@ namespace Ext.Net
                 }
                 else
                 {
-                    switch(param.ParameterType.Name)
+                    if (param.ParameterType.IsGenericType && param.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>))
                     {
-                        case "Guid":
-                            parameters[index++] = new Guid(paramValue);
-                            break;
-                        default:
-                            parameters[index++] = JSON.Deserialize(paramValue, param.ParameterType);
-                            break;
+                        if (paramValue.IsEmpty() || Newtonsoft.Json.Linq.JValue.Parse(paramValue).Type == Newtonsoft.Json.Linq.JTokenType.Null)
+                        {
+                            parameters[index++] = null;
+                        }
+                        else
+                        {
+                            parameters[index++] = JSON.Deserialize(paramValue, Nullable.GetUnderlyingType(param.ParameterType));
+                        }
+                    }
+                    else
+                    {
+                        switch (param.ParameterType.Name)
+                        {
+                            case "Guid":
+                                parameters[index++] = new Guid(paramValue);
+                                break;
+                            default:
+                                parameters[index++] = JSON.Deserialize(paramValue, param.ParameterType);
+                                break;
+                        }
                     }
                 }
             }

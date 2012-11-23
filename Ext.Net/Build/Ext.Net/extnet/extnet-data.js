@@ -1,10 +1,9 @@
 /*
- * @version   : 1.5.0 - Ext.NET Pro License
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
- * @license   : See license.txt and http://www.ext.net/license/. 
- * @website   : http://www.ext.net/
+ * @license   : See license.txt and http://www.ext.net/license/.
  */
 
 
@@ -61,6 +60,7 @@ if(options.dirtyRowsOnly&&!isNew){if(!record.dirty){return;}}
 if((options.dirtyCellsOnly===true||(options.dirtyCellsOnly!==false&&this.saveAllFields===false))&&!isNew){var j;for(j in data){if(record.isModified(j)){newData[j]=data[j];}}
 data=newData;}
 var k;for(k in data){if(options.filterField&&options.filterField(record,k,data[k])===false){data[k]=undefined;}
+if(options.encode){data[k]=Ext.util.Format.htmlEncode(data[k]);}
 field=this.getFieldByName(k);if(Ext.isEmpty(data[k],false)&&this.isSimpleField(k,field)){switch(field.submitEmptyValue){case"null":data[k]=null;break;case"emptystring":data[k]="";break;default:data[k]=undefined;break;}}}
 if(options.mappings!==false&&this.saveMappings!==false){var m,map=record.fields.map,mappings={};Ext.iterate(data,function(prop,value){m=map[prop];if(m){mappings[m.mapping?m.mapping:m.name]=value;}});if(options.excludeId!==true){mappings[this.metaId()]=record.id;}
 data=mappings;}
@@ -83,7 +83,7 @@ if(jsonUpdated.length>0){if(json.length>0){json+=",";}
 json+='"Updated":[';json+=jsonUpdated;}
 if(jsonCreated.length>0){if(json.length>0){json+=",";}
 json+='"Created":[';json+=jsonCreated;}
-return options.encode?Ext.util.Format.htmlEncode(json):json;},getByDataId:function(id){if(!this.metaId()){return undefined;}
+return json;},getByDataId:function(id){if(!this.metaId()){return undefined;}
 var m=this.modified,i;for(i=0;i<m.length;i++){if(m[i].data[this.metaId()]===id){return m[i];}}
 return undefined;},recordsSaved:function(o,options,success){if(!o||success===false){if(success!==false){this.fireEvent("save",this,options);}
 if(options.callback){options.callback.call(options.scope||this,options,false);}

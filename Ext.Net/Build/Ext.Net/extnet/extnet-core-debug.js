@@ -1,15 +1,14 @@
 /*
- * @version   : 1.5.0 - Ext.NET Pro License
+ * @version   : 1.6.0 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-07-10
+ * @date      : 2012-11-21
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
- * @license   : See license.txt and http://www.ext.net/license/. 
- * @website   : http://www.ext.net/
+ * @license   : See license.txt and http://www.ext.net/license/.
  */
 
 Ext.ns("Ext.net", "Ext.net.DirectMethods", "Ext.ux", "Ext.ux.plugins", "Ext.ux.layout");
 
-Ext.net.Version = "1.0.0";
+Ext.net.Version = "1.6.0";
 
 // @source core/net/ResourceMgr.js
 
@@ -28,7 +27,7 @@ Ext.net.ResourceMgr = function () {
         
         resolveUrl : function (url) {
             if (url && Ext.net.StringUtils.startsWith(url, "~/")) {                
-                return url.replace(/^~/, Ext.isEmpty(this.appName, false) ? "" : ("/"+this.appName))
+                return url.replace(/^~/, Ext.isEmpty(this.appName, false) ? "" : ("/" + this.appName))
             }
 
             return url;
@@ -1063,9 +1062,10 @@ Ext.override(Ext.Component, {
     autoFocusDelay  : 10,
 	
 	destroyBin : function () {
-		if(this.bin){
+		if (this.bin) {
 		    Ext.destroy(this.bin);
 		}
+
 		delete this.bin;
 	},
     
@@ -1102,6 +1102,7 @@ Ext.override(Ext.Component, {
         
         if (Ext.isArray(plugins)) {
             var i = 0;
+
             for (i; i < plugins.length; i++) {
                 this.plugins.push(this.initPlugin(plugins[i]));
             }
@@ -1666,7 +1667,7 @@ Ext.override(Ext.layout.FitLayout, {
     onLayout : function (ct, target) {
         Ext.layout.FitLayout.superclass.onLayout.call(this, ct, target);
         
-        if (!ct.collapsed) {            
+        if (!ct.collapsed || (ct.collapseEl === "el" && ct.isVisible())) { //the second condition is a fix for BorderLayout floatable case: http://forums.ext.net/showthread.php?20506
             var sz;
             
             if (Ext.isIE6 && Ext.isStrict && target.dom == (Ext.net.ResourceMgr.getAspForm() || {}).dom) {
@@ -2315,7 +2316,8 @@ Ext.apply(Ext.lib.Ajax, {
 					    data.push(encoder(name));
 					    data.push("=");
 					    data.push(encoder(element.value));
-					    data.push("&");    
+					    data.push("&");
+                          
 					    if (type === "submit") {
 					        hasSubmit = /submit/i.test(type);
                         }
@@ -2326,6 +2328,7 @@ Ext.apply(Ext.lib.Ajax, {
 
 	    data = data.join("");
         data = data.substr(0, data.length - 1);
+
         return data;
     }
 });
@@ -3844,7 +3847,7 @@ Ext.form.Field.override({
             if (this.rvConfig.lastValue === this.getValue() && this.rvConfig.remoteValid === false) {
                 this.markInvalid(this.rv_response.message || "Invalid");
             }
-            else{
+            else {
                 this.clearInvalid();
             }
             return this.rvConfig.remoteValid;
@@ -5390,8 +5393,14 @@ Ext.form.ComboBox.override({
     },
     
     selectByIndex : function (index, fireSelect) {
+        var r;
+
         if (index >= 0) {
-            this[this.fireSelect ? "setValueAndFireSelect" : "setValue"](this.store.getAt(index).get(this.valueField || this.displayField));
+            r = this.store.getAt(index);
+
+            if (r) {
+                this[fireSelect ? "setValueAndFireSelect" : "setValue"](r.get(this.valueField || this.displayField));
+            }
         }
     },
     
@@ -7759,21 +7768,41 @@ Ext.net.DropDownField = Ext.extend(Ext.net.TriggerField, {
         this.triggers[this.triggers.length - 1].on("click", this.onTriggerClick, this);
     },
     
+    getListParent : function () {
+        return this.componentRenderTo || Ext.net.ResourceMgr.getAspForm() || document.body;
+    },
+    
+    getParentZIndex : function () {
+        var zindex;
+
+        if (this.ownerCt) {
+            this.findParentBy(function (ct) {
+                zindex = parseInt(ct.getPositionEl().getStyle('z-index'), 10);
+                return !!zindex;
+            });
+        }
+
+        return zindex;
+    },
+    
+    getZIndex : function (listParent) {
+        listParent = listParent || Ext.getDom(this.getListParent() || Ext.getBody());
+        var zindex = parseInt(Ext.fly(listParent).getStyle('z-index'), 10);
+
+        if (!zindex) {
+            zindex = this.getParentZIndex();
+        }
+
+        return (zindex || 12000) + 5;
+    },
+    
     initDropDownComponent : function () {
         if (this.component && !this.component.render) {
             this.component.floating = true;
             this.component = new Ext.ComponentMgr.create(this.component, "panel");
         }
         
-        var renderTo = this.componentRenderTo || Ext.net.ResourceMgr.getAspForm() || document.body,
-            zindex = parseInt(Ext.fly(renderTo).getStyle("z-index"), 10);
-            
-        if (this.ownerCt && !zindex) {
-            this.findParentBy(function (ct) {
-                zindex = parseInt(ct.getPositionEl().getStyle("z-index"), 10);
-                return !!zindex;
-            });
-        }
+        var renderTo = this.componentRenderTo || Ext.net.ResourceMgr.getAspForm() || document.body;
         
         this.component.setWidth(this.component.initialConfig.width || this.getWidth());
         this.component.dropDownField = this;
@@ -7781,7 +7810,7 @@ Ext.net.DropDownField = Ext.extend(Ext.net.TriggerField, {
         this.component.hide();
         this.first = true;
         
-        this.component.getPositionEl().position("absolute", (zindex || 12000) + 5);
+        this.component.getPositionEl().position("absolute", this.getZIndex());
         
         if (this.component.initialConfig.height) {
             this.component.setHeight(this.component.initialConfig.height);
@@ -7849,13 +7878,13 @@ Ext.net.DropDownField = Ext.extend(Ext.net.TriggerField, {
         var el = this.component.getPositionEl();
         el.setLeft(0);
         el.setTop(0);
-        if(Ext.isIE6 || Ext.isIE7){
+        if (Ext.isIE6 || Ext.isIE7) {
             this.component.show();
         }
-        
+        el.setZIndex(this.getZIndex());
         el.alignTo(this.wrap, this.componentAlign);
         
-        if(!(Ext.isIE6 || Ext.isIE7)){
+        if (!(Ext.isIE6 || Ext.isIE7)) {
             this.component.show();
         }
         
@@ -8833,7 +8862,7 @@ Ext.Toolbar.Item.prototype.getEl = function () {
 // @source core/toolbar/ToolbarSpacer.js
 
 Ext.net.ToolbarSpacer = function (config) {
-    Ext.net.ToolbarSpacer.superclass.constructor.call(this);
+    Ext.net.ToolbarSpacer.superclass.constructor.call(this, config);
     config = config || {};
     this.width = config.width;
 
@@ -10644,18 +10673,18 @@ Ext.DatePicker.override({
         this.update(this.value, true);
     },
     
-    update : function(date, forceRefresh){
-        if(this.rendered){
+    update : function (date, forceRefresh) {
+        if (this.rendered) {
             var vd = this.activeDate, vis = this.isVisible();
             this.activeDate = date;
-            if(!forceRefresh && vd && this.el){
+            if (!forceRefresh && vd && this.el) {
                 var t = date.getTime();
-                if(vd.getMonth() == date.getMonth() && vd.getFullYear() == date.getFullYear()){
+                if (vd.getMonth() == date.getMonth() && vd.getFullYear() == date.getFullYear()) {
                     this.cells.removeClass('x-date-selected');
-                    this.cells.each(function(c){
-                       if(c.dom.firstChild.dateValue == t){
+                    this.cells.each(function (c) {
+                       if (c.dom.firstChild.dateValue == t) {
                            c.addClass('x-date-selected');
-                           if(vis && !this.cancelFocus){
+                           if (vis && !this.cancelFocus) {
                                Ext.fly(c.dom.firstChild).focus(50);
                            }
                            return false;
@@ -10668,7 +10697,7 @@ Ext.DatePicker.override({
                 firstOfMonth = date.getFirstDateOfMonth(),
                 startingPos = firstOfMonth.getDay()-this.startDay;
 
-            if(startingPos < 0){
+            if (startingPos < 0) {
                 startingPos += 7;
             }
             days += startingPos;
@@ -10691,52 +10720,52 @@ Ext.DatePicker.override({
                 ddaysText = this.disabledDaysText,
                 format = this.format;
                 
-            if(this.showToday){
+            if (this.showToday) {
                 var td = new Date().clearTime(),
                     disable = (td < min || td > max ||
                     (ddMatch && format && ddMatch.test(td.dateFormat(format))) ||
                     (ddays && ddays.indexOf(td.getDay()) != -1));
 
-                if(!this.disabled){
+                if (!this.disabled) {
                     this.todayBtn.setDisabled(disable);
                     this.todayKeyListener[disable ? 'disable' : 'enable']();
                 }
             }
 
-            var setCellClass = function(cal, cell){
+            var setCellClass = function (cal, cell) {
                 cell.title = '';
                 var t = d.clearTime(true).getTime();
                 cell.firstChild.dateValue = t;
-                if(t == today){
+                if (t == today) {
                     cell.className += ' x-date-today';
                     cell.title = cal.todayText;
                 }
-                if(t == sel){
+                if (t == sel) {
                     cell.className += ' x-date-selected';
-                    if(vis){
+                    if (vis) {
                         Ext.fly(cell.firstChild).focus(50);
                     }
                 }
                 // disabling
-                if(t < min) {
+                if (t < min) {
                     cell.className = ' x-date-disabled';
                     cell.title = cal.minText;
                     return;
                 }
-                if(t > max) {
+                if (t > max) {
                     cell.className = ' x-date-disabled';
                     cell.title = cal.maxText;
                     return;
                 }
-                if(ddays){
-                    if(ddays.indexOf(d.getDay()) != -1){
+                if (ddays) {
+                    if (ddays.indexOf(d.getDay()) != -1) {
                         cell.title = ddaysText;
                         cell.className = ' x-date-disabled';
                     }
                 }
-                if(ddMatch && format){
+                if (ddMatch && format) {
                     var fvalue = d.dateFormat(format);
-                    if(ddMatch.test(fvalue)){
+                    if (ddMatch.test(fvalue)) {
                         cell.title = ddText.replace('%0', fvalue);
                         cell.className = ' x-date-disabled';
                     }
@@ -10744,13 +10773,13 @@ Ext.DatePicker.override({
             };
 
             var i = 0;
-            for(; i < startingPos; i++) {
+            for (; i < startingPos; i++) {
                 textEls[i].innerHTML = (++prevStart);
                 d.setDate(d.getDate()+1);
                 cells[i].className = 'x-date-prevday';
                 setCellClass(this, cells[i]);
             }
-            for(; i < days; i++){
+            for (; i < days; i++) {
                 var intDay = i - startingPos + 1;
                 textEls[i].innerHTML = (intDay);
                 d.setDate(d.getDate()+1);
@@ -10758,7 +10787,7 @@ Ext.DatePicker.override({
                 setCellClass(this, cells[i]);
             }
             var extraDays = 0;
-            for(; i < 42; i++) {
+            for (; i < 42; i++) {
                  textEls[i].innerHTML = (++extraDays);
                  d.setDate(d.getDate()+1);
                  cells[i].className = 'x-date-nextday';
@@ -10767,7 +10796,7 @@ Ext.DatePicker.override({
 
             this.mbtn.setText(this.monthNames[date.getMonth()] + ' ' + date.getFullYear());
 
-            if(!this.internalRender){
+            if (!this.internalRender) {
                 var main = this.el.dom.firstChild,
                     w = main.offsetWidth;
                 this.el.setWidth(w + this.el.getBorderWidth('lr'));
@@ -10776,7 +10805,7 @@ Ext.DatePicker.override({
                 // opera does not respect the auto grow header center column
                 // then, after it gets a width opera refuses to recalculate
                 // without a second pass
-                if(Ext.isOpera && !this.secondPass){
+                if (Ext.isOpera && !this.secondPass) {
                     main.rows[0].cells[1].style.width = (w - (main.rows[0].cells[0].offsetWidth+main.rows[0].cells[2].offsetWidth)) + 'px';
                     this.secondPass = true;
                     this.update.defer(10, this, [date]);
@@ -11910,7 +11939,7 @@ Ext.dd.DragSource.override({
 });
 
 // in future, check that Window is dragable under Chrome, if true then remove the following code
-Ext.dd.DragDropMgr.getLocation = function(oDD) {
+Ext.dd.DragDropMgr.getLocation = function (oDD) {
 	if (! this.isTypeOfDD(oDD)) {
 		return null;
 	}
