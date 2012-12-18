@@ -27,7 +27,7 @@
                         "#FF0000"
                 };
 
-                XmlDocument doc = new System.Xml.XmlDocument();
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.Load(Server.MapPath("Australia.xml"));
 
                 List<object> info = new List<object>();

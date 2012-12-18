@@ -1,13 +1,13 @@
 /*
- * @version   : 2.1.0 - Ext.NET Pro License
+ * @version   : 2.1.1 - Ext.NET Pro License
  * @author    : Ext.NET, Inc. http://www.ext.net/
- * @date      : 2012-11-21
+ * @date      : 2012-12-10
  * @copyright : Copyright (c) 2007-2012, Ext.NET, Inc. (http://www.ext.net/). All rights reserved.
  * @license   : See license.txt and http://www.ext.net/license/.
  */
 
 
-Ext.ns("Ext.net","Ext.ux","Ext.ux.plugins","Ext.ux.layout");Ext.net.Version="2.1.0";
+Ext.ns("Ext.net","Ext.ux","Ext.ux.plugins","Ext.ux.layout");Ext.net.Version="2.1.1";
 
 Ext.util.Observable.override({constructor:function(config){this.callParent(arguments);this.directListeners=this.directListeners||{};this.hasDirectListeners=this.hasDirectListeners||{};if(Ext.net&&Ext.net.MessageBus){Ext.net.MessageBus.initEvents(this);}}});Ext.util.DirectObservable={initDirectEvents:function(){if(!this.directListeners){this.directListeners={};}
 if(!this.hasDirectListeners){this.hasDirectListeners={};}
